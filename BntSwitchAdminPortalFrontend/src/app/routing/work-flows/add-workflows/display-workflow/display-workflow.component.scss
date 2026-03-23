@@ -1,0 +1,135 @@
+ul.tree, ul.tree ul {
+  list-style: none;
+   margin: 0;
+   padding: 0;
+ } 
+ ul.tree ul {
+   margin-left: 10px;
+ }
+ ul.tree li {
+   margin: 0;
+   padding: 0 7px;
+   line-height: 20px;
+  // color: #369;
+   // font-weight: bold;
+   border-left:1px solid rgb(100,100,100);
+   background: #efefef;
+   margin: 5px;
+   padding: 9px;
+   position: relative;
+   z-index: 1;
+   top: 3px;
+ }
+ ul.tree li:last-child {
+     border-left:none;
+ }
+
+ ul.tree li:first-child {
+  border-left:none;
+  border-bottom: none;
+  border: none;
+}
+ ul.tree li:before {
+  position: relative;
+  top: -3px;
+  height: 1em;
+  width: 12px;
+  color: white;
+  border-bottom: 3px solid #999;
+  content: "";
+  display: inline-block;
+  left: 4px;
+ }
+ ul.tree li:last-child:before {
+    border-left:3px solid #999;   
+ }
+ 
+
+ i {
+  border: solid #999;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+ul.tree-parent, ul.tree-parent ul {
+  list-style: none;
+   margin: 0;
+   padding: 0;
+ } 
+
+ ul.tree-parent ul {
+  margin-left: 10px;
+}
+
+ ul.tree-parent li {
+  margin: 0;
+  padding: 0 7px;
+  line-height: 20px;
+ // color: #369;
+  // font-weight: bold;
+  // border-left:1px solid rgb(100,100,100);
+  background: #efefef;
+  margin: 5px;
+  padding: 9px;
+  position: relative;
+  z-index: 1;
+  top: 3px;
+}
+.color-mandatory{
+  color: #c1c0c0;
+}
+
+.clt, .clt ul, .clt li {
+  position: relative;
+}
+
+.clt ul {
+ list-style: none;
+ padding-left: 32px;
+}
+
+.clt li::before, .clt li::after {
+content: "";
+position: absolute;
+left: 42px;
+}
+
+.clt li::before {
+border-top: 2px solid #3c8dbc;
+top: 25px;
+width: 70px;
+height: 0;
+left: 22px;
+}
+
+.clt li::after {
+border-left: 2px solid #3c8dbc;
+height: 100%;
+width: 70px;
+top: 2px;
+left: 22px;
+}
+
+::ng-deep .mat-menu-content:not(:empty) {
+padding-top: 0px !important;
+padding-bottom: 0px !important;
+}
+::ng-deep .mat-menu-panel  {
+min-width: 112px;
+max-width: 280px;
+overflow: visible !important;
+-webkit-overflow-scrolling: touch;
+max-height: calc(100vh - 48px);
+border-radius: 4px;
+outline: 0;
+}
+.dropdown-align{
+margin-top: 5px;
+  margin-bottom: 5px;
+}

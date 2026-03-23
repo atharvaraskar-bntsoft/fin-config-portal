@@ -1,0 +1,21 @@
+<div [ngClass]="wrapperClasses" [rvColor]="currentColor || inputColor" rvColorPrefix="has">
+  <label *ngIf="label || inputGroupLabelDirective">
+    {{ label }}
+    <ng-content select="rv-input-group-label"></ng-content>
+  </label>
+  <div class="input-group">
+    <span *ngIf="addonLeft || inputGroupAddonLeftDirective" class="input-group-addon">
+      {{ addonLeft }}
+      <ng-content select="rv-input-group-addon-left"></ng-content>
+    </span>
+    <ng-content select="rv-input-group-content"></ng-content>
+    <span *ngIf="addonRight || inputGroupAddonRightDirective" class="input-group-addon">
+      {{ addonRight }}
+      <ng-content select="rv-input-group-addon-right"></ng-content>
+    </span>
+    <span *ngIf="fromInvalid" class="text-danger pull-right">
+      <ng-container select="rv-input-group-error">{{ errorMessage }}</ng-container>
+    </span>
+  </div>
+  <ng-template #noAddon><ng-content select="rv-input-group-content"></ng-content></ng-template>
+</div>

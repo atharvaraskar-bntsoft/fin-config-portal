@@ -1,0 +1,43 @@
+services:
+  
+  bnt-switch-admin-portal:
+    build:
+      context: ../..
+      dockerfile: docker/Dockerfile
+    image: ${DOCKER_USERNAME}/bnt-switch-admin-portal:${IMAGE_VERSION}
+    container_name: bnt-switch-admin-portal
+    ports:
+      - "${SERVER_PORT}:8080"
+    environment:
+      SERVER_PORT: ${SERVER_PORT}
+      # hazelcast configuration
+      HAZELCAST_HOST: ${HAZELCAST_HOST}
+      HAZELCAST_PORT: ${HAZELCAST_PORT}
+      # switch database configuration
+      BSWITCH_DB_HOST: ${BSWITCH_DB_HOST}
+      BSWITCH_DB_PORT: ${BSWITCH_DB_PORT}
+      BSWITCH_DB_SCHEMA: ${BSWITCH_DB_SCHEMA}
+      BSWITCH_AUDIT_DB_SCHEMA: ${BSWITCH_AUDIT_DB_SCHEMA}
+      BSWITCH_DB_USERNAME: ${BSWITCH_DB_USERNAME}
+      BSWITCH_DB_PASSWORD: ${BSWITCH_DB_PASSWORD}
+      # keycloak configuration
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      # LOG LOCATION
+      switch_log_location: /usr/local/tomcat/logs
+    volumes:
+      - /var/log/bnt-ps/bnt-switch-admin/logs:/usr/local/tomcat/logs
+    networks:
+      - bnt-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8080/actuator/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+    
+networks:
+  bnt-network:
+    driver: bridge
+    external: true

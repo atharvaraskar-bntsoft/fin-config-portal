@@ -1,0 +1,1779 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import "~ng-zorro-antd/ng-zorro-antd.min.css";
+
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border-color: #eae3e3;
+}
+
+.ant-input-disabled {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.cdk-overlay-container[aria-hidden]{
+z-index: 1001!important;
+}
+
+.ant-select-disabled,
+.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.filter-shadow .select-gap.ng-select .ng-select-container {
+  min-height: 26px;
+}
+.portal-search {
+  left: calc(38% - 62px) !important;
+  z-index: 100 !important;
+}
+.mat-radio-label-content{
+  color: #000 !important;
+ }
+ .saveConditionCss  {
+  margin-bottom: 10px;
+ }
+ .advance-filter > .ant-card-body {
+  padding: 4px;
+ }
+ 
+.body-height {
+  overflow-y: auto;
+  max-height: 55vh;
+  overflow-x: hidden;
+}
+.input-search-custom {
+  width: 230px !important;
+}
+.portal-search-custom{
+  left: calc(38% - 14px) !important;
+}
+.gutter-0.row {
+  margin-right: -0px;
+  margin-left: -0px;
+}
+.gutter-0 > [class^="col-"], .gutter-0 > [class^=" col-"] {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.nopadding-lg {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.text-label-right {
+  text-align: right;
+  width: 166px;
+}
+.text-label-right-only {
+  text-align: right;
+}
+.ant-tabs, .ant-tabs-nav-container {
+  font-size: 12px !important;
+}
+.ant-tabs-nav{
+  margin: 0px !important;
+}
+.ant-tabs-tab {
+  background-color: #36BBA6 !important;
+  color: #000 !important;
+}
+.ant-modal-body {
+  padding: 11px !important;
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  background-color: #36BBA6 !important;
+  color: #fff !important;
+}
+.ant-table {
+  font-size: 12px !important;
+}
+.ngx-datatable {
+  min-height: 85vh !important;
+}
+.properties {
+  height: 38px !important;
+}
+.tree {
+  $color: #222;
+  $border-color: #ddd;
+  $background-color: #eee;
+  $border-weight: 1px;
+  $margin: 12px;
+  
+  margin: $margin * 1.5;
+  padding: 0;
+  
+  &:not(:empty):before, &:not(:empty):after,
+  ul:not(:empty):before, ul:not(:empty):after,
+  li:not(:empty):before, li:not(:empty):after {
+    display:block;
+    position:absolute;
+    content:"";
+  }
+  
+  ul, li {
+    position: relative;
+    margin:0;
+    padding-top: 10px;
+  }
+  
+  li {
+    list-style:none;
+  }
+  .table {
+    font-size: 12px !important;
+  }
+
+  &.cascade {
+    li {
+      margin-left: 2 * $margin;
+      
+  
+      &:before {
+        border-left: $border-weight solid $border-color;
+        height:100%;
+        width:0;
+        top:0;
+        left:-$margin;
+      }
+
+      &:after {
+        border-top: $border-weight solid $border-color;
+        width: $margin;
+        left:-$margin;
+        top: $margin * 2;
+      }
+
+      &:last-child:before {
+        height:$margin * 2;
+        top:0;
+      }
+    }
+    
+    &>li {
+      
+      &:first-child:before {
+        top: $margin * 2;
+      }
+      
+      &:only-child {
+        margin-left:0;
+      }
+
+      &:only-child:before, &:only-child:after {
+        content:none;
+      }
+    }
+  }
+
+    
+  %subcascade {
+    flex-direction:column;
+    align-items:start;
+    padding: 0 $margin;
+    
+    &:before {
+      left:2*$margin;
+    }
+    
+    &:after {
+      left:0;
+    }
+    
+    &:first-child:after {
+      left:2*$margin;
+      width:100%;
+    }
+    
+    &:last-child:after {
+      left:0;
+      width:2*$margin;
+    }
+    
+    ul, li {
+      display:block;
+    }
+    
+    ul:before, ul:after,
+    li:before, li:after {
+      border:none;
+    }
+    
+    div {
+      margin:0;
+      margin-top:$margin;
+    }
+    
+    li {
+      margin-left: 2 * $margin;
+      
+      &:before {
+        border-left: $border-weight solid $border-color;
+        height:100%;
+        width:0;
+        top:0;
+        left:-$margin;
+      }
+
+      &:after {
+        border-top: $border-weight solid $border-color;
+        width: $margin;
+        height: 0;
+        left:-$margin;
+        top: $margin * 2;
+        content: "";
+      }
+      
+      &:last-child:before {
+        height:$margin * 2;
+        top:0;
+      }
+    }
+  }
+  
+  &.vertical .cascade {
+    @extend %subcascade;
+  }
+  
+  &.vertical.cascade-1 {
+    &>li {
+      @extend %subcascade;
+    }
+  }
+  
+  &.vertical.cascade-2 {
+    &>li>ul>li {
+      @extend %subcascade;
+    }
+  }
+  
+  &.vertical.cascade-3 {
+    &>li>ul>li>ul>li {
+      @extend %subcascade;
+    }
+  }
+  
+  &.vertical.cascade-4 {
+    &>li>ul>li>ul>li>ul>li {
+      @extend %subcascade;
+    }
+  }
+}
+
+
+.auto-width {
+  width: auto !important;
+}
+/* customize */
+.gutter-6.row {
+  margin-right: -3px;
+  margin-left: -3px;
+}
+.gutter-6 > [class^="col-"], .gutter-6 > [class^=" col-"] {
+  padding-right: 3px;
+  padding-left: 3px;
+}
+.table-height {
+  overflow-y: auto;
+  max-height: 65vh;
+  overflow-x: hidden;
+}
+label {
+  font-size:12px !important;
+}
+.mat-form-field-label{
+  color:rgba(0,0,0,.85) !important;
+  font-size: 14px !important;
+}
+.mat-form-field-underline{
+  background-color:rgba(0,0,0,.85) !important;
+  font-size: 14px !important;
+}
+@media screen and (min-width: 1280px) {
+  .table-height {
+    max-height: 65vh;
+  }
+}
+.empty-row{
+  display: none;
+}
+/* fallback */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./assets/data/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+.page-title {
+  font-size: 17px;
+  font-weight: 600;
+  padding-bottom: 15px;
+}
+.card {
+  background: #fff;
+    border-radius: 4px;
+    padding: 15px;
+  .no_data{
+    padding: 30px 0;
+  }
+}
+.btn.btn-flat {
+  border-radius: 0;
+  box-shadow: none;
+  border-width: 1px;
+}
+button {
+  margin-left: 2px;
+}
+
+/* .skin-blue-light .sidebar a {
+  color: #9ba1b9;
+} */
+
+th {
+  color: #666666;
+  font-weight: 600;
+}
+
+.large-logo {
+  background-color: #fff;
+}
+
+.alert-danger {
+  text-align: right !important;
+  background: #fff !important;
+  color: red;
+  color: red !important;
+  border: none;
+  margin: 2px;
+  padding: 0px;
+  position: absolute;
+  right: 0;
+}
+
+.form-group {
+  position: relative;
+}
+
+input.ng-touched.ng-invalid {
+  border: 1px solid #ff0000;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched > .ng-select-container {
+  border: 1px solid #ff0000;
+}
+
+.small-logo {
+  height: 40px;
+}
+
+a.links {
+  margin: 2px;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+}
+
+.fade {
+  opacity: 0;
+  -webkit-transition: opacity 0.15s linear;
+  -o-transition: opacity 0.15s linear;
+  transition: opacity 0.15s linear;
+}
+
+.detail-sub-header {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.iconColor {
+  color: #888888;
+}
+
+.fade.in {
+  opacity: 1;
+}
+
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+}
+
+.modal.in .modal-dialog {
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+
+:host .modal.fade .modal-dialog {
+  -webkit-transition: -webkit-transform 0.3s ease-out;
+  -o-transition: -o-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  -o-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 10%;
+}
+
+@media (min-width: 768px) {
+  .modal-dialog {
+    width: 600px;
+    margin: 10% auto;
+  }
+}
+
+.resize-handle {
+  visibility: visible !important;
+}
+
+.content {
+  padding: 8px;
+}
+
+body {
+  font-family: 'lato', sans-serif !important;
+  font-weight: 400;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-size: 13px;
+}
+.ngx-datatable.bootstrap .datatable-footer {
+  background: none;
+  color: #000;
+  height: auto !important;
+  margin-top: -1px;
+  border-top: 1px solid #ccc;
+  overflow: hidden;
+}
+.datatable-footer-inner .ng-star-inserted {
+  margin: 0 !important;
+}
+.ngx-datatable.bootstrap .datatable-body .datatable-body-row {
+  vertical-align: top;
+  border-top: 1px solid #d1d4d7;
+}
+
+.ngx-datatable.fixed-row .datatable-scroll .datatable-body-row .datatable-body-cell {
+  padding: 0.75rem;
+}
+
+.ngx-datatable.bootstrap .datatable-footer .datatable-pager a {
+  height: 22px;
+  min-width: 24px;
+  line-height: 22px;
+  padding: 0;
+  border-radius: 3px;
+  margin: 0 3px;
+  text-align: center;
+  vertical-align: top;
+  text-decoration: none;
+  vertical-align: bottom;
+  color: #000000;
+}
+
+.ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a {
+  background-color: #abaaaa;
+  font-weight: bold;
+  color: #fff;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.ngx-datatable.bootstrap .datatable-body .datatable-body-row.datatable-row-even {
+  background-color: #fff;
+}
+
+.ngx-datatable.bootstrap:not(.cell-selection) .datatable-body-row:hover,
+.ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover .datatable-row-group {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0);
+  border-bottom: 2px solid #f4f6f9;
+  /* transition: .15s linear; */
+}
+
+.skin-blue-light .sidebar-menu > li:hover > a,
+.skin-blue-light .sidebar-menu > li.active > a {
+  color: #000000;
+  background: #fff;
+  border-left: 2px #000 solid;
+}
+
+.configTitle {
+  float: left;
+  font-size: 20px;
+  color: #fff;
+  margin: 0 auto;
+  left: 45%;
+  font-weight: bold;
+  position: absolute;
+  top: 8px;
+}
+
+.content-inner {
+  display: block;
+  padding-bottom: 10px;
+  min-height: 96vh;
+  overflow: hidden;
+}
+
+.nav-tabs-custom {
+  box-shadow: none;
+}
+
+.nav-tabs-custom > .tab-content {
+  /* overflow: hidden; */
+  /*
+  min-height: 60vh;
+  */
+}
+
+.content-header > h1 {
+  font-size: 22px;
+}
+
+.ngx-datatable.fixed-row .datatable-scroll .datatable-body-row .datatable-body-cell {
+  /* border: 1px solid #d1d4d7; */
+  border-top: none;
+}
+
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell {
+  border-left: 1px solid #d1d4d7;
+  border-top: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-group.has-warning .form-control,
+.form-group.has-warning .input-group-addon {
+  border-color: #dd4b39;
+}
+
+.form-group.has-warning label {
+  color: #dd4b39;
+}
+
+.text-danger {
+  color: #dd4b39;
+  position: absolute;
+  right: 0;
+  top: 35px;
+}
+
+.skin-blue-light .main-header .navbar {
+  background: #fff !important;
+  border-bottom: solid #36BBA7 1px;
+}
+
+.skin-blue-light .main-header .navbar .nav > li > a :hover {
+  color: #888888;
+}
+
+.skin-blue-light .main-header .navbar .nav > li > a {
+  color: #888888;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > p {
+  z-index: 5;
+  color: #ffffff;
+  font-size: 17px;
+  margin-top: 10px;
+}
+.skin-blue-light .sidebar-menu > li {
+  border-bottom: solid 1px #fff;
+}
+.skin-blue-light .main-header li.user-header {
+  background-color: #36BBA7;
+}
+
+.navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
+  /*border-color: #000;*/
+  position: absolute;
+  right: 0;
+  left: auto;
+}
+.login-page,
+.register-page {
+  background: #f5f9ff;
+}
+.login-box-body,
+.register-box-body {
+  box-shadow: 2px 2px #ccc;
+}
+.skin-blue-light .main-header .logo {
+  background: #f9fafc;
+  border-right: solid #ccc 1px;
+}
+
+.skin-blue-light .main-header .logo:hover {
+  background: #f9fafc;
+}
+
+.skin-blue-light .main-header .navbar .sidebar-toggle {
+  color: #000;
+}
+
+.skin-blue-light .main-header .navbar .sidebar-toggle:hover {
+  background: #dfdfdf;
+  color: #000;
+}
+
+.user-menu a {
+  color: #000000;
+}
+
+.row-li-tag {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.row-li-tag-export {
+  list-style: none;
+  text-align: left;
+  margin: 0px;
+  padding: 0px;
+  cursor: pointer;
+}
+
+.row-li-tag-export li {
+  padding: 5px 4px;
+  border-bottom: solid 1px #cccccc;
+  margin-bottom: 1px;
+}
+
+.success-badges {
+  background: #8cc574;
+}
+
+.progress-badges {
+  background: #f3ce68;
+}
+
+.failure-badges {
+  background: #ee8087;
+}
+
+.badges {
+  color: white;
+}
+
+.popup-close {
+  display: none;
+  opacity: 0;
+}
+
+.popup-open {
+  display: block;
+  opacity: 1;
+}
+
+.text-color {
+  color: #3c8dbc;
+}
+.skin-blue-light .sidebar-menu .treeview-menu {
+  z-index: 99;
+}
+.skin-blue-light .sidebar-menu .treeview-menu > li.active > a {
+  color: #000;
+}
+
+.skin-blue-light .sidebar-menu .treeview-menu > li.active > span {
+  color: #3c8dbc;
+  font-size: 13px;
+}
+
+.skin-blue-light .sidebar-menu > li > a {
+  /*
+  border-bottom: 1px #ccc solid;
+  */
+}
+
+.sidebar-menu > li > a {
+  padding: 8px 5px 8px 15px !important;
+  display: block;
+}
+
+.button-margin {
+  margin-right: 0px;
+}
+
+.skin-blue-light .main-sidebar {
+  height: 100vh;
+}
+
+
+.sidebar-mini.sidebar-collapse .main-sidebar {
+  z-index: 11;
+}
+
+.main-header {
+  z-index: 2;
+}
+
+.main-sidebar {
+  z-index: 11;
+}
+
+.ngx-json-viewer {
+  overflow: auto;
+  height: 50vh;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.isDisabled {
+  pointer-events: none;
+  cursor: default;
+  color: #000000;
+}
+
+.color-red {
+  color: #ff0000;
+}
+
+.color-red:hover {
+  color: #ff0000;
+}
+
+.loading {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url('./assets/img/8.gif') 50% 50% no-repeat rgb(249, 249, 249);
+}
+
+.check_box_container {
+  width: 10%;
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+
+.check_box_container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border: solid 2px #ccc;
+}
+
+/* On mouse-over, add a grey background color */
+
+.check_box_container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+
+.check_box_container input:checked ~ .checkmark {
+  background-color: #2196f3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+
+.check_box_container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+
+.check_box_container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.ratio_box_container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+
+.ratio_box_container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+
+.checkmarkRadio {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+
+.ratio_box_container:hover input ~ .checkmarkRadio {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+
+.ratio_box_container input:checked ~ .checkmarkRadio {
+  background-color: #2196f3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+
+.checkmarkRadio:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+
+.ratio_box_container input:checked ~ .checkmarkRadio:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+
+.ratio_box_container .checkmarkRadio:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.badge {
+  /* width: 60px; */
+}
+
+/* make keyframes that tell the start state and the end state of our object */
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  /* make things invisible upon start */
+  -webkit-animation: fadeIn ease-in 1;
+  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 0.1s;
+  -moz-animation-duration: 0.1s;
+  animation-duration: 0.1s;
+}
+
+.fade-in.template {
+  -webkit-animation-delay: 0.1s;
+  -moz-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+}
+
+.leftNavMargin {
+  margin-left: 5px;
+}
+
+.content-wrapper {
+  position: unset !important;
+  /*background-color: #fbfbfb !important;*/
+}
+.main-header {
+  z-index: 22;
+}
+
+.ngx-datatable.bootstrap .datatable-header {
+  // border: solid 1px #ccc;
+  background-color: #36BBA7 !important;
+}
+
+.ngx-datatable .datatable-header .datatable-header-cell .resize-handle {
+  cursor: ew-resize;
+  /*border: solid #ece8e8 1px;
+  width: 0px !important;*/
+  padding: 0px !important;
+}
+
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell {
+  background: #36BBA7 !important;
+  // padding: 0.25rem;
+  // changing this after upgrade to v17
+  padding: 0.75rem;
+}
+
+.datatable-scroll {
+  width: 100% !important;
+  border-left: solid 1px #ccc;
+}
+.btn-primary {
+  background-color: #36BBA7;
+  border-color: #36BBA7;
+}
+
+.treeview-menu {
+  margin-top: -3px;
+}
+
+.treeview-menu > li {
+  margin-left: 35px !important;
+}
+
+.sidebar-collapse .treeview-menu > li {
+  margin: 0 !important;
+  margin-left: 0px !important;
+}
+
+.sidebar-mini.sidebar-collapse .sidebar-menu > li {
+  position: none !important;
+  border-bottom: solid 1px #fff;
+}
+
+.desktop {
+  margin-right: 10px;
+}
+
+.line-chart {
+  margin-right: 10px;
+}
+
+.sliders {
+  margin-right: 10px;
+}
+
+.sidebar-collapse .sidebar-menu li > a {
+  position: static !important;
+}
+
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse
+  .sidebar-menu
+  > li:hover
+  > a
+  > span {
+  top: -1px;
+  margin-left: -1px;
+  padding: 12px 5px 10px 20px;
+  background-color: inherit;
+}
+
+.btn.btn-flat {
+  // border-radius: 3px !important;
+  // box-shadow: 0 3px 6px 0 rgba(11, 75, 146, .35);
+}
+
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell {
+  font-weight: bold !important;
+  color: #fff !important;
+}
+
+/* .login-page {
+ background: url(./assets/img/hdr-bnr-01.jpg) !important;
+  background-size: 100% !important;
+  background-repeat: no-repeat !important;
+}*/
+
+.login-logo span {
+  /*color: #fff !important;*/
+  margin-left: 10px !important;
+}
+
+.import-header {
+  background-color: #61abfe;
+  color: #fff;
+}
+
+.filter-shadow {
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.15);
+}
+
+.skin-blue-light .wrapper,
+.skin-blue-light .main-sidebar,
+.skin-blue-light .left-side {
+  background-color: #36BBA7;
+}
+
+.skin-blue-light .sidebar-menu > li > .treeview-menu {
+  background: #36BBA7;
+}
+
+.skin-blue-light .main-header .logo {
+  background: #f8f8f8;
+}
+
+.skin-blue-light .sidebar-menu > li.header {
+  background: #f8f8f8;
+}
+
+.skin-blue-light .sidebar-menu .treeview-menu > li.active > a {
+  font-weight: 400;
+}
+
+.skin-blue-light .sidebar-menu > li:hover > a,
+.skin-blue-light .sidebar-menu > li.active > a {
+  color: #000;
+  background: #fff;
+  /* border-left: 4px #3468fa solid;*/
+}
+
+.skin-blue-light .sidebar a {
+  color: #fff;
+}
+
+.skin-blue-light .sidebar-menu .treeview-menu > li > a {
+  color: whitesmoke;
+}
+
+.skin-blue-light .sidebar-menu .treeview-menu > li > a:hover {
+  color: #7bb9ff;
+}
+
+.skin-blue-light .sidebar-menu > li > a {
+  border-left: 3px solid transparent;
+  font-weight: normal;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  white-space: pre-line !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  border-bottom: solid 1px #dfdfdf;
+}
+
+.ng-progress {
+  pointer-events: none;
+  border: 1px solid '#ccc';
+  .ng-meteor {
+    &:after {
+      display: block;
+      position: absolute;
+      right: 0;
+      width: 100px;
+      height: 100%;
+      box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+      opacity: 1;
+      -webkit-transform: rotate(3deg) translate(0, -4px);
+      -ms-transform: rotate(3deg) translate(0, -4px);
+      transform: rotate(3deg) translate(0, -4px);
+    }
+  }
+  &:before {
+    display: block;
+    position: fixed;
+    right: auto;
+    left: 50%;
+    top: rem(13);
+    margin-left: rem(-73);
+    text-align: center;
+    padding-left: 25px;
+  }
+  &:after {
+    content: '';
+    display: block;
+    position: fixed;
+    left: 50%;
+    top: 22px;
+    margin-left: -57px;
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    border: solid 2px transparent;
+    border-top-color: #36BBA6;
+    border-left-color: #36BBA6;
+    border-radius: 50%;
+    -webkit-animation: nprogress-spinner 400ms linear infinite;
+    animation: nprogress-spinner 400ms linear infinite;
+  }
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+$color-grey: #5f6f72;
+$color-grey-medium: #364346;
+$color-grey-dark: #293538;
+$color-orange: #fd6722;
+$color-white: #fff;
+$color-white-dark: #eee;
+.decision-dialog {
+  width: 90vw !important;
+  max-width: 100vw !important;
+}
+
+.reversal-dialog {
+  width: 90vw !important;
+  max-width: 100vw !important;
+}
+
+body {
+  margin-bottom: 6em;
+}
+
+$border-color: #e3e5ef;
+$primary-color: #bada55;
+.treeview {
+  //Variables
+  $_treeview-level-size: 55px;
+  //General styles for bootstrap
+  .btn-default {
+    border-color: $border-color;
+    &:hover {
+      background-color: #f7faea;
+      color: $primary-color;
+    }
+  }
+  // Targetting the HTML Elements for treeview
+  ul {
+    list-style: none;
+    padding-left: 32px;
+    li {
+      padding: 28px 0px 0px 35px;
+      position: relative;
+      &:before {
+        content: '';
+        position: absolute;
+        top: -26px;
+        left: -31px;
+        border-left: 1px solid #a2a5b5;
+        width: 1px;
+        height: 100%;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        border-top: 1px solid #a2a5b5;
+        top: 45px;
+        left: -30px;
+        width: 122px;
+      }
+      &:last-child:before {
+        top: -22px;
+        height: 69px;
+      }
+    }
+  }
+  // First Level Elements
+  & > ul {
+    & > li {
+      &:after,
+      &:last-child:before {
+        content: unset;
+      }
+      &:before {
+        top: 90px;
+        left: 36px;
+      }
+      &:not(:last-child) > ul > li {
+        &:before {
+          content: unset;
+        }
+      }
+      & > .treeview__level {
+        &:before {
+          height: $_treeview-level-size + 5;
+          width: $_treeview-level-size + 5;
+          top: -9.5px;
+          background-color: #54a6d9;
+          border: 7.5px solid #d5e9f6;
+          font-size: 22px;
+        }
+      }
+      & > ul {
+        padding-left: 34px;
+      }
+    }
+  }
+  // Treeview Components
+  &__level {
+    //padding: 7px;
+    padding-left: 60px;
+    padding-top: 11px;
+    // padding-left: ($_treeview-level-size / 2) + 15;
+    //display: flex;
+    //border-radius: 5px;
+    //font-weight: 700;
+    // border: 1px solid $border-color;
+    position: relative;
+    z-index: 1;
+    &:before {
+      content: attr(data-level);
+      position: absolute;
+      left: -78px;
+      top: -30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 25px;
+      width: 25px;
+      // border-radius: 50%;
+      border: 7.5px solid #509ef8;
+      background-color: #509ef8;
+      color: #fff;
+      font-size: 20px;
+      transform: rotate(45deg);
+    }
+    &-btns {
+      margin-left: 15px;
+      display: inline-block;
+      position: relative;
+    }
+    .level {
+      &-same,
+      &-sub {
+        position: absolute;
+        display: none;
+        transition: opacity 250ms cubic-bezier(0.7, 0, 0.3, 1);
+        &.in {
+          display: block;
+          .btn-default {
+            background-color: #faeaea;
+            color: #da5555;
+          }
+        }
+      }
+      &-same {
+        top: 0;
+        left: 45px;
+      }
+      &-sub {
+        top: 42px;
+        left: 0px;
+      }
+      &-remove {
+        display: none;
+      }
+    }
+    &.selected {
+      background-color: #f9f9fb;
+      box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.1);
+      .level {
+        &-remove {
+          display: inline-block;
+        }
+        &-add {
+          display: none;
+        }
+        &-same,
+        &-sub {
+          display: none;
+        }
+      }
+    }
+  }
+  &__levels {
+    padding: 2px;
+    padding-left: 60px;
+    // padding-left: ($_treeview-level-size / 2) + 15;
+    display: flex;
+    border-radius: 5px;
+    font-weight: 700;
+    // border: 1px solid $border-color;
+    position: relative;
+    z-index: 1;
+    &:before {
+      // content: attr(data-level);
+      position: absolute;
+      left: -55.5px;
+      top: -1.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      border: 7.5px solid #509ef8;
+      background-color: #509ef8;
+      color: #fff;
+      font-size: 20px;
+    }
+    &-btns {
+      margin-left: 15px;
+      display: inline-block;
+      position: relative;
+    }
+    .level {
+      &-same,
+      &-sub {
+        position: absolute;
+        display: none;
+        transition: opacity 250ms cubic-bezier(0.7, 0, 0.3, 1);
+        &.in {
+          display: block;
+          .btn-default {
+            background-color: #faeaea;
+            color: #da5555;
+          }
+        }
+      }
+      &-same {
+        top: 0;
+        left: 45px;
+      }
+      &-sub {
+        top: 42px;
+        left: 0px;
+      }
+      &-remove {
+        display: none;
+      }
+    }
+    &.selected {
+      background-color: #f9f9fb;
+      box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.1);
+      .level {
+        &-remove {
+          display: inline-block;
+        }
+        &-add {
+          display: none;
+        }
+        &-same,
+        &-sub {
+          display: none;
+        }
+      }
+    }
+  }
+  .level-title {
+    cursor: pointer;
+    user-select: none;
+    width: 16%;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  &--mapview {
+    ul {
+      justify-content: center;
+      display: flex;
+      li {
+        &:before {
+          content: unset;
+        }
+        &:after {
+          content: unset;
+        }
+      }
+    }
+  }
+}
+
+.tree-workflow ul {
+  margin-left: 20px;
+}
+
+.tree-workflow li {
+  list-style-type: none;
+  margin: 10px;
+  position: relative;
+}
+
+.tree-workflow li::before {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: -20px;
+  border-left: 2px solid #3c8dbc;
+  border-bottom: 2px solid #3c8dbc;
+  border-radius: 0 0 0 0px;
+  width: 20px;
+  height: 25px;
+}
+
+.tree-workflow li::after {
+  position: absolute;
+  content: '';
+  top: 8px;
+  left: -20px;
+  border-left: 2px solid #3c8dbc;
+  border-top: 2px solid #3c8dbc;
+  border-radius: 0px 0 0 0;
+  width: 20px;
+  height: 100%;
+}
+
+.tree-workflow li:last-child::after {
+  display: none;
+}
+
+.tree-workflow li:last-child:before {
+  border-radius: 0 0 0 5px;
+}
+
+ul.tree > li:first-child::before {
+  display: none;
+}
+
+ul.tree-workflow > li:first-child::after {
+  border-radius: 5px 0 0 0;
+}
+
+.tree-workflow li a {
+  border: 2px solid #3c8dbc;
+  border-radius: 5px;
+  padding: 2px 5px;
+}
+
+.tree-workflow li a:hover,
+.tree-workflow li a:hover + ul li a,
+.tree-workflow li a:focus,
+.tree-workflow li a:focus + ul li a {
+  background: #ccc;
+  color: #000;
+  border: 1px solid #000;
+}
+
+.tree-workflow li a:hover + ul li::after,
+.tree-workflow li a:focus + ul li::after,
+.tree-workflow li a:hover + ul li::before,
+.tree-workflow li a:focus + ul li::before .tree-workflow li a:hover + ul::before,
+.tree-workflow li a:focus + ul::before .tree-workflow li a:hover + ul ul::before,
+.tree-workflow li a:focus + ul ul::before {
+  border-color: #000;
+  /*connector color on hover*/
+}
+
+.tree-margin {
+  margin-left: 35px;
+  margin-top: 24px;
+}
+
+.decisionType {
+  position: relative;
+  right: 7.9rem;
+  bottom: 11px;
+  color: #509ef8;
+  font-weight: 700;
+}
+
+.square {
+  background-color: #509ef8;
+  transform: rotate(45deg);
+}
+
+.mat-tree-node {
+  min-height: 30px !important;
+}
+
+.mat-menu-panel {
+  overflow: hidden !important;
+}
+
+.treeview-menu > li > ul > li {
+  margin-left: 0px !important;
+}
+
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+
+.error {
+  color: red;
+  &.ml35 {
+    margin-left: 35px;
+  }
+}
+
+.ant-table tfoot > tr > td,
+.ant-table tfoot > tr > th,
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th {
+  position: relative;
+  padding: 16px;
+  overflow-wrap: break-word;
+  white-space: nowrap !important;
+}
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th {
+  word-break: break-word;
+}
+.tooltip-example {
+  text-align: center;
+  padding: 0 50px;
+}
+.tooltip-example [tooltip] {
+  display: inline-block;
+  margin: 50px 20px;
+  width: 180px;
+  height: 50px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  line-height: 50px;
+  text-align: center;
+}
+.ng-tooltip {
+  position: absolute;
+  max-width: 150px;
+  font-size: 14px;
+  text-align: center;
+  color: #f8f8f2;
+  padding: 3px 8px;
+  background: #282a36;
+  border-radius: 4px;
+  z-index: 1000;
+  opacity: 0;
+}
+.ng-tooltip:after {
+  content: '';
+  position: absolute;
+  border-style: solid;
+}
+.ng-tooltip-top:after {
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: black transparent transparent transparent;
+}
+.ng-tooltip-bottom:after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: transparent transparent black transparent;
+}
+.ng-tooltip-left:after {
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-color: transparent transparent transparent black;
+}
+.ng-tooltip-right:after {
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-color: transparent black transparent transparent;
+}
+.ng-tooltip-show {
+  opacity: 1;
+}
+.joined-word-break {
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.custom-form-control nz-tree-select {
+  width: 100% !important;
+  //box-shadow: 0 3px 10px 0 rgb(24 40 65 / 15%);
+  line-height: 55px !important;
+}
+
+.custom-form-control .ant-select-selector {
+  height: 36px !important;
+  border-radius: 4px !important;
+}
+
+.mt-4{
+  margin-top: 20px;
+}
+.ant-modal-content {
+  position: relative;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 0;
+  border-radius: 2px;
+  pointer-events: auto;
+  float: left;
+  width: 100%;
+}
+.editor {
+  height: 450px;
+  border: solid 1px #ccc;
+  margin-top: 10px;
+}
+.mapper {
+  clear: both;  
+}
+.invalid-block {
+  color: #ff0000;
+}
+.invalid {
+  border: 1px solid #dc3545;
+}
+.main-checkbox {
+  //background: #efefef;
+  border: #eaeaea solid 1px;
+  padding: 10px 0 5px;
+}
+.form-panel {
+  border: #ccc solid 1px;
+  float: left;
+  width: 100%;
+  padding-bottom: 15px;
+  margin-top: 15px;
+}
+.form-pannel {
+  border: #ccc solid 1px;
+  float: left;
+  width: 100%;
+  padding-bottom: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.card-main{
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
+  height: 40px;
+  color: #fff !important;
+  background: #fff;
+  border-color: #1890ff;
+  border-bottom: 1px solid #fff;
+}
+.join-pannel {
+  border: #ccc solid 1px;
+  float: left;
+  width: 100%;
+}
+.card-heading{
+  background:#f7f7f7;
+  padding:15px;
+  font-size:16px;
+  font-weight:600;
+  color:#000;
+  }
+  .card-body{
+  background:#fff;
+  padding:15px
+  }

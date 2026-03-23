@@ -1,0 +1,18 @@
+.treeview-menu.collapse {
+  display: none;
+}
+
+.treeview-menu,
+.treeview-menu.collapse.in {
+  display: block;
+}
+.left-margin {
+  margin-left: 40px;
+}
+
+::ng-deep .sidebar-menu li > a > .pull-right-container {
+  position: relative;
+  right: 10px;
+  top: 50%;
+  margin-top: -7px;
+}

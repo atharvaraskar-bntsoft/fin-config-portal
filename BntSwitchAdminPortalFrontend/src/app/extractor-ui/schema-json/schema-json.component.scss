@@ -1,0 +1,105 @@
+:host label {
+  color: #000000a6;
+  margin-right: 15px;
+}
+.top-margin {
+  margin-top: 10px;
+}
+.row-direction {
+  display: flex;
+}
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+
+:host ::ng-deep .ant-tabs.ant-tabs .ant-tabs-bar .ant-tabs-tab {
+  height: 40px;
+  margin: 0 2px 0 0;
+  padding: 0 16px;
+  line-height: 38px;
+  background: #509ef8;
+  border: 1px solid #509ef8;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+:host ::ng-deep .ant-tabs-tab-active {
+  background-color: #1b95e0 !important;
+  color: #fff !important;
+}
+:host ::ng-deep .ant-modal-body {
+  padding: 11px !important;
+}
+.ant-tabs-tab-active {
+  background-color: #1b95e0 !important;
+  color: #fff !important;
+}
+.table{
+  border-collapse:unset;
+}
+:host .rulsCss {
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  width: 30px;
+  padding-left: 8px;
+  margin-top: 5px;
+  margin-left: 7px;
+}
+.icon-hover:hover {
+  background-color: #ddd;
+}
+.input-align {
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+}
+.example-input {
+  margin-right: 2em;
+}
+.schema-row-height {
+  height: 350px;
+  overflow-y: scroll;
+}
+.add-button-margin {
+  margin-left: 30px;
+}
+.delete-cursor {
+  cursor: pointer;
+}
+.delete-cursor:hover {
+  cursor: pointer;
+}
+pre {
+  height: 465px;
+  overflow-y: scroll;
+}
+.top-padding {
+  padding-left: 9px;
+}
+.header-height {
+  height: 340px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.table-height {
+  overflow-y: auto;
+  max-height: 60vh;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 1280px) {
+  .table-height {
+    max-height: 65vh;
+  }
+}

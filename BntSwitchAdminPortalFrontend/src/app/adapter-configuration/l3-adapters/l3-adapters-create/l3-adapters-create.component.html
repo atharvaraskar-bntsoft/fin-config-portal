@@ -1,0 +1,96 @@
+<nz-spin [nzSpinning]="loading">
+  <div>
+    <a class="btn" routerLink="/adapter-configuration/l3-adapters"><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{
+      'BACK' | translate }}</a>
+  </div>
+  <div class="tab-margin">
+    <div>
+      <l3-adapter-template [templateValueList]="templateValueList" [format]="format" [adapterData]="adapterData"
+        [name]="name" [template]="template" [id]="id" [readOnlyFlag]="readOnlyFlag"
+        [isHttp_urlencoded]="isHttp_urlencoded" [isJson] ="isJson" [isDisable]="isEdit" [activeTab]="activeTab"
+        (changeTemplate)="changeTemplate($event)" [getIfmList]="getIfmList" [imfId]="imfId"
+        (loader)="loaderValue($event)" (changeAdapterData)="changeAdapterData($event)" [multiPackager]="multiPackager" [singleProperty]="singleProperty" (checkSingleProperty)="checkSingleProperty($event)"  (changeMultiPackager)="changeMultiPackager($event)">
+      </l3-adapter-template>
+    </div>
+    <div>
+      <div *ngIf="!adapterData && !editMessage">
+        <h1 class="headingData">
+          <nz-spin nzTip="Enter Name and Select Template To Show Data"></nz-spin>
+        </h1>
+      </div>
+      <div *ngIf="!adapterData && editMessage">
+        <h1 class="headingData">
+          <nz-spin nzTip="Loading..."></nz-spin>
+        </h1>
+      </div>
+      <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSelectedIndex]="activeTab">
+        <nz-tab [nzTitle]="'Schema'" (nzClick)="schmaTab()">
+          <ng-container *ngIf="adapterData">
+            <app-schema *ngIf="!isJson && !isHttp_urlencoded && !isXmlHttp" [schemaById]="schemaById" [name]="name" [id]="id"
+              [readOnlyFlag]="readOnlyFlag" [template]="template" [adapterData]="adapterData" [tabIndex]="tabIndex"
+              (tabValue)="tabValue($event)" [widthConfig]="widthConfig" [isEdit]="isEdit" [rowsResponse]="rowsResponse" [rows]="rows">
+            </app-schema>
+            <app-http-urlencoded *ngIf="isHttp_urlencoded" [schemaById]="schemaById" [name]="name" [id]="id"
+              [readOnlyFlag]="readOnlyFlag" [template]="template" [adapterData]="adapterData" [tabIndex]="tabIndex"
+              (tabValue)="tabValue($event)" [widthConfig]="widthConfig" [isEdit]="isEdit" [rows]="rows">
+            </app-http-urlencoded>
+            <app-schema-json *ngIf="isJson" [schemaById]="schemaById" [name]="name" [id]="id" [template]="template"
+              [readOnlyFlag]="readOnlyFlag" [adapterData]="adapterData" [tabIndex]="tabIndex"
+              (tabValue)="tabValue($event)" [widthConfig]="widthConfig" [isEdit]="isEdit" [rows]="rows" >
+            </app-schema-json>
+            <app-l3-xml-over-http *ngIf="isXmlHttp" [isEdit]="isEdit" [schemaById]="schemaById" [name]="name" [id]="id"
+              [template]="template" [adapterData]="adapterData" [tabIndex]="tabIndex" [readOnlyFlag]="readOnlyFlag"
+              (tabValue)="tabValue($event)" [widthConfig]="widthConfig" [rows]="rows" >
+            </app-l3-xml-over-http>
+          </ng-container>
+        </nz-tab>
+        <ng-container *ngIf="adapterData">
+          <nz-tab [nzTitle]="'Network'" [nzDisabled]="networkTabDisable" (nzClick)="networkTab()">
+            <div>
+              <app-network [adapterData]="adapterData" [name]="name" [template]="template" [tabIndex]="tabIndex"
+                [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)" [isEdit]="isEdit" [isJson]="isJson">
+              </app-network>
+            </div>
+          </nz-tab>
+        </ng-container>
+        <nz-tab [nzTitle]="'Transform'" (nzClick)="selectTransform()" [nzDisabled]="transformTabDisable">
+          <div *ngIf="adapterData && showTransform">
+            <app-transform-json *ngIf="(isJson || isXmlHttp)  && !isHttp_urlencoded && adapterData && imfId"
+              [adapterData]="adapterData" (tabValue)="tabValue($event)" [template]="template" [format]="format"
+              [readOnlyFlag]="readOnlyFlag" [name]="name" [tabIndex]="tabIndex" [imfId]="imfId.id">
+            </app-transform-json>
+            <app-transform-http *ngIf="!isJson && isHttp_urlencoded && !isXmlHttp && adapterData && imfId" [adapterData]="adapterData"
+              (tabValue)="tabValue($event)" [template]="template" [format]="format" [readOnlyFlag]="readOnlyFlag"
+              [name]="name" [tabIndex]="tabIndex" [imfId]="imfId.id">
+            </app-transform-http>
+            <app-transform *ngIf="!isJson && !isHttp_urlencoded && !isXmlHttp && adapterData && imfId" [adapterData]="adapterData"
+              (tabValue)="tabValue($event)" [template]="template" [format]="format" [readOnlyFlag]="readOnlyFlag"
+              [name]="name" [tabIndex]="tabIndex" [imfId]="imfId.id">
+            </app-transform>
+          </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Response'" [nzDisabled]="responseTabDisable">
+          <div *ngIf="adapterData">
+            <app-response-code-tab [adapterData]="adapterData" [isEdit]="isEdit" [tabIndex]="tabIndex"
+              [template]="template" [readOnlyFlag]="readOnlyFlag" [name]="name" (tabValue)="tabValue($event)" >
+            </app-response-code-tab>
+          </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Post validation'" [nzDisabled]="pvalidationTabDisable">
+          <div style="height: 425px; border: solid 1px #cccccc" *ngIf="adapterData && ShowPostvalidationTab">
+            <app-post-validation [adapterData]="adapterData" [isEdit]="isEdit" [tabIndex]="tabIndex"
+              [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)">
+            </app-post-validation>
+          </div>
+        </nz-tab>
+        <!-- <nz-tab [nzTitle]="'Beans'" *ngIf="!beanTabDisable" [nzDisabled]="responseTabDisable">
+          <div style="height: 425px; border: solid 1px #cccccc" *ngIf="adapterData">
+            <app-beans  [readOnlyFlag]="readOnlyFlag" [adapterData]="adapterData" [isEdit]="isEdit" [tabIndex]="tabIndex"
+              (tabValue)="tabValue($event)" [singleProperty]="singleProperty">
+            </app-beans>
+          </div>
+        </nz-tab> -->
+      </nz-tabset>
+    </div>
+  </div>
+</nz-spin>

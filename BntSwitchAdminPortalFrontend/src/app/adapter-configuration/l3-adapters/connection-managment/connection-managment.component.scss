@@ -1,0 +1,46 @@
+nz-select {
+    width: 100%;
+  }
+  .card-details{
+    border: #e8e8e8 solid 1px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  .card-details-header{
+    padding: 6px 15px;
+    line-height: 30px;
+  }
+  .card-details-body{
+    padding: 10px;
+  }
+
+  .card-details .table tr th, .card-details .table tr td {
+    padding: 6px 15px;
+}
+.button-footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+.table{
+  border-collapse:unset;
+}
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+
+input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        display: none;
+      }

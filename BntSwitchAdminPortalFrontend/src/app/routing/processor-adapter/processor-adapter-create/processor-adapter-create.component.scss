@@ -1,0 +1,11 @@
+.required {
+
+    &:after {
+      position: relative;
+      display: inline-block;
+      font-size: 16px;
+      line-height: 1.25;
+      color: #f46771;
+      content: '*';
+    }
+  }

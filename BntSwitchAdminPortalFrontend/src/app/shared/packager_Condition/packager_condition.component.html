@@ -1,0 +1,56 @@
+<ng-container>
+  <div class="row row-margin row-align marginleft" *ngFor="let item of condition; let i = index">
+    <div class="row col-md-6 fieldName">
+      <ng-select
+        [items]="ruleListItem"
+        bindLabel="name"
+        bindValue="id"
+        placeholder="Select condition"
+        [clearable]="false"
+        [(ngModel)]="item.fieldName"
+        (change)="checkError()"
+      >
+      </ng-select>
+    </div>
+    <div class="row col-md-2">
+      <ng-select
+        [items]="ruleTypeList"
+        bindLabel="name"
+        bindValue="value"
+        placeholder="Select type"
+        [clearable]="false"
+        [(ngModel)]="item.type"
+        style="margin-left: 5px"
+      >
+      </ng-select>
+    </div>
+    <!-- <span style="margin-left: 8px;">=</span> -->
+    <input
+      class="toto input-align input-search valueCss"
+      type="text"
+      placeholder="Enter value"
+      [(ngModel)]="item.value"
+      maxlength="40"
+      (blur)="checkError(); valueValidation(item.value)"
+    />
+    <span
+      class="toto input-align rulsCss icon-hover"
+      *ngIf="i + 1 === condition.length && condition.length > 1"
+      (click)="pullItem()"
+      ><i class="fa fa-minus"></i
+    ></span>
+    <span
+      class="toto input-align rulsCss icon-hover"
+      *ngIf="i + 1 === condition.length"
+      (click)="pushItem(item)"
+      ><i class="fa fa-plus"></i
+    ></span>
+    <br />
+    <span *ngIf="i + 1 !== condition.length">
+      <span>and</span>
+    </span>
+  </div>
+  <span *ngIf="ruleError" style="color: red">Please fill all mandatory fields</span>
+  <span *ngIf="!ruleError && valueValidError" style="color: red">please enter valid value.</span>
+  <button nz-button nzType="primary" class="saveCss" (click)="saveFn()">{{ btnText }}</button>
+</ng-container>

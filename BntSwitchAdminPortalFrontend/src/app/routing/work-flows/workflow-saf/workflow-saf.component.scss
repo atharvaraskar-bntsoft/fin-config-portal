@@ -1,0 +1,38 @@
+.condition {
+  border: 1px solid #000000;
+  margin-top: 20px;
+  margin-left: 15px;
+  width: 80%;
+  margin-bottom: 10px;
+}
+.mat-body {
+  display: block;
+  margin: 0 -24px;
+  padding: 0 24px;
+  max-height: 65vh;
+  overflow: hidden !important;
+  overflow-y: auto !important;
+}
+.ruleBox {
+  padding: 10px 10px 84px 0px;
+  min-height: 15vh;
+  //  border: 2px solid #3c8dbc;
+  margin-left: 15px;
+  margin-top: 10px;
+}
+
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+.conditionScroll {
+//   overflow-y: scroll;
+//   max-height: 3500px;
+  overflow-x: clip;
+}

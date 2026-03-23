@@ -1,0 +1,91 @@
+
+
+  <ng-container *ngIf="conditionObj?.conditions">
+    <div *ngFor="let nodes of conditionObj.conditions; let i = index" style="position: relative">
+      <div [ngClass]="[conditionObj.conditions.length === 1 ? 'withNotClass' : 'withoutNotClass']" *ngIf="i === 0">
+        <div style="text-align: enableProdModenter; font-size: 14px">
+          <a [ngClass]="{'toggle-rotate': collapsed1}" class="fa fa-sort-desc toggle-collapse"
+            (click)="collapsed1=!collapsed1"></a>
+          <nz-radio-group [(ngModel)]="conditionObj.type">
+            <label nz-radio-button nzValue="and" [nzDisabled] = "readOnlyFlag"><span>And</span></label>
+            <label nz-radio-button nzValue="or" [nzDisabled] = "readOnlyFlag"><span>Or</span></label>
+            <label nz-radio-button nzValue="not" [nzDisabled] = "readOnlyFlag" *ngIf="conditionObj.conditions.length === 1"><span>Not</span></label>
+          </nz-radio-group>
+        </div>
+      </div>
+      <div class="fileds" *ngIf="!collapsed1">
+        <div class="group">
+          <div class="groupChild_rule" *ngIf="!nodes.conditions">
+            <div id="{{ nodes.id }}" style="display: none">
+              {{ 'ENTER_REQUIRED' | translate }}
+            </div>
+            <div class="field">
+              <nz-select appendTo="body" style="width:100%"  bindLabel="name" bindValue="id" nzPlaceHolder="Select field"
+                 [(ngModel)]="nodes.fieldName"  [disabled]="readOnlyFlag">
+                <nz-option *ngFor="let item of ruleListItem" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+              </nz-select>
+              <br />
+              <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].field">Please select field.</span>
+            </div>
+            <div class="field">
+              <nz-select class="custom" appendTo="body" style="width:100%"
+                [(ngModel)]="selectedOperator[nodes.id]" (ngModelChange)="changeFieldData($event, nodes, 'operator')"
+                bindLabel="text" [disabled]="readOnlyFlag" bindValue="value"
+                nzPlaceHolder="Select operator">
+                <nz-option *ngFor="let item of operatorList" [nzLabel]="item.text" [nzValue]="item"></nz-option>
+              </nz-select>
+              <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].operator">Please select operator.</span>
+            </div>
+            <div class="imputText field">
+              <input [ngClass]="[
+                  Error[nodes.id] && Error[nodes.id].value
+                    ? 'conditionError form-control'
+                    : 'form-control'
+                ]" [(ngModel)]="selectedValue[nodes.id]"
+                (change)="changeFieldData(selectedValue[nodes.id], nodes, 'textvalue')" style="width: 100%" type="text"
+                 maxlength="40" placeholder="Enter Value*"
+                [disabled]="(!selectedOperator[nodes.id] || disabledValue[nodes.id]) || readOnlyFlag" />
+              <span class="error" *ngIf="Error[nodes.id] && (Error[nodes.id].specialChar || Error[nodes.id].value)">Please
+                enter valid data.</span>
+            </div>
+            <div class="groupAction" *ngIf="!readOnlyFlag">
+              <div class="dropdown">
+                <a class="dropbtn" *ngIf="!nodes.group">{{ 'ACTIONS' | translate }}</a>
+                <div class="dropdown-content">
+                  <a (click)="createGroup(nodes, i)" class="creategroup">
+                    {{ 'CREATE_GROUP' | translate }}</a>
+                  <a (click)="delete(nodes.id)" *ngIf="!conditionObj.group || conditionObj.conditions.length > 1">
+                    <i class="fa fa-trash fa-sm" aria-hidden="true" style="color: #f46771"></i>
+                    <span class="delete-color" style="margin-left: 10px">{{
+                      'DELETE' | translate
+                      }}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="clear: both"></div>
+          <div *ngIf="nodes['conditions'] && nodes['conditions'].length > 0 && !readOnlyFlag"
+            [ngClass]="{ groupheader: 'true' }" (click)="deleteGroup(nodes.id, nodes['conditions'])">
+            <span class="deleteicon"><i class="fa fa-trash" aria-hidden="true"></i> </span>
+          </div>
+          <div *ngIf="nodes['conditions'] && nodes['conditions'].length > 0" [ngClass]="{ grouporder: 'true' }">
+            <span style="width: 100%" *ngIf="!collapsed1">            
+              <app-packager-condition-builder [conditionObj]="nodes" [ShowSave]="false" [Error]="Error"
+                [field]="field" [readOnlyFlag]="readOnlyFlag">              
+              </app-packager-condition-builder>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <a class="fonsize required"  (click)="addSingleConditon()" style="margin-left: 5px">
+    <i class="fa fa-plus-square" aria-hidden="true"></i>
+    {{ 'ADD_CONDITION' | translate }}</a>
+    <button nz-button nzType="primary" class="saveConditionCss"
+  *ngIf="ShowSave && conditionObj.conditions && conditionObj.conditions.length > 0 && !readOnlyFlag"
+  (click)="saveConditon()">
+  {{ btnText }}
+</button>
+

@@ -1,0 +1,307 @@
+<div class="join-pannel" style="margin-top: 0px;">
+  <div class="card-main">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <nz-radio-group nzName="radiogroup" [(ngModel)]="joinSchema.status">
+            <label nz-radio nzValue="M">Mandatory</label>
+            <label nz-radio nzValue="O">Optional</label>
+            <label nz-radio nzValue="C">Conditional</label>
+          </nz-radio-group>
+          <a *ngIf="joinSchema.status === 'C' && joinSchema.condition" (click)="createCondition(joinSchema, -1)"
+            class="required">Edit
+            Condition</a>
+          <a *ngIf="joinSchema.status === 'C' && !joinSchema.condition" (click)="createCondition(joinSchema, -1)"
+            class="required">Create
+            Condition</a>
+          <a *ngIf="joinSchema.status=== 'C' && joinSchema.condition" style="color:red;" nz-popconfirm nzPopconfirmTitle="Sure to delete?"
+          (nzOnConfirm)="deleteCondition(joinSchema)"><i class="fa fa-trash fa-lg"></i></a>
+          <span class="invalid-feedback" *ngIf="!conditionError && joinSchema.status === 'C'">
+            Please Enter Condition
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="text-label-right">Steps</label>
+        </div>
+        <div class="col-md-4">
+          <span class="btn btn-default" *ngIf="joinSchema.listFunction.length === 0"
+            (click)="createStep(joinSchema,-1)">
+            <i class="fa fa-plus"></i>
+          </span>
+          <span class="btn btn-default" *ngIf="joinSchema.listFunction.length !== 0"
+            (click)="createStep(joinSchema,-1)">
+            <i class="fa fa-edit"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="text-label-right required">Destinations</label>
+        </div>
+        <div class="col-md-4">
+          <app-imf-extract (emitIMFValue)="onChange($event, joinSchema)" [imfValue]="joinSchema.imfField.alias"
+            [imfList]="imfList" [internalFormatError]="true"></app-imf-extract>
+          <span class="invalid-feedback" *ngIf="!joinSchema.imfField.text && submit">This field is
+            required.</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="joinSchema.imfField.useCase == 2 || joinSchema.imfField.useCase == 3">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="required text-label-right">Service:</label>
+        </div>
+        <div class="col-md-3">
+          <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Service" [(ngModel)]="joinSchema.imfField.service">
+            <nz-option *ngFor="let list of serviceList" [nzValue]="list.value" [nzLabel]="list.value">
+            </nz-option>
+          </nz-select>
+          <span class="invalid-feedback" *ngIf="!joinSchema.imfField.service && submit">This field is
+            required.</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="joinSchema.imfField.useCase == 3">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="required text-label-right">Type:</label>
+        </div>
+        <div class="col-md-3">
+          <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Type" [(ngModel)]="joinSchema.imfField.type">
+            <nz-option *ngFor="let list of typeList" [nzValue]="list.value" [nzLabel]="list.name">
+            </nz-option>
+          </nz-select>
+          <span class="invalid-feedback" *ngIf="!joinSchema.imfField.type && submit">This field is
+            required.</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="text-label-right required">Set IPC:</label>
+        </div>
+        <div class="col-md-4">
+          <nz-select class="form-control" [disabled]="readOnlyFlag" appendTo="body" bindValue="value" bindLabel="value"
+            [(ngModel)]="joinSchema.ipc" placeholder="Select IPC">
+            <nz-option *ngFor="let list of ipcList" [nzValue]="list.value" [nzLabel]="list.value"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="text-label-right">Post Validation:</label>
+        </div>
+        <div class="col-md-4">
+          <span type="button" *ngIf="joinSchema.listValidationFunction.length == 0"
+            (click)="createPostValidation(joinSchema,-1)" class="btn btn-default">
+            <i class="fa fa-plus"></i>
+          </span>
+          <span type="button" *ngIf="joinSchema.listValidationFunction.length != 0"
+            (click)="createPostValidation(joinSchema,-1)" class="btn btn-default">
+            <i class="fa fa-edit"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="text-label-right">Evaluate:</label>
+        </div>
+        <div class="col-md-4">
+          <span class="btn btn-default" *ngIf="!joinSchema.customMapperList" (click)="createEvaluate(joinSchema, -1)"><i
+              class="fa fa-plus"></i>
+          </span>
+          <span class="btn btn-default" *ngIf="joinSchema.customMapperList" (click)="createEvaluate(joinSchema,-1)"><i
+              class="fa fa-edit"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-left">
+          <label class="text-label-right required">Source:</label>
+        </div>
+        <div class="col-md-4">
+          <a class="btn btn-default" (click)="addSource(joinSchema)">Add Source</a>
+          <p class="invalid-feedback" *ngIf="!joinSchema.listJoinSource.length && submit">Source is
+            required.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-main" *ngIf="joinSchema.listJoinSource.length">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-12">
+          <div *ngFor="let panel of joinSchema.listJoinSource; let i = index;">
+            <div class="card-main">
+              <div class="card-heading" [ngClass]="{ collapses: panel.collapse }" (click)="collapseClick(panel)">
+                {{ i + 1 }} - Source
+                <div class="card-icon">
+                  <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  <i (click)="removeSource(joinSchema, i)" class="fa fa-trash"></i>
+                </div>
+              </div>
+              <div *ngIf="!panel.collapse" class="card-body">
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-2"><label class="text-label-right">Condition:</label></div>
+                          <div class="col-md-4"><a *ngIf="panel.condition" (click)="createCondition(panel, i)">Edit
+                              Condition</a>
+                            <a *ngIf="!panel.condition" (click)="createCondition(panel, i)">Create
+                              Condition</a>
+                            <a *ngIf="panel.condition" style="color:red;" nz-popconfirm nzPopconfirmTitle="Do you want to delete Condition?"
+                              (nzOnConfirm)="deleteCondition(panel)"><i class="fa fa-trash fa-lg"></i></a>
+                            <!-- <span class="invalid-feedback" *ngIf="!panel.condition && submit">
+                                                        Please Enter Condition
+                                                      </span> -->
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-2"><label class="text-label-right required">Source Type:</label></div>
+                          <div class="col-md-4">
+                            <nz-radio-group [(ngModel)]="panel.sourceType"
+                              (ngModelChange)="onSourceTypeChange($event, panel)">
+                              <label nz-radio nzValue="imf">IMF</label>
+                              <label nz-radio nzValue="text">Text</label>
+                            </nz-radio-group>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="panel.sourceType=='imf'">
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-md-2"><label class="text-label-right required">IMF:</label></div>
+                            <div class="col-md-4">
+                              <app-imf-extract (emitIMFValue)="onSourceChange($event, panel,'imf')"
+                                [imfValue]="panel.sourceImf.alias" [imfList]="imfList" [internalFormatError]="true">
+                              </app-imf-extract>
+                              <span class="invalid-feedback" *ngIf="!panel.sourceImf.text && submit">This field is
+                                required.</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group" *ngIf="panel.sourceImf.useCase == 2 || panel.sourceImf.useCase == 3">
+                          <div class="row">
+                            <div class="col-md-2 ">
+                              <label class="required text-label-right">Service:</label>
+                            </div>
+                            <div class="col-md-3">
+                              <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Service"
+                                [(ngModel)]="panel.sourceImf.service">
+                                <nz-option *ngFor="let list of serviceList" [nzValue]="list.value"
+                                  [nzLabel]="list.value">
+                                </nz-option>
+                              </nz-select>
+                              <span class="invalid-feedback" *ngIf="!panel.sourceImf.service && submit">This field is
+                                required.</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group" *ngIf="panel.sourceImf.useCase == 3">
+                          <div class="row">
+                            <div class="col-md-2 ">
+                              <label class="required text-label-right">Type:</label>
+                            </div>
+                            <div class="col-md-3">
+                              <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Type"
+                                [(ngModel)]="panel.sourceImf.type">
+                                <nz-option *ngFor="let list of typeList" [nzValue]="list.value" [nzLabel]="list.name">
+                                </nz-option>
+                              </nz-select>
+                              <span class="invalid-feedback" *ngIf="!panel.sourceImf.type && submit">This field is
+                                required.</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group" *ngIf="panel.sourceType=='text'">
+                        <div class="row">
+                          <div class="col-md-2"><label class="text-label-right required">Source:</label></div>
+                          <div class="col-md-4">
+                            <input nz-input placeholder="Enter source in text"
+                              (ngModelChange)="onSourceChange($event, panel, 'text')" [(ngModel)]="panel.sourceText" />
+                            <span class="invalid-feedback" *ngIf="!panel.sourceImf && submit">This field is
+                              required.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-2"><label class="text-label-right">Set IPC:</label></div>
+                          <div class="col-md-4">
+                            <nz-select class="form-control" [disabled]="readOnlyFlag" appendTo="body" bindValue="value"
+                              bindLabel="value" [(ngModel)]="panel.ipc" placeholder="Select IPC">
+                              <nz-option *ngFor="let list of ipcList" [nzValue]="list.value" [nzLabel]="list.value">
+                              </nz-option>
+                            </nz-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-2"><label class="text-label-right">Evaluate:</label></div>
+                          <div class="col-md-4">
+                            <span class="btn btn-default" *ngIf="!panel.customMapperList"
+                              (click)="createEvaluate(panel, i)"><i class="fa fa-plus"></i>
+                            </span>
+                            <span class="btn btn-default" *ngIf="panel.customMapperList"
+                              (click)="createEvaluate(panel,i)"><i class="fa fa-edit"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-2"><label class="text-label-right">Steps:</label></div>
+                          <div class="col-md-4">
+                            <span class="btn btn-default" *ngIf="!panel.listFunction.length"
+                              (click)="createStep(panel,-1)"><i class="fa fa-plus"></i>
+                            </span>
+                            <span class="btn btn-default" *ngIf="panel.listFunction.length"
+                              (click)="createStep(panel,i)"><i class="fa fa-edit"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 text-right">
+    <button class="btn btn-danger" (click)="close()">Close</button>
+    <button (click)="save(joinSchema)" class="btn btn-primary" style="margin-left: 10px">Submit</button>
+    <nz-divider nzType="vertical"></nz-divider>
+  </div>
+</div>
+<div *ngIf="isVisible">
+  <nz-drawer [nzMaskClosable]="false" [nzVisible]="isVisible" nzTitle="Condition" [nzWidth]="1040" [nzClosable]="true" (nzOnClose)="closeDrawer()">
+    <ng-container *nzDrawerContent>
+      <app-condition-builder *ngIf="jsonDataValue" [jsonData]="jsonDataValue" [ruleCondition]="conditionObj"
+        (addSubRule)="getRule($event)" (closeCreate)="close($event)">
+      </app-condition-builder>
+    </ng-container>
+  </nz-drawer>
+</div>

@@ -1,0 +1,81 @@
+<div class="conditionScroll">
+  <h3>{{ 'REVERSAL_CONDITION' | translate }}</h3>
+  <mat-dialog-content class="mat-typography mat-body">
+    <!-- <div class="col-md-12 reversalBox" *ngIf="data.ruleData && data.serviceList">
+      <app-rule-decision-condition
+        [inputruleData]="data.ruleData"
+        [nodes]="data?.nodes"
+        [serviceList]="data.serviceList"
+        style="width: 80%"
+        (addSubRule)="deleteElement($event)"
+        [showTooltip]="true"
+      ></app-rule-decision-condition>
+    </div> -->
+    <div class="row">
+      <label class="revesralLabel required">{{ 'ADD_SERVICES_FOR_REVERSAL' | translate }}</label>
+      <div class="col-md-12">
+        <div class="col-md-4" style="width: 40%">
+          <div class="scroll">
+            <ul class="row-li-tag-export">
+              <li
+                *ngFor="let list of data?.menuListReversal; let i = index"
+                [ngClass]="list['status'] ? 'selected' : ''"
+                (click)="getSelectedReversalLeft(i)"
+              >
+                {{ list.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-2" style="width: 10%">
+          <button
+            type="button"
+            class="btn btn-primary btn-md btn-flat center-button"
+            style="margin-top: 150%"
+            (click)="getReversalElement()"
+          >
+            <i class="fa fa-arrow-right"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary btn-md btn-flat center-button"
+            (click)="removeReversalElement()"
+          >
+            <i class="fa fa-arrow-left"> </i>
+          </button>
+        </div>
+        <div class="col-md-4" style="width: 40%">
+          <div class="scroll">
+            <ul class="row-li-tag-export">
+              <li
+                *ngFor="let exportList of data?.selectedMenuListReversal; let i = index"
+                [ngClass]="exportList['status'] ? 'selected' : ''"
+                (click)="getSelectedRightTraversal(i)"
+              >
+                {{ exportList.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <app-reversal-condition-builder
+    *ngIf="data"
+    [jsonData]="data.ruleData"
+    [ruleCondition]="reversalCondition"
+    (addSubRule)="getRule($event)"
+  >
+  </app-reversal-condition-builder>
+  <mat-dialog-actions align="end">
+    <button class="btn" style="margin-top: 25px" mat-dialog-close>
+      {{ 'CANCEL' | translate }}
+    </button>
+  </mat-dialog-actions>
+  <!-- <mat-dialog-actions align="end">
+        <button class="btn" mat-dialog-close>{{ 'CANCEL' | translate }}</button>
+        <button class="btn btn-flat btn-primary" style="margin-left: 10px" (click)="closeReversalModal('save')">
+            {{ 'SAVE' | translate }}
+        </button>
+    </mat-dialog-actions> -->
+</div>

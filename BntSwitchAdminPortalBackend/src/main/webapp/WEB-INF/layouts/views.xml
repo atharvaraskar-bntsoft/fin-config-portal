@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition name="login" extends="homePageTemplate">
+		<put-attribute name="body" value="/WEB-INF/views/jsp/login.jsp" />
+	</definition>
+	<definition name="*" extends="DefaultTemplate">
+		<put-attribute name="body" value="/WEB-INF/views/jsp/{1}.jsp" />
+	</definition>
+	
+	<definition name="forgotpassword" extends="homePageTemplate">
+	<put-attribute name="body" value="/WEB-INF/views/jsp/forgotpassword.jsp" />
+	</definition>
+		
+	<definition name="datacenterdetail" extends="homePageTemplate">
+	<put-attribute name="body" value="/WEB-INF/views/jsp/datacenterdetail.jsp" />
+	</definition>
+	
+	<definition name="datacenterdetailGS" extends="homePageTemplate">
+	<put-attribute name="body" value="/WEB-INF/views/jsp/datacenterdetailGS.jsp" />
+	</definition>
+	
+</tiles-definitions>

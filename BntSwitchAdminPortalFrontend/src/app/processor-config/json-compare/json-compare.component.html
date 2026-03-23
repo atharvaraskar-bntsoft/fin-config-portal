@@ -1,0 +1,78 @@
+<div class="row" style="margin-top:-5px;">
+  <form [formGroup]="jsonForm" (ngSubmit)="onSubmit(jsonForm)">
+    <div class="col-md-6 auto-width">
+      <div class="col-md-4 auto-width form-group">
+        <label class="required">{{ 'Type' }}:</label>
+        <!-- (change)="loadComponentList($event)" -->
+        <ng-select style="width: 100px" [clearable]="false" [(ngModel)]="selectedType" 
+         formControlName="type" [items]="typeList" bindLabel="name"
+          bindValue="id" placeholder="Select type">
+        </ng-select>
+      </div>
+      <div class="col-md-4 auto-width">
+        <label>{{ 'Component Name' }}:</label>
+        <ng-select style="width: 200px" [clearable]="false" [items]="componentList" [(ngModel)]="selectedComponentName" bindLabel="name" bindValue="name" placeholder="Select Name"
+          (change)="getVersionList($event)" formControlName="name">
+        </ng-select>
+      </div>
+      <div class="col-md-4  auto-width nopadding-lg form-group" [ngClass]="displayFieldCss('v1')">
+        <label class="required">{{ 'Version 1' }}:</label>
+        <ng-select style="width: 75px" [clearable]="false" formControlName="v1" [(ngModel)]="selectedV1" [items]="versions" placeholder="version"
+        (change)="selectVersion($event)">
+        </ng-select>
+        <!-- <app-field-error-display
+        [displayError]="isFieldValid('v1')"
+        errorMsg="Please select version 1"
+      >
+      </app-field-error-display> -->
+      </div>
+    </div>
+    <div class="col-md-1 auto-width nopadding-lg" style="margin-top:25px;">
+      <label>{{ 'To' }}:</label>
+    </div>
+    <div class="col-md-5 auto-width">
+      <div class="col-md-3 auto-width form-group"  [ngClass]="displayFieldCss('v2')">
+        <label class="required">{{ 'Version 2' }}:</label>
+        <ng-select [clearable]="false" style="width: 75px" formControlName="v2" [(ngModel)]="selectedV2" [items]="version2" placeholder="version"
+        (change)="selectVersion2($event)">
+        </ng-select>
+        <!-- <app-field-error-display
+        [displayError]="isFieldValid('v2')"
+        errorMsg="Please select version 2"
+      >
+      </app-field-error-display> -->
+      </div>
+      <div class="col-md-4 auto-width">
+        <label>{{ 'Sub Type' }}:</label>
+        <ng-select [clearable]="false" style="width: 200px" formControlName="subtype" style="width: 200px" [(ngModel)]="selectedSubType" [items]="subTypeList" placeholder="Select Subtype">
+        </ng-select>
+      </div>
+      <div class="col-md-5 auto-width" style="margin-top:25px;">
+        <button class="btn btn-primary" type="submit">
+          {{ 'Compare' }}
+        </button>
+        <!-- <nz-divider nzType="vertical"></nz-divider> -->
+        <button class="btn btn-primary" type="button" (click)="reset()">
+          {{ 'Reset' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="row mt-4" *ngIf="object1View && object2View">
+  <div class="col-md-6" nzTitle="Version"><b>Version {{selectedVer1}}  Created By : {{createdBy}}</b> 
+    <!-- <nz-card nzTitle="Version"><b>{{selectedVer1}} : Created By : {{createdBy}}</b>  -->
+      <ngx-object-diff [obj]="object1View"></ngx-object-diff>
+    <!-- </nz-card> -->
+  </div>
+  <div class="col-md-6" nzTitle="Version"><b>Version {{ver2}}  Created By : {{createdBy}}</b> 
+    <!-- <nz-card nzTitle="Version"><b>{{ver2}} : Created By : {{createdBy}}</b> -->
+  <ngx-object-diff [obj]="diffView"></ngx-object-diff>
+    <!-- </nz-card> -->
+  </div>
+  <!-- <div class="col-md-12">
+    <nz-card nzTitle="Full Diff">
+      <ngx-object-diff [obj]="diffView"></ngx-object-diff>
+    </nz-card>
+  </div> -->
+</div>

@@ -1,0 +1,533 @@
+<nz-spin class="monitor-service" nzTip="Loading..." [nzSpinning]="_monitoringService.isSpinning">
+  <section class="content fade-in template" *ngIf="tableData">
+    <div class="full-page" *ngIf="flag">
+      <div class="row info-nodes">
+        <div class="col-md-3 col-xs-12">
+          <rv-box-info header="Total" iconBackgroundColor="aqua" iconStyleClass="">
+            {{ nodeStatusMap.RUNNING + nodeStatusMap.PAUSED + nodeStatusMap.UNREACHABLE }}
+            {{ 'NODES' | translate }}
+          </rv-box-info>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <rv-box-info header="Running" iconBackgroundColor="green" iconStyleClass="">
+            {{ nodeStatusMap.RUNNING }} {{ 'NODES' | translate }}
+          </rv-box-info>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <rv-box-info header="Paused" iconBackgroundColor="yellow" iconStyleClass="">
+            {{ nodeStatusMap.PAUSED }} {{ 'NODES' | translate }}
+          </rv-box-info>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <rv-box-info header="Unreachable" iconBackgroundColor="red" iconStyleClass="">
+            {{ nodeStatusMap.UNREACHABLE }} {{ 'NODES' | translate }}
+          </rv-box-info>
+        </div>
+      </div>
+      <!-- Main row -->
+      <div class="row">
+        <!-- Left col -->
+        <section class="col-lg-6">
+          <rv-box header="" [isCollapsable]="false" [isRemovable]="false">
+            <rv-chart-js
+              [data]="chartData"
+              [height]="'100'"
+              [width]="'100px'"
+              [position]="'left'"
+            ></rv-chart-js>
+          </rv-box>
+        </section>
+        <section class="col-lg-6">
+          <rv-box header="" [isCollapsable]="false" [isRemovable]="false">
+            <rv-chart-js
+              [data]="incomingChartData"
+              [height]="'100'"
+              [width]="'100px'"
+              [position]="'left'"
+            >
+            </rv-chart-js>
+          </rv-box>
+        </section>
+      </div>
+
+      <div class="row">
+        <!-- Left col -->
+        <div class="row col-md-5">
+          <div>
+            <span class="icons">
+              <span
+                >{{ 'REFRESH_TIME' | translate }}
+                <countdown [config]="config" #cd1 (event)="onFinished($event)">$!s! </countdown>
+                <span class="pause-icon">
+                  <i
+                    *ngIf="pause"
+                    class="fa fa-pause"
+                    aria-hidden="true"
+                    (click)="cd1.pause(); pauseToogle()"
+                  ></i>
+                  <i
+                    *ngIf="play"
+                    class="fa fa-play"
+                    aria-hidden="true"
+                    (click)="cd1.resume(); playToogle()"
+                  ></i
+                ></span>
+              </span>
+              <i class="fa fa-refresh refresh-icon" aria-hidden="true" (click)="refreshData()"></i
+            ></span>
+          </div>
+          <h4 class="header-padding-services">{{ 'SERVICES' | translate }}</h4>
+        </div>
+        <div class="row col-md-6">
+          <div class="pull-left">
+            <h4 class="header-service header-padding-details">
+              {{ 'DETAILS' | translate }}
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <section class="row col-lg-5 left-one">
+          <app-monitoring-item
+            *ngFor="let row of tableData"
+            [tableData]="tableData"
+            [data]="row"
+            (responseData)="responseData($event)"
+          >
+          </app-monitoring-item>
+        </section>
+
+        <nz-spin nzTip="Loading..." [nzSpinning]="_monitoringService.isSpinning">
+          <section *ngIf="!_monitoringService.isSpinning" class="row col-lg-6 right-one" id="right">
+            <div>
+              <table class="table table-bordered table-striped font-size" [id]="objData.name">
+                <tbody>
+                  <ng-container *ngIf="objData">
+                    <tr class="object-data">
+                      <th colspan="2">
+                        <span class="obj-data name">{{ objData.name }}</span>
+                        <span> ({{ getAlert(objData) }})</span>
+                      </th>
+                    </tr>
+                    <tr *ngIf="objData.status !== 'UNREACHABLE'">
+                      <th>{{ 'UP_SINCE' | translate }}</th>
+                      <td *ngIf="objData.status !== 'UNREACHABLE'">
+                        <span>{{
+                          objData.runningSince && objData.status !== 'UNREACHABLE'
+                            ? (objData['runningSince'] | date : 'dd MMM yyyy')
+                            : ''
+                        }}</span>
+                        {{
+                          objData.runningSince && objData.status !== 'UNREACHABLE'
+                            ? (objData['runningSince'] | date : 'hh:mm:ss a')
+                            : ''
+                        }}
+                        {{ objData['dayFormate'] }}
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="objData.status === 'UNREACHABLE'">
+                      <th>{{ 'UNREACHABLE_SINCE' | translate }}</th>
+                      <td *ngIf="objData.status === 'UNREACHABLE'">
+                        <span>{{
+                          objData.runningSince && objData.status === 'UNREACHABLE'
+                            ? (objData['runningSince'] | date : 'dd MMM yyyy')
+                            : ''
+                        }}</span>
+                        {{
+                          objData.runningSince && objData.status === 'UNREACHABLE'
+                            ? (objData['runningSince'] | date : 'hh:mm:ss a')
+                            : ''
+                        }}
+                        {{ objData['dayFormate'] }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Rest Url:</th>
+                      <td>{{ objData.restUrlToShow }}</td>
+                    </tr>
+                    <tr *ngIf="objData.inflight">
+                      <th>{{ 'INFLIGHT' | translate }}</th>
+                      <td>{{ objData.inflight }}</td>
+                    </tr>
+                    <tr>
+                      <th>{{ 'STATUS' | translate }}</th>
+                      <td>
+                        <span *ngIf="['UP', 'RUNNING'].includes(objData.status)" class="green">
+                          {{ objData.status }}</span
+                        >
+                        <span *ngIf="!['UP', 'RUNNING'].includes(objData.status)" class="red">
+                          {{ objData.status }}</span
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>{{ 'IS_SAFE_TO_KILL' | translate }}</th>
+                      <td>
+                        {{ objData.safeToKill ? 'Yes' : 'No' }}
+                        <!-- <a
+                        *ngIf="objData.safeToKill"
+                        class="mon-kill-button"
+                        title="Kill"
+                        (click)="kill(objData)"
+                        >{{ 'KILL' | translate }}</a
+                      > -->
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Current Status</th>
+                      <td>{{ objData.currentStatus ? objData.currentStatus : 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                      <th>Connection Count</th>
+                      <td>{{ objData.connectionCount }}</td>
+                    </tr>
+                    <tr
+                      *ngIf="
+                        objData.componentPerformanceMap &&
+                        objData.componentPerformanceMap.latency &&
+                        objData.componentPerformanceMap.latency.delay
+                      "
+                      class="latency"
+                    >
+                      <th>{{ 'LATENCY' | translate }}</th>
+                      <td>
+                        <p
+                          *ngIf="
+                            objData.componentPerformanceMap.latency &&
+                            objData.componentPerformanceMap.latency.delay
+                          "
+                        >
+                          {{ 'INTERNAL_RESPONSE_TIME' | translate }}
+                          {{ objData.componentPerformanceMap.latency.delay }}
+                        </p>
+                        <p
+                          *ngIf="
+                            objData.componentPerformanceMap.latency &&
+                            objData.componentPerformanceMap.latency['COMM-ADP-ISOGICC-QUEUE']
+                          "
+                        >
+                          {{ 'COMM_ADP_ISOGICC' | translate }}
+                          {{ 'QUEUE' | translate }}
+                          {{ objData.componentPerformanceMap.latency['COMM-ADP-ISOGICC-QUEUE'] }}
+                        </p>
+                      </td>
+                    </tr>
+                    <ng-container *ngIf="headerName === ('L3_TCP_SERVER' || 'L3_TCP_CLIENT')">
+                      <tr *ngIf="objData?.allNetworkStatusList">
+                        <td colspan="2">
+                          <label>{{ 'NETWORKSTATUS' | translate }}</label>
+                          <select
+                            class="logging-select"
+                            [(ngModel)]="objData.networkStatus"
+                            (ngModelChange)="
+                              onChangeNetworkStatus(objData?.allNetworkStatusList, objData, $event)
+                            "
+                          >
+                            <option
+                              [ngValue]="option.id"
+                              *ngFor="let option of objData?.allNetworkStatusList"
+                            >
+                              {{ option.id }}
+                            </option>
+                          </select>
+                          <span *ngIf="objData?.allNetworkStatusList.length > 0">
+                            <a
+                              *ngFor="let codes of objData?.codeList"
+                              class="show-network-status"
+                              title="{{ codes }}"
+                              >{{ codes }}</a
+                            >
+                          </span>
+                          <span *ngIf="objData?.allNetworkStatusList.length == 0"> N/A </span>
+                          <span *ngIf="objData?.allNetworkStatusList.length > 0">
+                            <button
+                              class="btn btn-primary btn-xs"
+                              (click)="
+                                refreshNetworkStatus(
+                                  objData?.allNetworkStatusList,
+                                  objData,
+                                  objData.networkStatus
+                                )
+                              "
+                            >
+                              Refresh
+                            </button>
+                          </span>
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <tr *ngIf="objData.loggerList.length != 0">
+                      <td colspan="2">
+                        <label>{{ 'LOGGER' | translate }}</label>
+                        <select
+                          class="logging-select"
+                          [disabled]="
+                            (objData.status !== 'UP' && objData.status !== 'RUNNING') ||
+                            objData.loggerList.length == 0 ||
+                            objData.loggerList.length == 1
+                          "
+                          [ngModel]="objData.loggerName"
+                          (ngModelChange)="onChangeLogLevel($event, row, objData)"
+                        >
+                          <option [ngValue]="option" *ngFor="let option of objData.loggerList">
+                            {{ option }}
+                          </option>
+                        </select>
+
+                        <label class="text">{{ 'LEVEL' | translate }}</label>
+                        <select
+                          class="logging-select"
+                          [disabled]="
+                            (objData.status !== 'UP' && objData.status !== 'RUNNING') ||
+                            objData.loggerList.length == 0
+                          "
+                          [ngModel]="objData.loggerLevel"
+                          (ngModelChange)="onChangeNewLogLevel($event, row, objData)"
+                        >
+                          <option
+                            [ngValue]="option"
+                            *ngFor="let option of tableData[0]['metaInfo']['loggerLevelSet']"
+                          >
+                            {{ option }}
+                          </option>
+                        </select>
+                        <button
+                          class="btn btn-primary btn-xs"
+                          [disabled]="objData.status !== 'UP' && objData.status !== 'RUNNING'"
+                          (click)="changeLogLevel(objData)"
+                          *ngIf="!objData.isLogsEnabled"
+                        >
+                          {{ 'CHANGE' | translate }}
+                        </button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="objData.listNetworkRequest && objData.listNetworkRequest.length > 0">
+                      <td colspan="2">
+                        <label>Network Request</label>
+                        <select
+                          class="logging-select"
+                          (change)="setData($event.target.value, rowIndex, dataIndex, objData)"
+                        >
+                          <option hidden [ngValue]="null" selected>Select method</option>
+                          <option
+                            [ngValue]="option"
+                            *ngFor="let option of objData.listNetworkRequest"
+                          >
+                            {{ option }}
+                          </option>
+                        </select>
+                        <label class="text">Connection</label>
+                        <select
+                          class="logging-select"
+                          (change)="setConnectionData($event.target.value, rowIndex, dataIndex)"
+                        >
+                          <option hidden [ngValue]="null" selected>Select connection</option>
+                          <option
+                            [ngValue]="option"
+                            *ngFor="let option of objData.listConnectionNames"
+                          >
+                            {{ option }}
+                          </option>
+                        </select>
+                        <button
+                          *ngIf="
+                            networkRequestModel[rowIndex + ',' + dataIndex] &&
+                            connectionRequestModel[rowIndex + ',' + dataIndex]
+                          "
+                          class="btn btn-primary btn-xs"
+                          (click)="
+                            executeOperation(
+                              objData,
+                              networkRequestModel[rowIndex + ',' + dataIndex],
+                              connectionRequestModel[rowIndex + ',' + dataIndex]
+                            )
+                          "
+                        >
+                          Execute
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="objData.propertiesMap && objData.propertiesMap.length > 0">
+                      <td colspan="2">
+                        <label>Property</label>
+                        <select
+                          class="logging-select"
+                          (change)="
+                            setPropertyData(
+                              $event.target.value,
+                              rowIndex,
+                              dataIndex,
+                              objData.propertiesMap
+                            )
+                          "
+                        >
+                          <option hidden [ngValue]="null" selected>Select property</option>
+                          <option [ngValue]="option" *ngFor="let option of objData.propertiesMap">
+                            {{ option.id }}
+                          </option>
+                        </select>
+                        <label class="text">Value</label>
+                        <input
+                          type="text"
+                          [(ngModel)]="provertyValueRequestModel[rowIndex + ',' + dataIndex]"
+                          class="logging-select"
+                          (keyup)="setPropertyValueData($event.target.value, rowIndex, dataIndex)"
+                        />
+
+                        <button
+                          *ngIf="
+                            propertyRequestModel[rowIndex + ',' + dataIndex] &&
+                            provertyValueRequestModel[rowIndex + ',' + dataIndex]
+                          "
+                          class="btn btn-primary btn-xs"
+                          (click)="
+                            executePropertyOperation(
+                              objData,
+                              propertyRequestModel[rowIndex + ',' + dataIndex],
+                              provertyValueRequestModel[rowIndex + ',' + dataIndex]
+                            )
+                          "
+                        >
+                          Execute
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr
+                      *ngIf="objData.listConnectionNames && objData.listConnectionNames.length > 0"
+                    >
+                      <td colspan="2">
+                        <label>Connection</label>
+                        <select
+                          class="logging-select"
+                          (change)="
+                            setConnectionMData($event.target.value, rowIndex, dataIndex, objData)
+                          "
+                        >
+                          <option hidden [ngValue]="null" selected>Select connection</option>
+                          <option
+                            [ngValue]="option"
+                            *ngFor="let option of objData.listConnectionNames"
+                          >
+                            {{ option }}
+                          </option>
+                        </select>
+                        <label class="text">Maintenance</label>
+                        <input
+                          type="checkbox"
+                          [(ngModel)]="maintenanceModel[rowIndex + ',' + dataIndex]"
+                          class="logging-select"
+                          [disabled]="!connectionMRequestModel[rowIndex + ',' + dataIndex]"
+                          (change)="
+                            toggleMaintenance($event.target.value, rowIndex, dataIndex, data)
+                          "
+                        />
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="isNetworkDumpEnable(tableData[0]['metaInfo'])">
+                      <td colspan="2">
+                        <span class="button-text">{{ 'NETWORK_DUMPS' | translate }}</span>
+                        <span class="button">
+                          <button
+                            class="btn btn-primary btn-xs"
+                            [disabled]="objData.status !== 'UP' && objData.status !== 'RUNNING'"
+                            *ngIf="!objData.isEnableNetworkDump"
+                            (click)="enableDump(objData, true)"
+                          >
+                            {{ 'ENABLE_DUMPS' | translate }}
+                          </button>
+                          <button
+                            class="btn btn-primary btn-xs"
+                            [disabled]="objData.status !== 'UP' && objData.status !== 'RUNNING'"
+                            *ngIf="objData.isEnableNetworkDump == true"
+                            (click)="enableDump(objData, false)"
+                          >
+                            {{ 'DISBALE_DUMPS' | translate }}
+                          </button>
+                        </span>
+                      </td>
+                    </tr>
+
+                    <!-- Secret Manager Implementation -->
+                    <tr *ngIf="objData['secretNames'] && objData['secretNames'].length > 0">
+                      <td colspan="2">
+                        <label>{{ 'SECRET' | translate }}</label>
+                        <select
+                          class="logging-select"
+                          [(ngModel)]="secretName"
+                          (ngModelChange)="onChangeSecretName($event, row, objData)"
+                        >
+                          <option [ngValue]="option" *ngFor="let option of objData['secretNames']">
+                            {{ option }}
+                          </option>
+                        </select>
+
+                        <label class="text">{{ 'PROCESS' | translate }}</label>
+                        <select
+                          class="logging-select"
+                          [(ngModel)]="processName"
+                          (ngModelChange)="onChangeProcessName($event)"
+                        >
+                          <option [ngValue]="option" *ngFor="let option of processList">
+                            {{ option }}
+                          </option>
+                        </select>
+
+                        <label *ngIf="processName === 'schedule'">
+                          <input
+                            class="logging-select"
+                            id="duration"
+                            type="checkbox"
+                            name="duration"
+                            [(ngModel)]="isDurationChecked"
+                            (change)="isDurationChange()"
+                          />
+                          Duration
+
+                          <input
+                            *ngIf="isDurationChecked"
+                            type="text"
+                            class="logging-select"
+                            placeholder="Duration Value"
+                            [(ngModel)]="durationValue"
+                            (keypress)="numberOnly($event)"
+                          />
+                        </label>
+
+                        <button
+                          class="btn btn-primary btn-xs"
+                          (click)="executeSecretOperation(objData)"
+                        >
+                          Execute
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </nz-spin>
+      </div>
+    </div>
+    <div class="full-blankpage" *ngIf="!flag">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="error-template">
+            <div class="error-details">
+              {{ errorMsg }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content fade-in template" *ngIf="!flag">
+    <div class="text-center">
+      <h2>{{ errorMsg }}</h2>
+    </div>
+  </section>
+</nz-spin>

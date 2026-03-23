@@ -1,0 +1,110 @@
+<nz-spin [nzSpinning]="loading">
+  <div>
+    <a class="btn" routerLink="/adapter-configuration/l1-adapters"><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{
+      'BACK' | translate }}</a>
+  </div>
+  <div class="tab-margin">
+    <div>
+      <adapter-template [templateValueList]="templateValueList" [formatValueList]="formatValueList" [format]="format"
+      [id]="id"[adapterData]="adapterData" [name]="name" [activeTab]="activeTab" [template]="template"
+        [isHttp_urlencoded]="isHttp_urlencoded" [isDisable]="isEdit" (changeTemplate)="changeTemplate($event)"
+        (loader)="loaderValue($event)" (changeAdapterData)="changeAdapterData($event)" [getIfmList]="getIfmList" [multiPackager]="multiPackager"
+        [isJson]="isJson" [isXmlHttp]="isXmlHttp" [imfId]="imfId" [readOnlyFlag]="readOnlyFlag" [singleProperty]="singleProperty" (checkSingleProperty)="checkSingleProperty($event)"  (changeMultiPackager)="changeMultiPackager($event)">
+      </adapter-template>
+    </div>
+    <div>
+      <div *ngIf="!adapterData && !editMessage">
+        <h1 class="headingData">
+          <nz-spin nzTip="Enter Name and Select Template To Show Data"></nz-spin>
+        </h1>
+      </div>
+      <div *ngIf="!adapterData && editMessage">
+        <h1 class="headingData">
+          <nz-spin nzTip="Loading..."></nz-spin>
+        </h1>
+      </div>
+
+      <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSelectedIndex]="activeTab">
+        <nz-tab [nzTitle]="'Schema'" (nzClick)="schmaTab()">
+          <div *ngIf="adapterData">
+            <schema *ngIf="!isJson && !isHttp_urlencoded && !isXmlHttp" [schemaById]="schemaById" [name]="name" [template]="template"
+            [id]="id" [widthConfig]="widthConfig" [isEdit]="isEdit" [adapterData]="adapterData" [tabIndex]="tabIndex"
+              [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)">
+            </schema>
+            <app-http-urlencoded *ngIf="isHttp_urlencoded && adapterData" [schemaById]="schemaById" [name]="name"
+              [id]="id" [template]="template" [isEdit]="isEdit" [adapterData]="adapterData" [tabIndex]="tabIndex"
+              [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)" [widthConfig]="widthConfig" [rows]="rows" >
+            </app-http-urlencoded>
+            <app-schema-json *ngIf="isJson && adapterData" [isEdit]="isEdit" [schemaById]="schemaById" [name]="name"
+              [id]="id" [template]="template" [adapterData]="adapterData" [tabIndex]="tabIndex"
+              [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)" [widthConfig]="widthConfig" [rows]="rows">
+            </app-schema-json>
+            <app-xml-over-http *ngIf="isXmlHttp && adapterData" [isEdit]="isEdit" [schemaById]="schemaById" [name]="name"
+              [id]="id" [template]="template" [adapterData]="adapterData" [tabIndex]="tabIndex"
+              [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)" [widthConfig]="widthConfig" [rows]="rows" >
+            </app-xml-over-http>
+          </div>
+        </nz-tab>
+        <!-- !(name && template) -->
+        <nz-tab [nzTitle]="'Network'" [nzDisabled]="networkTabDisable" (nzClick)="networkTab()">
+          <div *ngIf="adapterData">
+            <app-network [adapterData]="adapterData" [widthConfig]="widthConfig" [name]="name" [template]="template"
+              [tabIndex]="tabIndex" [isEdit]="isEdit" [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)"
+              (formValidate)="formValidate($event)" [checkSingleProperties]="checkSingleProperties">
+            </app-network>
+          </div>
+        </nz-tab>
+        <!-- !fvalid -->
+        <nz-tab [nzTitle]="'Transform'" (nzClick)="selectTransform()" [nzDisabled]="transformTabDisable">
+          <div *ngIf="adapterData && showTransform && !showSoapTransform">
+            <app-transform-iso *ngIf="!isJson && !isHttp_urlencoded && !isXmlHttp && adapterData && imfId" [adapterData]="adapterData"
+              [imfId]="imfId.id" [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)" [template]="template"
+              [tabIndex]="tabIndex" [format]="format" [name]="name" [checkSingleProperties]="checkSingleProperties">
+            </app-transform-iso>
+            <app-transform-json *ngIf="(isJson || isHttp_urlencoded || isXmlHttp) && adapterData && imfId"
+              [adapterData]="adapterData" [imfId]="imfId.id" (tabValue)="tabValue($event)" [template]="template"
+              [format]="format" [tabIndex]="activeTab" [name]="name" [readOnlyFlag]="readOnlyFlag" [checkSingleProperties]="checkSingleProperties">
+            </app-transform-json>
+          </div>
+          <div *ngIf="adapterData && showTransform && showSoapTransform">
+            <app-transform-soap [readOnlyFlag]="readOnlyFlag" [adapterData]="adapterData" (tabValue)="tabValue($event)"
+              [template]="template" [format]="format" [name]="name" [checkSingleProperties]="checkSingleProperties">
+            </app-transform-soap>
+          </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Response'" [nzDisabled]="responseTabDisable" (nzClick)="responseTab()">
+          <div *ngIf="!isHttp_urlencoded && !isJson  && !isXmlHttp && adapterData">
+            <app-response-code-tab [adapterData]="adapterData" [isEdit]="isEdit" [tabIndex]="tabIndex"
+              [template]="template" [name]="name" [readOnlyFlag]="readOnlyFlag" (tabValue)="tabValue($event)">
+            </app-response-code-tab>
+          </div>
+          <div *ngIf="isHttp_urlencoded && !isJson  && !isXmlHttp && adapterData">
+            <app-responsetab-http-json [adapterData]="adapterData" [isEdit]="isEdit" [tabIndex]="activeTab"
+              [template]="template" [readOnlyFlag]="readOnlyFlag" [name]="name" (tabValue)="tabValue($event)" >
+            </app-responsetab-http-json>
+          </div>
+          <div *ngIf="!isHttp_urlencoded && (isJson  || isXmlHttp) && adapterData">
+            <app-responsetab-json [adapterData]="adapterData" [isEdit]="isEdit" [tabIndex]="activeTab"
+              [readOnlyFlag]="readOnlyFlag" [template]="template" [name]="name" [templateType]="isXmlHttp" (tabValue)="tabValue($event)">
+            </app-responsetab-json>
+          </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Post validation'" [nzDisabled]="pvalidationTabDisable"
+          *ngIf="template && template.value && template.value.indexOf('SOAP') === -1">
+          <div style="height: 425px; border: solid 1px #cccccc" *ngIf="adapterData && ShowPostvalidationTab">
+            <app-post-validation [readOnlyFlag]="readOnlyFlag" [adapterData]="adapterData" [isEdit]="isEdit"
+              [tabIndex]="tabIndex" (tabValue)="tabValue($event)">
+            </app-post-validation>
+          </div>
+        </nz-tab>
+        <!-- <nz-tab [nzTitle]="'Beans'" *ngIf="!beanTabDisable" [nzDisabled]="responseTabDisable">
+	        <div style="height: 425px; border: solid 1px #cccccc" *ngIf="adapterData">
+		        <app-beans [readOnlyFlag]="readOnlyFlag" [adapterData]="adapterData" [isEdit]="isEdit" [tabIndex]="tabIndex"
+		        [template]="template" (tabValue)="tabValue($event)" [singleProperty]="singleProperty">
+		        </app-beans>
+	        </div>
+        </nz-tab> -->
+      </nz-tabset>
+    </div>
+  </div>
+</nz-spin>

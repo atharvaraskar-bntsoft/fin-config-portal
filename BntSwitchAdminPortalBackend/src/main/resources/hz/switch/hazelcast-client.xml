@@ -1,0 +1,41 @@
+<hazelcast-client xsi:schemaLocation="http://www.hazelcast.com/schema/client-config hazelcast-client-config-3.10.xsd"
+                  xmlns="http://www.hazelcast.com/schema/client-config"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <!-- Import license key configuration -->
+
+    <group>
+        <name>${hazelcast.client.group.name}</name>
+      <password>${hazelcast.client.group.password}</password>
+    </group>
+
+  <license-key>${hazelcast.license.key}
+</license-key>
+
+
+<near-cache name="${nearcache.endswith}">
+    <in-memory-format>${nearcache.in-memory-format}</in-memory-format>
+    <invalidate-on-change>${nearcache.invalidate-on-change}</invalidate-on-change>
+    <eviction eviction-policy="${nearcache.eviction-policy}" max-size-policy="${nearcache.max-size-policy}" size="${nearcache.size}"/>
+</near-cache>
+
+<connection-strategy async-start="${hazelcast.client.async-start}" reconnect-mode="${hazelcast.client.reconnect-mode}" />
+
+<properties>
+<property name="instance.name">${hazelcast.client.instance.name}</property>
+<property name="hazelcast.client.statistics.enabled">${hazelcast.client.statistics.enabled}</property>
+</properties>
+
+<network>
+  <cluster-members>
+  <!-- client to connect  -->
+    <address>${hazelcast.server.ip.list}</address>
+  </cluster-members>
+  <smart-routing>${hazelcast.client.smart.routing}</smart-routing>
+  <redo-operation>${hazelcast.client.redo.operation}</redo-operation>
+   <connection-timeout>${hazelcast.client.connection.timeout}</connection-timeout>
+   <connection-attempt-limit>${hazelcast.client.connection.attempt.limit}</connection-attempt-limit>
+   <connection-attempt-period>${hazelcast.client.connection.attempt.period}</connection-attempt-period>
+  
+</network>
+</hazelcast-client>

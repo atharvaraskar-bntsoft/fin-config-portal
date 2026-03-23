@@ -1,0 +1,88 @@
+<div class="schedule_container">
+  <div>
+    <span class="back_btn_align" routerLink="/export-list">
+      <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+      {{ 'BACK' | translate }}
+    </span>
+  </div>
+  <form *ngIf="isCreatePage" [formGroup]="exportForm" (ngSubmit)="onSubmit(exportForm)" class="form_container">
+    <div class="row">
+      <div class="col-sm-6">
+        <textarea name="" id="" class="form-control" formControlName="comment" rows="1"
+          placeholder="Comment"></textarea>
+      </div>
+      <div class="col-sm-6">
+        <button type="submit" class="btn btn-primary mr-3">Create Snapshot</button>
+        <input type="reset" class="btn btn-default" value="Reset" />
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </form>
+  <span [ngClass]="{ error: error }" *ngIf="error"> Please Select Atleast One Component</span>
+  <nz-spin [nzSpinning]="loading" nzTip="Loading...">
+    <div *ngIf="tableVsbl">
+      <ngx-datatable appNgxDatatableWatcher [style.height.vh]="tableHeight.innerContainer"
+        class="bootstrap fullscreen striped" [rows]="rows" [columns]="columns" [columnMode]="'force'"
+        [headerHeight]="headerHeight" [footerHeight]="40" [rowHeight]="rowHeight" [scrollbarV]="true"
+        (scroll)="onScroll($event)" [selected]="isCreatePage ? snapshotExportedDetail : []"
+        [selectionType]="isCreatePage ? 'radio' : null" [selectAllRowsOnPage]="false" (select)="onSelect($event)">
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </nz-spin>
+</div>
+
+<ng-template #btnradio let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <div>
+      <input *ngIf="isCreatePage" type="radio" name="radiogroup" />
+      {{ row.entityName }}
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #versionList let-row="row" ngx-datatable-cell-template>
+  <ng-container *ngIf="row.idVersionListToExport.length === 0"> N/A </ng-container>
+  <ng-container *ngIf="row.idVersionListToExport.length">
+    <div class="filteroverlapTemplate">
+      <ng-select class="filter-shadow" [(ngModel)]="row.version" (ngModelChange)="rowVersionChange($event, row)"
+        [items]="row.idVersionListToExport" appendTo="body" [closeOnSelect]="true" bindLabel="version" bindValue="id"
+        [clearable]="false">
+      </ng-select>
+    </div>
+  </ng-container>
+</ng-template>
+
+<!-- Doing for now -->
+<ng-container *ngIf="page === 'IMPORT'">
+  <button class="btn btn-primary btn-md btn-flat pull-right" routerLink="create-entities">
+    Download Snapshot
+  </button>
+</ng-container>

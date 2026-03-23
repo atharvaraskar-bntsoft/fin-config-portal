@@ -1,0 +1,189 @@
+<div class="col-md-12">
+  <div class="form-inline row">
+    <div class="form-group col-md-4">
+      <label
+        class="required"
+        tooltip="{{ 'ROUTER_LABEL.ROUTER_NAME' | translate }}"
+        placement="right"
+        delay="500"
+      >
+        {{ 'ROUTER_LABEL.ROUTER_NAME' | translate }}
+      </label>
+      <div class="input-group">
+        <input
+          type="input"
+          rv-noSpaces
+          pattern="[a-zA-Z0-9]+[a-zA-Z0-9 ]+"
+          #modelinput="ngModel"
+          [disabled]="editId"
+          [(ngModel)]="name"
+          class="form-control"
+          placeholder="{{ 'ROUTER_LABEL.ROUTER_NAME' | translate }}"
+          required
+        />
+        <div *ngIf="modelinput.invalid && modelinput.dirty" style="color: red">
+          {{ 'ROUTER_LABEL.PLEASE_ROUTER_NAME' | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-md-4">
+      <label
+        class="required"
+        tooltip="{{ 'ROUTER_LABEL.ROUTER_DESCRIPTION' | translate }}"
+        placement="right"
+        delay="500"
+        >{{ 'ROUTER_LABEL.ROUTER_DESCRIPTION' | translate }}</label
+      >
+      <div class="input-group">
+        <input
+          type="text"
+          #model="ngModel"
+          [disabled]="editId"
+          rv-noSpaces
+          pattern="[a-zA-Z0-9]+[a-zA-Z0-9 ]+"
+          [(ngModel)]="description"
+          class="form-control"
+          placeholder="{{ 'ROUTER_LABEL.ROUTER_DESCRIPTION' | translate }}"
+          required
+        />
+        <div *ngIf="model.invalid && model.dirty" style="color: red">
+          {{ 'ROUTER_LABEL.PLEASE_ENTER_DESCRIPTION' | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-md-4" *ngIf="ruleTypeRouter == 'service'">
+      <label
+        class="required"
+        tooltip="{{ 'ROUTER_LABEL.SERCICE_TYPE' | translate }}"
+        placement="right"
+        delay="500"
+        >{{ 'ROUTER_LABEL.SERCICE_TYPE' | translate }}</label
+      >
+
+      <div class="input-group">
+        <ng-select
+          bindLabel="name"
+          *ngIf="!editId"
+          [clearable]="false"
+          [closeOnSelect]="true"
+          [items]="serviceTypeList"
+          placeholder="{{ 'ROUTER_LABEL.PLEASE_SELECT_SERVICE' | translate }}"
+          [(ngModel)]="paymenttype"
+        >
+        </ng-select>
+        <input
+          type="text"
+          #model="ngModel"
+          *ngIf="editId"
+          [disabled]="editId"
+          [(ngModel)]="paymenttype"
+          class="form-control"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <table class="table" style="margin-top: 20px; border-bottom: solid 1px #f6f6f6">
+    <tbody>
+      <tr>
+        <th>{{ 'RULE_NAME' | translate }}</th>
+        <th>{{ 'RULE_DESCRIPTION' | translate }}</th>
+        <th>{{ 'VERSION' | translate }}</th>
+        <th>{{ 'PRIORTY' | translate }}</th>
+        <th>{{ 'ACTIONS' | translate }}</th>
+      </tr>
+      <tr *ngFor="let item of ruleList; let i = index">
+        <td>{{ item.name }}</td>
+        <td>{{ item.description }}</td>
+        <td>
+          <ng-select
+            bindLabel="version"
+            bindValue="id"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            [items]="item.ruleConfiguration"
+            [(ngModel)]="item['ruleversion']"
+          >
+          </ng-select>
+        </td>
+        <td>
+          {{ item.priority ? item.priority : 0 }}
+          <span *ngIf="item.enable">
+            <a href="javascript:;" (click)="up(i)"
+              ><i class="fa fa-arrow-up" aria-hidden="true"></i
+            ></a>
+            <a href="javascript:;" (click)="down(i)"
+              ><i class="fa fa-arrow-down" aria-hidden="true"></i></a
+          ></span>
+        </td>
+        <td>
+          <a
+            href="javascript:;"
+            (click)="toggle(item)"
+            tooltip="{{
+              item.enable ? ('EXCLUDE' | translate) : ('INCLUDE' | translate)
+            }}"
+            placement="right"
+            delay="500"
+            >{{ item.enable ? ('EXCLUDE' | translate) : ('INCLUDE' | translate) }}</a
+          >
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="main-form__btns pull-right">
+    <button type="button" (click)="cancel()" class="btn btn-flat marg">
+      {{ 'CANCEL' | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="commitSave()"
+      *ngIf="!editId"
+      [disabled]="
+        model.invalid ||
+        modelinput.invalid ||
+        ruleListCount ||
+        submitted ||
+        (ruleTypeRouter == 'service' && !paymenttype)
+      "
+      class="btn btn-primary marg btn-flat"
+    >
+      {{ 'PUBLISH' | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="saveOnly()"
+      *ngIf="!editId"
+      [disabled]="
+        model.invalid ||
+        modelinput.invalid ||
+        ruleListCount ||
+        submitted ||
+        (ruleTypeRouter == 'service' && !paymenttype)
+      "
+      class="btn btn-primary marg"
+    >
+      {{ 'SAVE_DRAFT' | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="saveAsNewVersion()"
+      *ngIf="editId"
+      [disabled]="model.invalid || modelinput.invalid || ruleListCount || submitted"
+      class="btn btn-primary marg btn-flat"
+    >
+      {{ 'PUBLISH' | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="saveOnly()"
+      *ngIf="editId"
+      [disabled]="model.invalid || modelinput.invalid || ruleListCount || submitted"
+      class="btn btn-primary marg"
+    >
+      {{ 'SAVE_DRAFT' | translate }}
+    </button>
+  </div>
+</div>

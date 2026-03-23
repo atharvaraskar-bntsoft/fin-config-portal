@@ -1,0 +1,8 @@
+:host ::ng-deep .ant-spin-container .ant-spin-nested-loading,
+:host ::ng-deep .ant-spin-container .ant-spin-container {
+  position: unset !important;
+}
+.delete_align {
+color: red;
+font-size: 12px;
+}

@@ -1,0 +1,60 @@
+{
+	"jmxUrl": "172.16.23.15:3320",
+	"mbeanName": "com.bnt.bswitch:type=Management,name=Hazelcast Instance Manager",
+	"listMethodInfo": [
+		{
+			"methodName": "getMonitoringData",
+			"returnType": "java.util.List",
+			"parameters": [
+				{
+					"name": "firstName",
+					"type": "String",
+					"description": "First Name",
+					"value": null
+				},
+				{
+					"name": "age",
+					"type": "int",
+					"description": "Age",
+					"value": null
+				}
+			]
+		},
+		{
+			"methodName": "shutDownInstance",
+			"returnType": "boolean",
+			"parameters": [
+				{
+					"name": "firstName",
+					"type": "String",
+					"description": "First Name",
+					"value": null
+				},
+				{
+					"name": "age",
+					"type": "int",
+					"description": "Age",
+					"value": null
+				}
+			]
+		},
+		{
+			"methodName": "startNewInstance",
+			"returnType": "boolean",
+			"parameters": [
+				{
+					"name": "firstName",
+					"type": "String",
+					"description": "First Name",
+					"value": null
+				},
+				{
+					"name": "age",
+					"type": "int",
+					"description": "Age",
+					"value": null
+				}
+			]
+		}
+	]
+}

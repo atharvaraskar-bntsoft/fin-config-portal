@@ -1,0 +1,60 @@
+<div class="col-md-12 fade-in template">
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div>
+      <ngx-datatable
+        appNgxDatatableWatcher
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>
+<ng-template #action ngx-datatable-cell-template let-row="row">
+  <div class="action_class">
+    <span (click)="viewL1Data(row)" *ngIf="isColVisible(row, 'l1configuration')">
+      View L1 Data
+    </span>
+    <span (click)="viewL3Data(row)" *ngIf="isColVisible(row, 'l3configuration')">
+      View L3 Data
+    </span>
+  </div>
+</ng-template>

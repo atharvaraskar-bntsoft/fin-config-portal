@@ -1,0 +1,350 @@
+<div class="RuleDiv" *ngIf="!isRequest && !showAddParamPopup && showAllData">
+  <div class="row text-center">
+    <div class="col-md-12" *ngIf="!addCondition">
+      <div class="main-checkbox">
+        <mat-radio-group class="mat-radio" [disabled]="readOnlyFlag" [(ngModel)]="conditionCheck">
+          <mat-radio-button value="Mandatory" color="primary" [disabled]="dependentSource || readOnlyFlag"
+            (click)="fieldPresenceChange('Mandatory')">
+            Mandatory
+          </mat-radio-button>
+          <mat-radio-button value="Optional" color="primary" style="margin-left: 10px"
+            [disabled]="dependentSource || readOnlyFlag" (click)="fieldPresenceChange('Optional')">Optional
+          </mat-radio-button>
+          <mat-radio-button value="Conditional" color="primary" style="margin-left: 10px"
+            [disabled]="dependentSource || readOnlyFlag" (click)="fieldPresenceChange('Conditional')">Conditional
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+  <div class="transform-request" style="margin-top: -5px">
+    <div class="row row-margin row-align row-template" *ngIf="conditionCheck === 'Conditional'">
+      <a *ngIf="!isConditionalData && !addCondition" (click)="addCondition = true" style="margin-left: 15px"
+        class="required">Create Condition</a>
+      <a *ngIf="isConditionalData && !addCondition" (click)="addCondition = true" style="margin-left: 15px"
+        class="required">Edit Condition</a>
+      <br />
+      <span *ngIf="!isConditionalData && !addCondition && conditionError" style="color: red; margin-left: 15px">Please
+        add condition.</span>
+      <app-packager-condition-builder [readOnlyFlag]="readOnlyFlag"
+        *ngIf="conditionCheck === 'Conditional' && addCondition" [ruleCondition]="isConditionalData" [btnText]="'Save'"
+        [listIdRule]="fieldList" (addSubRule)="saveConditionalData($event)">
+      </app-packager-condition-builder>
+    </div>
+    <ng-container *ngIf="addCondition">
+      <div class="row row-margin row-align row-template pull-right">
+        <div style="margin-right: 80px; margin-bottom: -35px; margin-top: -40px">
+          <button nz-button nzType="default" (click)="addCondition = false">Cancel</button>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!addCondition">
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-12" style="margin-left: 0px">
+          <label>Parse and Extract Data (if present)</label>
+        </div>
+      </div>
+      <div class="row row-margin row-align row-template">
+        <div class="col-md-12 text-center">
+          <mat-radio-group [(ngModel)]="itemList.isExtract" aria-label="Select an option" class="mat-radio">
+            <mat-radio-button value="internalFormat" color="primary" (click)="extractDataChange(false)"
+              [disabled]="dependentSource || readOnlyFlag">
+              Copy as is
+            </mat-radio-button>
+            <mat-radio-button value="extractfield" color="primary" style="margin-left: 10%"
+              (click)="extractDataChange(true)" [disabled]="dependentSource || readOnlyFlag">Extract Data
+              <!-- value from composite field -->
+            </mat-radio-button>
+            <mat-radio-button *ngIf="!isArray" value="builtInMapper" [disabled]="dependentSource || readOnlyFlag"
+              style="margin-left: 10%" color="primary" (click)="extractDataChange(false)">
+              Mapper
+            </mat-radio-button>
+            <mat-radio-button *ngIf="!isArray" value="script" color="primary" style="margin-left: 10%"
+              [disabled]="dependentSource || readOnlyFlag" (click)="extractDataChange(false)">
+              Script
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div *ngIf="!isExtract && itemList.isExtract === 'internalFormat'">
+        <nz-spin nzTip="Loading..." [nzSpinning]="
+            !(
+              (validationList.length !== 0 &&
+                field &&
+                jsonData &&
+                imfId &&
+                networkService &&
+                mapperList &&
+                mapperList.length !== 0 &&
+                ipcList &&
+                ipcList.length !== 0 &&
+                imfList &&
+                imfList.length !== 0) ||
+              (sourceList && sourceList.length !== 0)
+            )
+          ">
+          <l3-copy-res-option [readOnlyFlag]="readOnlyFlag" [validationList]="validationList" [field]="field"
+            [l3Adapter]="true" [type]="l1" [sourceList]="sourceList" [imfList]="imfList" [ipcList]="ipcList"
+            [jsonData]="jsonData" [imfId]="imfId" [serviceList]="serviceList" [copyItem]="transformActionItemRes"
+            [networkService]="networkService" [isRequest]="isRequest" (copyData)="saveCopyResData($event)"
+            (oncancel)="oncancel($event)">
+          </l3-copy-res-option>
+        </nz-spin>
+      </div>
+
+      <div *ngIf="!isExtract && itemList.isExtract === 'builtInMapper'">
+        <nz-spin nzTip="Loading..." [nzSpinning]="
+            !(
+              (serviceList.length !== 0 &&
+                imfId &&
+                jsonData &&
+                mapperList &&
+                mapperList.length !== 0 &&
+                ipcList &&
+                ipcList.length !== 0 &&
+                imfList &&
+                imfList.length !== 0) ||
+              (sourceList && sourceList.length !== 0)
+            )
+          ">
+          <ng-container>
+            networkService {{networkService}}
+            <l3-response-mapper [readOnlyFlag]="readOnlyFlag" [typeList]="typeList" [serviceList]="serviceList"
+              [mapperList]="mapperList" [field]="field" [sourceList]="sourceList" [imfList]="imfList"
+              [ipcList]="ipcList" [jsonData]="jsonData" [isRequest]="isRequest" [imfId]="imfId"
+              [mapperItem]="transformActionItemRes" [networkService]="networkService" (mapperData)="saveMapper($event)"
+              (oncancel)="oncancel($event)">
+            </l3-response-mapper>
+          </ng-container>
+        </nz-spin>
+      </div>
+
+      <div *ngIf="!isExtract && itemList.isExtract === 'script'">
+        <app-script-option [readOnlyFlag]="readOnlyFlag" [scriptItem]="transformActionItemRes" [field]="field"
+          (scriptData)="saveScript($event)" (oncancel)="oncancel($event)"></app-script-option>
+      </div>
+
+    </ng-container>
+    <div class="row row-margin row-align row-template">
+      <div class="row col-md-12"></div>
+    </div>
+  </div>
+</div>
+
+<div class="RuleDiv" *ngIf="isRequest && !showAddParamPopup && showAllData">
+  <div class="row text-center">
+    <div class="col-md-12x" *ngIf="!addCondition">
+      <div class="main-checkbox">
+        <mat-radio-group class="mat-radio" [(ngModel)]="reqConditionCheck">
+          <mat-radio-button value="Mandatory" color="primary" [disabled]="readOnlyFlag"> Mandatory </mat-radio-button>
+          <mat-radio-button value="Optional" color="primary" style="margin-left: 10px" [disabled]="readOnlyFlag">
+            Optional
+          </mat-radio-button>
+          <mat-radio-button value="Conditional" color="primary" style="margin-left: 10px" [disabled]="readOnlyFlag">
+            Conditional
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+  <div class="transform">
+    <div class="row row-margin row-align row-template" *ngIf="reqConditionCheck === 'Conditional'">
+      <a *ngIf="!resConditionalData && !addCondition" (click)="addCondition = true" style="margin-left: 15px"
+        class="required">Create Condition</a>
+      <a *ngIf="resConditionalData && !addCondition" (click)="addCondition = true" style="margin-left: 15px"
+        class="required">Edit Condition</a>
+      <br />
+      <span *ngIf="!resConditionalData && !addCondition && conditionError" style="color: red; margin-left: 15px">Please
+        add condition.</span>
+      <app-condition-builder *ngIf="reqConditionCheck === 'Conditional' && addCondition" [jsonData]="jsonData"
+        [ruleCondition]="resConditionalData" [readOnlyFlag]="readOnlyFlag"
+        (addSubRule)="saveResConditionalData($event)">
+      </app-condition-builder>
+    </div>
+    <ng-container *ngIf="addCondition">
+      <div class="row row-margin row-align row-template pull-right">
+        <div style="margin-right: 130px; margin-bottom: -35px; margin-top: -49px">
+          <button nz-button nzType="default" (click)="addCondition = false">Cancel</button>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!addCondition">
+      <ng-container>
+        <div class="row row-margin row-align row-template">
+          <div class="col-md-12 text-center" style="margin-top: 15px;">
+            <mat-radio-group [(ngModel)]="resRadioModel" aria-label="Select an option" class="mat-radio">
+              <div class="col-md-2">
+                <mat-radio-button color="primary" [disabled]="readOnlyFlag" (change)="radioChange($event)"
+                  value="copyField">Copy as is
+                </mat-radio-button>
+              </div>
+              <div class="col-md-2">
+                <mat-radio-button color="primary" [disabled]="readOnlyFlag" (change)="radioChange($event)"
+                  value="operationField">
+                  Extract Data
+                </mat-radio-button>
+              </div>
+              <div class="col-md-2">
+                <mat-radio-button color="primary" [disabled]="readOnlyFlag" (change)="radioChange($event)"
+                  value="mapper">Mapper
+                </mat-radio-button>
+              </div>
+              <div class="col-md-2">
+                <mat-radio-button color="primary" [disabled]="readOnlyFlag" (change)="radioChange($event)"
+                  value="script">Script
+                </mat-radio-button>
+              </div>
+              <div class="col-md-2">
+                <mat-radio-button color="primary" [disabled]="readOnlyFlag" (change)="radioChange($event)" value="join">
+                  Join
+                </mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-container *ngIf="isRequest && resRadioModel === 'copyField'">
+  <nz-spin nzTip="Loading..." [nzSpinning]="
+      !(
+        (validationList.length !== 0 &&
+          field &&
+          jsonData &&
+          imfId &&
+          networkService &&
+          mapperList &&
+          mapperList.length !== 0 &&
+          ipcList &&
+          ipcList.length !== 0 &&
+          imfList &&
+          imfList.length !== 0) ||
+        (sourceList && sourceList.length !== 0)
+      )
+    ">
+    <l3-copy-req-option [readOnlyFlag]="readOnlyFlag" [validationList]="validationList" [field]="field"
+      [l3Adapter]="true" [type]="l1" [sourceList]="sourceList" [isMandatory]="isMandatory" [imfList]="imfList"
+      [ipcList]="ipcList" [jsonData]="jsonData" [imfId]="imfId" [serviceList]="serviceList" [copyItem]="transformItem"
+      [networkService]="networkService" [isRequest]="isRequest" (copyData)="saveCopyReqData($event)"
+      (oncancel)="oncancel($event)">
+    </l3-copy-req-option>
+  </nz-spin>
+</ng-container>
+
+<ng-container *ngIf="isRequest && resRadioModel === 'operationField'">
+  <nz-spin nzTip="Loading..." [nzSpinning]="
+    !(
+      (validationList.length !== 0 &&
+        field &&
+        jsonData &&
+        imfId &&
+        networkService &&
+        mapperList &&
+        mapperList.length !== 0 &&
+        ipcList &&
+        ipcList.length !== 0 &&
+        imfList &&
+        imfList.length !== 0) ||
+      (sourceList && sourceList.length !== 0)
+    )
+  ">
+    <l3-extract-data-request [readOnlyFlag]="readOnlyFlag" [isMandatory]="isMandatory" [validationList]="validationList"
+      [field]="field" [sourceList]="sourceList" [imfList]="imfList" [ipcList]="ipcList" [imfId]="imfId"
+      [jsonData]="jsonData" [field]="field" [transformItem]="transformItem" [resConditionalData]="resConditionalData"
+      [serviceList]="serviceList" [elData]="elData" [adapterDataMap]="adapterDataMap"
+      [reqConditionCheck]="reqConditionCheck" [stepList]="stepList" [lookupList]="lookupList"
+      [showAddParamPopup]="showAddParamPopup" [resRadioModel]="resRadioModel" [networkService]="networkService"
+      (showParamPopup)="showParamPopup($event)" (saveReqData)="saveReqData($event)" (oncancel)="oncancel($event)">
+    </l3-extract-data-request>
+  </nz-spin>
+</ng-container>
+
+<ng-container *ngIf="!isRequest && itemList.isExtract === 'extractfield'">
+  <nz-spin nzTip="Loading..." [nzSpinning]="
+    !(
+      (validationList.length !== 0 &&
+        field &&
+        jsonData &&
+        imfId &&
+        networkService &&
+        mapperList &&
+        mapperList.length !== 0 &&
+        ipcList &&
+        ipcList.length !== 0 &&
+        imfList &&
+        imfList.length !== 0) ||
+      (sourceList && sourceList.length !== 0)
+    )
+  ">
+    <l3-extract-data-response [readOnlyFlag]="readOnlyFlag" [validationList]="validationList" [field]="field"
+      [sourceList]="sourceList" [imfList]="imfList" [isMandatory]="isMandatory" [conditionCheck]="conditionCheck"
+      [isConditionalData]="isConditionalData" [imfId]="imfId" [ipcList]="ipcList" [jsonData]="jsonData" [field]="field"
+      [transformActionItemRes]="transformActionItemRes" [serviceList]="serviceList" [elData]="elData"
+      [adapterDataMap]="adapterDataMap" [reqConditionCheck]="reqConditionCheck" [stepList]="stepList"
+      [lookupList]="lookupList" [showAddParamPopup]="showAddParamPopup" [resRadioModel]="resRadioModel"
+      [networkService]="networkService" (showParamPopup)="showParamPopup($event)" (saveResData)="saveResData($event)"
+      (oncancel)="oncancel($event)">
+    </l3-extract-data-response>
+  </nz-spin>
+</ng-container>
+
+<ng-container *ngIf="resRadioModel === 'mapper'">
+  <nz-spin nzTip="Loading..." [nzSpinning]="
+      !(
+        (serviceList.length !== 0 &&
+          imfId &&
+          jsonData &&
+          mapperList &&
+          mapperList.length !== 0 &&
+          ipcList &&
+          ipcList.length !== 0 &&
+          imfList &&
+          imfList.length !== 0) ||
+        (sourceList && sourceList.length !== 0)
+      )
+    ">
+    <ng-container>
+      <l3-request-mapper [readOnlyFlag]="readOnlyFlag" [typeList]="typeList" [serviceList]="serviceList"
+        [mapperList]="mapperList" [field]="field" [sourceList]="sourceList" [imfList]="imfList" [ipcList]="ipcList"
+        [jsonData]="jsonData" [isRequest]="isRequest" [imfId]="imfId" [mapperItem]="transformItem"
+        [networkService]="networkService" (mapperData)="saveMapper($event)" (oncancel)="oncancel($event)">
+      </l3-request-mapper>
+    </ng-container>
+  </nz-spin>
+</ng-container>
+
+<ng-container *ngIf="resRadioModel === 'script'">
+  <app-script-option [readOnlyFlag]="readOnlyFlag" [scriptItem]="transformItem" [field]="field"
+    (scriptData)="saveScript($event)" (oncancel)="oncancel($event)"></app-script-option>
+</ng-container>
+
+<ng-container *ngIf="resRadioModel === 'join'">
+  <nz-spin nzTip="Loading..." [nzSpinning]="
+      !(
+        (serviceList.length !== 0 &&
+          field &&
+          jsonData &&
+          mapperList &&
+          mapperList.length !== 0 &&
+          ipcList &&
+          ipcList.length !== 0 &&
+          lookupList &&
+          lookupList.length !== 0 &&
+          stepList &&
+          stepList.length !== 0 &&
+          imfList &&
+          imfList.length !== 0) ||
+        (sourceList && sourceList.length !== 0)
+      )
+    ">
+    <ng-container>
+      <l3-request-join [readOnlyFlag]="readOnlyFlag" [stepList]="stepList" [field]="field" [sourceList]="sourceList"
+        [imfList]="imfList" [ipcList]="ipcList" [ipcList]="ipcList" [lookupList]="lookupList"
+        [serviceList]="serviceList" [networkService]="networkService" [jsonData]="jsonData"
+        [validationList]="validationList" [typeList]="typeList" (joinMapper)="saveJoinMapper($event)"
+        (emitParamPopup)="hideAllFn($event)" (oncancel)="oncancel()" [transformItem]="transformItem"></l3-request-join>
+    </ng-container>
+  </nz-spin>
+</ng-container>

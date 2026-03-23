@@ -1,0 +1,42 @@
+@import '../../../variable';
+.btn_color {
+  color: red;
+}
+
+::ng-deep .ant-modal-title {
+  color: $main-color;
+}
+.selectAll {
+  margin: 5px;
+}
+
+.checkbox_color {
+  color: rgb(0, 110, 255);
+}
+.current_schedule_title {
+  color: $main-color;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: -103px;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  opacity: 0.03 !important;
+  background-color: #348de2 !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #348de2;
+}
+
+.inputBox {
+  margin-top: -4px;
+  padding: 7px;
+}
+
+.warningError {
+  color: red;
+  float: left;
+  margin-left: -200px;
+}

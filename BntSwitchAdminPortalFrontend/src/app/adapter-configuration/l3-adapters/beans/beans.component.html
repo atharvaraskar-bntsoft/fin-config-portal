@@ -1,0 +1,43 @@
+<div class="card col-lg-6" *ngFor="let bean of adapterData?.beanconfiguationData?.beans">
+  <div class="card-header">
+    {{ bean.fileType }}
+  </div>
+  <div></div>
+  <div *ngIf="singleProperty == true" [hidden]="singleProperty == false">
+    <div class="card-body" >
+      <div
+        ace-editor
+        [(text)]="bean.fileContentSingle"
+        [theme]="'eclipse'"
+        [readOnly]="readOnlyFlag"
+        class="editor"
+        [mode]="'xml'"
+      ></div>
+    </div>
+  </div>
+  <div [hidden]="singleProperty == true">
+    <div class="card-body">
+      <div
+        ace-editor
+        [(text)]="bean.fileContent"
+        [theme]="'eclipse'"
+        [readOnly]="readOnlyFlag"
+        class="editor"
+        [mode]="'xml'"
+      ></div>
+    </div>
+  </div>
+</div>
+<div class="margin pull-left">
+  <button class="btn btn-primary" type="button" (click)="prevTabValue()">
+    {{ 'PREVIOUS' | translate }}
+  </button>
+</div>
+<div class="margin pull-right">
+  <button class="btn btn-primary" type="button" *ngIf="!readOnlyFlag" (click)="draftTransform()">
+    {{ 'SAVE_DRAFT' | translate }}
+  </button>
+  <button class="btn btn-primary" [disabled]="btnDisable" type="button" *ngIf="!readOnlyFlag" (click)="versionData()">
+    {{ 'PUBLISH' | translate }}
+  </button>
+</div>

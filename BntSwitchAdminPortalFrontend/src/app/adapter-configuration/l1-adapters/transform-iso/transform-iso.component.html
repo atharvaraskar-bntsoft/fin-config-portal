@@ -1,0 +1,743 @@
+<div class="row row-margin row-template" style="margin-top: 10px">
+  <div class="col-md-2">
+    <label class="required" style="color: rgba(0, 0, 0, 0.65)">Message Type: </label>
+  </div>
+  <div class="col-md-3" style="padding-left: 0px; padding-right: 0px; margin-right: 0px">
+    <div class="example-input" style="width: 100%">
+      <nz-input-group nzSearch nzSize="default" [nzAddOnAfter]="suffixIconButton">
+        <input appAlphabetOnly placeholder="Message type" nz-input maxlength="50" [(ngModel)]="selectedTransactionType"
+          [nzAutocomplete]="auto" (keyup)="keyUpFn($event)" (keypress)="showCondition($event)" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSize="default" [disabled]="readOnlyFlag" (click)="addTransaction()">
+          Add
+        </button>
+      </ng-template>
+      <nz-autocomplete #auto (selectionChange)="transactionSelection($event)">
+        <nz-auto-option class="global-search-item" *ngFor="let option of transactionTypeValueList"
+          [nzValue]="option.value">
+          {{ option.value }}
+          <em class="fa fa-trash fa-lg" style="float: right; color: red" *ngIf="!readOnlyFlag" nz-popconfirm nzPopconfirmTitle="Are you sure to delete this Message Type?"
+          nzPopconfirmPlacement="bottom" [nzIcon]="iconTpl" (nzOnConfirm)="deleteTransactionFn(option.value, $event)"></em>
+          <ng-template #iconTpl>
+            <span nz-icon nzType="question-circle-o" style="color: red;"></span>
+          </ng-template>
+        </nz-auto-option>
+      </nz-autocomplete>
+    </div>
+  </div>
+  <div class="col-md-2" *ngIf="selectedTransactionType && transactionTypeValueList.length > 0 && ruleIcon">
+    <label class="required" style="color: rgba(0, 0, 0, 0.65);margin-top:6px;"> Conditions: </label>
+
+    <i class="fa fa-external-link fa-lg" (click)="showTransactionCondModal()"
+      style="color: #3c8dbc; margin-top: 12px; cursor: pointer" title="Message Condition" aria-hidden="true"></i>
+  </div>
+</div>
+
+<div *ngIf="!showRuleConditionList[selectedTransactionType]" style="height: 300px">
+  <h1 class="transform-heading">
+    <nz-spin nzTip="Please select message type or enter message type(minimum
+      length should be 4)"></nz-spin>
+  </h1>
+</div>
+<ng-container *ngIf="selectedTransactionType && showRuleConditionList[selectedTransactionType]">
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" *ngIf="showRuleConditionList[selectedTransactionType]"
+    [(nzSelectedIndex)]="selectedTabIndex">
+    <nz-tab *ngFor="let tab of transformTab; let i = index" [nzTitle]="tab" (nzClick)="tabChange(tab, i)"></nz-tab>
+  </nz-tabset>
+  <ng-container *ngIf="authData.length">
+    <div class="table-height" *ngIf="authReqDivShow === 'req' && showRuleConditionList[selectedTransactionType]">
+      <table class="table table-bordered table-hover">
+        <caption></caption>
+        <thead>
+          <tr>
+            <th class="col-sm-4 th-color">Source</th>
+            <th class="col-sm-8 th-color">Destination</th>
+            <th class="col-sm-0 th-color">Mapper</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of authData">
+            <td class="col-md-5 td-color joined-word-break">
+              <nz-switch nzSize="small" [nzDisabled]="readOnlyFlag"
+                [(ngModel)]="selectSourceData[data.id + selectedTransactionType]"
+                 (ngModelChange)="
+                  callSchemeImfMapper(
+                    data,
+                    'req',
+                    selectSourceData[data.id + selectedTransactionType]
+                  )
+                ">
+              </nz-switch>
+              {{ data.name }}
+            </td>
+            <td class="col-md-7 td-color joined-word-break">
+              {{ requestImfField[data.id + selectedTransactionType] }}
+            </td>
+            <td class="col-md-0 td-color joined-word-break textAlign">
+              <span *ngIf="
+                  (readOnlyFlag && requestImfField[data.id + selectedTransactionType]) ||
+                  !readOnlyFlag
+                " (click)="
+                  transactionReqPopFun(
+                    data,
+                    'req',
+                    selectSourceData[data.id + selectedTransactionType]
+                  )
+                ">
+                <em class="fa fa-edit fa-lg"
+                  style="color: #3c8dbc; margin-top: 4px; cursor: pointer; text-align: center"></em>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <div class="table-height" *ngIf="authReqDivShow === 'res'">
+    <table class="table table-bordered table-hover">
+      <caption></caption>
+      <thead>
+        <tr>
+          <th class="col-sm-4 th-color">Destination</th>
+          <th class="col-sm-0 th-color">Echo</th>
+          <th class="col-sm-8 th-color">Source</th>
+          <th class="col-sm-0 th-color">Mapper</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of resAuthData">
+          <td class="col-md-4 td-color joined-word-break">
+            <nz-switch [nzDisabled]="readOnlyFlag" nzSize="small"
+              [(ngModel)]="selectSourceResData[data.id + selectedTransactionType]" (click)="
+                callSchemeImfMapper(
+                  data,
+                  'res',
+                  selectSourceResData[data.id + selectedTransactionType]
+                )
+              ">
+            </nz-switch>
+            {{ data.name }}
+          </td>
+          <td class="col-md-0 td-color joined-word-break">
+            <nz-switch nzSize="small" [nzDisabled]="readOnlyFlag"
+              [(ngModel)]="authResEcho[data.id + selectedTransactionType]"
+              (click)="selectEcho(authResEcho[data.id + selectedTransactionType], data.id)">
+            </nz-switch>
+          </td>
+          <td class="col-md-8 td-color joined-word-break">
+            {{ responseImfField[data.id + selectedTransactionType] }}
+          </td>
+          <td class="col-md-0 td-color joined-word-break textAlign">
+            <span *ngIf="
+                (readOnlyFlag && responseImfField[data.id + selectedTransactionType]) ||
+                !readOnlyFlag
+              " (click)="
+                transactionResPopFun(
+                  data,
+                  'res',
+                  selectSourceResData[data.id + selectedTransactionType]
+                )
+              ">
+              <i class="fa fa-edit fa-lg" style="color: #3c8dbc; margin-top: 4px; cursor: pointer"></i>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Post Action start -->
+  <ng-container *ngIf="authReqDivShow === 'post' && postActionArray[selectedTransactionType]">
+    <div class="tranformSoapCodeCss">
+      <div class="card">
+        <div class="card-heading post-heading">
+          <label for="Post Validation">Post Action</label>
+          <span class="btn btn-default pull-right" style="margin-left: 10px" *ngIf="!readOnlyFlag"
+            (click)="addPostAction()">
+            <em class="fa fa-plus"></em></span>
+          <span class="btn btn-primary pull-right"
+            *ngIf="!readOnlyFlag && postActionArray[selectedTransactionType].length" (click)="savePostAction()">
+            Save Post Action</span>
+        </div>
+        <div class="card-body post-card">
+          <div class="card" *ngFor="let item of postActionArray[selectedTransactionType]; let a = index">
+            <div class="card-heading post-heading">
+              <label for="Post Validation">Post Action {{ a + 1 }}</label>
+              <span class="btn btn-default pull-right" *ngIf="!readOnlyFlag" (click)="removePostAction(a)">
+                <em class="fa fa-minus"></em></span>
+            </div>
+            <div class="card-body post-card">
+              <ng-container *ngIf="postActionArray[selectedTransactionType]">
+                <div class="row row-margin row-align row-template" style="margin-top: 10px">
+                  <div class="col-md-4" style="width: 30%">
+                    <mat-radio-group class="mat-radio" [(ngModel)]="item.postAction">
+                      <mat-radio-button value="Optional" [disabled]="readOnlyFlag" color="primary"
+                        style="margin-left: 10px">Non Conditional
+                      </mat-radio-button>
+                      <mat-radio-button value="Conditional" [disabled]="readOnlyFlag" color="primary"
+                        style="margin-left: 10px">
+                        Conditional
+                      </mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+                <div class="row row-margin row-align row-template" *ngIf="item.postAction === 'Conditional'"
+                  style="margin-left: 4%">
+                  <a *ngIf="item.conditionObj" (click)="radioChange(item)">Edit Condition</a>
+                  <a *ngIf="!item.conditionObj" (click)="radioChange(item)" class="required">Create Condition</a>
+                </div>
+                <nz-modal [(nzVisible)]="item.isVisiblecon" [nzTitle]="modalTitle" [nzContent]="modalContent"
+                  [nzFooter]="modalFooter" [nzWidth]="1150" nzClosable="false">
+                  <ng-template #modalTitle>Condition</ng-template>
+                  <ng-template #modalContent>
+                    <app-condition-builder [readOnlyFlag]="readOnlyFlag"
+                      *ngIf="item.postAction === 'Conditional' && jsonData" [postActionIndex]="a" [jsonData]="jsonData"
+                      [ruleCondition]="item.conditionObj" (addSubRule)="getRule($event)">
+                    </app-condition-builder>
+                  </ng-template>
+                  <ng-template #modalFooter>
+                    <button nz-button nzType="primary" style="width: 80px" (click)="conCancel(item)">
+                      Cancel
+                    </button>
+                  </ng-template>
+                </nz-modal>
+                <div class="executeDiv">
+                  <div class="row row-margin row-align row-template">
+                    <div class="row col-md-2">
+                      <label>Execute:<span class="required"></span> </label>
+                    </div>
+                    <div class="row col-md-6">
+                      <ng-select style="width: 75%; margin-left: 10px" [clearable]="false" [closeOnSelect]="true"
+                        bindLabel="actionName" [disabled]="readOnlyFlag" appendTo="body" [items]="executeData"
+                        [(ngModel)]="item.executeModel" placeholder="Select value"
+                        (change)="poststepFunction($event, a, 0, true)"></ng-select>
+                    </div>
+                    <div class="row col-md-2" *ngIf="item?.executeModel?.parameters.length > 0">
+                      <a (click)="poststepFunction(item.executeModel, a, 0)">{{ item.executeModel.parameters.length }}
+                        Parameter</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="executeDiv">
+                  <div class="row row-margin row-align row-template">
+                    <div class="row col-md-2">
+                      <label class="required">Set IPC</label>
+                    </div>
+                    <div class="row col-md-6">
+                      <ng-select [clearable]="false" [disabled]="readOnlyFlag" class="filter-shadow"
+                        style="width: 75%; margin-left: 10px" [closeOnSelect]="true" bindValue="value" appendTo="body"
+                        bindLabel="value" [items]="ipcList" [(ngModel)]="item.IPCvalue" placeholder="Select IPC">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <span *ngIf="item.showError" style="color: red; margin-left: 10px">
+                Please provide all mandatory field
+              </span>
+            </div>
+          </div>
+          <nz-modal [(nzVisible)]="showPostActionParam" [nzTitle]="modalTitleNew" [nzContent]="modalContentNew"
+            [nzFooter]="parameterFooter" [nzWidth]="1150" nzClosable="false">
+            <ng-template #modalTitleNew>Parameter(s)</ng-template>
+            <ng-template #modalContentNew>
+              <app-common-parameter [readOnlyFlag]="readOnlyFlag" *ngIf="showPostActionParam && jsonData"
+                [serviceList]="serviceList" [sourceList]="authData" [ipcList]="ipcList" (parameter)="addParam($event)"
+                [imfList]="jsonData" [showCancelBtn]="showCancelBtn"
+                [selectedStepParameter]="selectedPostActionParameter">
+              </app-common-parameter>
+            </ng-template>
+            <ng-template #parameterFooter>
+              <button nz-button nzType="default" style="width: 85px; margin-right: 15px; margin-top: 50px"
+                (click)="closeParamPopup(selectedPostActionParameter.index)">
+                Cancel
+              </button>
+            </ng-template>
+          </nz-modal>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <!-- Post Action End -->
+
+  <!--pre Action Start -->
+  <ng-container *ngIf="authReqDivShow === 'pre' && preActionArray[selectedTransactionType]">
+    <div class="tranformSoapCodeCss">
+      <div class="card">
+        <div class="card-heading post-heading">
+          <label for="Post Validation">Pre Action</label>
+          <span *ngIf="!readOnlyFlag" class="btn btn-default pull-right" style="margin-left: 10px"
+            (click)="addPreAction()">
+            <em class="fa fa-plus"></em></span>
+          <span class="btn btn-primary pull-right"
+            *ngIf="!readOnlyFlag && preActionArray[selectedTransactionType].length" (click)="savePreAction()">
+            Save Pre Action</span>
+        </div>
+        <div class="card-body post-card">
+          <div class="card" *ngFor="let newitem of preActionArray[selectedTransactionType]; let a = index">
+            <div class="card-heading post-heading">
+              <label for="Post Validation">Pre Action {{ a + 1 }}</label>
+              <span *ngIf="!readOnlyFlag" class="btn btn-default pull-right" (click)="removePreAction(a)">
+                <em class="fa fa-minus"></em></span>
+            </div>
+            <div class="card-body post-card">
+              <ng-container *ngIf="preActionArray[selectedTransactionType]">
+                <div class="row row-margin row-align row-template" style="margin-top: 10px">
+                  <div class="col-md-4" style="width: 30%">
+                    <mat-radio-group class="mat-radio" [(ngModel)]="newitem.preAction">
+                      <mat-radio-button value="Optional" [disabled]="readOnlyFlag" color="primary"
+                        style="margin-left: 10px">Non Conditional
+                      </mat-radio-button>
+                      <mat-radio-button value="Conditional" [disabled]="readOnlyFlag" color="primary"
+                        style="margin-left: 10px">
+                        Conditional
+                      </mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+                <div class="row row-margin row-align row-template" *ngIf="newitem.preAction === 'Conditional'"
+                  style="margin-left: 4%">
+                  <a *ngIf="newitem.conditionObj" (click)="radioChange(newitem)">Edit Condition</a>
+                  <a *ngIf="!newitem.conditionObj" (click)="radioChange(newitem)" class="required">Create Condition</a>
+                </div>
+                <nz-modal [(nzVisible)]="newitem.isVisiblecon" [nzTitle]="modalTitle" [nzContent]="modalContent"
+                  [nzFooter]="modalFooter" [nzWidth]="1150" nzClosable="false">
+                  <ng-template #modalTitle>Condition</ng-template>
+                  <ng-template #modalContent>
+                    <app-condition-builder [readOnlyFlag]="readOnlyFlag"
+                      *ngIf="newitem.preAction === 'Conditional' && jsonData" [postActionIndex]="a"
+                      [jsonData]="jsonData" [ruleCondition]="newitem.conditionObj" (addSubRule)="preGetRule($event)">
+                    </app-condition-builder>
+                  </ng-template>
+                  <ng-template #modalFooter>
+                    <button nz-button nzType="primary" style="width: 80px" (click)="conCancel(newitem)">
+                      Cancel
+                    </button>
+                  </ng-template>
+                </nz-modal>
+                <div class="executeDiv">
+                  <div class="row row-margin row-align row-template">
+                    <div class="row col-md-2">
+                      <label>Execute: <span class="required"></span> </label>
+                    </div>
+                    <div class="row col-md-6">
+                      <ng-select style="width: 75%; margin-left: 10px" [disabled]="readOnlyFlag" [clearable]="false"
+                        [closeOnSelect]="true" bindLabel="actionName" appendTo="body" [items]="preExecuteData"
+                        [(ngModel)]="newitem.executeModel" placeholder="Select value"
+                        (change)="prestepFunction($event, a, 0, true)"></ng-select>
+                    </div>
+                    <div class="row col-md-2" *ngIf="newitem?.executeModel?.parameters.length > 0">
+                      <a (click)="prestepFunction(newitem.executeModel, a, 0)">{{ newitem.executeModel.parameters.length
+                        }} Parameter</a>
+                    </div>
+                  </div>
+                </div>
+                <nz-modal [(nzVisible)]="showPreActionParam" [nzTitle]="modalTitleNew1" [nzContent]="modalContentNew1"
+                  [nzFooter]="parameterFooter" [nzWidth]="1150" nzClosable="false">
+                  <ng-template #modalTitleNew1>Parameter(s)</ng-template>
+                  <ng-template #modalContentNew1>
+                    <app-common-parameter [readOnlyFlag]="readOnlyFlag" *ngIf="showPreActionParam"
+                      [serviceList]="serviceList" [sourceList]="authData" [ipcList]="ipcList"
+                      (parameter)="addPreParam($event)" [imfList]="jsonData" [showCancelBtn]="preShowCancelBtn"
+                      [selectedStepParameter]="selectedPreActionParameter">
+                    </app-common-parameter>
+                  </ng-template>
+
+                  <ng-template #parameterFooter>
+                    <button nz-button nzType="default" style="width: 85px; margin-right: 15px; margin-top: 50px"
+                      (click)="preCloseParamPopup(selectedPreActionParameter.index)">
+                      Cancel
+                    </button>
+                  </ng-template>
+                </nz-modal>
+                <ng-container *ngIf="newitem.executeModel && false">
+                  <div class="executeDiv">
+                    <div class="row row-margin row-align row-template">
+                      <div class="row col-md-2" *ngIf="newitem.executeModel.parameters.length > 0">
+                        <label class="required">Parameter(s): </label>
+                      </div>
+                      <div class="col-md-3" *ngFor="let param of newitem.param; let id = index">
+                        <app-imf-tree-structure *ngIf="param.label.indexOf('imf_') !== -1" [index]="a + ',' + id"
+                          [imfId]="imfId" [imfValue]="param.value" [placeHolder]="param.name"
+                          (emitIMFValue)="preActionGetImfFn($event, 'paramIMF')">
+                        </app-imf-tree-structure>
+                        <ng-select [disabled]="readOnlyFlag" appendTo="body" [clearable]="false" class="filter-shadow"
+                          style="width: 100%" [closeOnSelect]="true" bindValue="value" bindLabel="value"
+                          [items]="ipcList" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+                          *ngIf="param.label.indexOf('ipc_') !== -1">
+                        </ng-select>
+                        <ng-select [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+                          style="width: 100%" [closeOnSelect]="true" appendTo="body" bindValue="id" bindLabel="name"
+                          [items]="param.list" [(ngModel)]="param.value" placeholder="{{ param.name }}" *ngIf="
+                            param.list.length > 0 &&
+                            param.label.indexOf('imf_') === -1 &&
+                            param.label.indexOf('ipc_') === -1
+                          ">
+                          <ng-template ng-option-tmp let-item="newitem">
+                            <div [title]="newitem.tooltip">{{ newitem.name }}</div>
+                          </ng-template>
+                        </ng-select>
+                        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" type="text"
+                          [(ngModel)]="param.value" placeholder="{{ param.name }}"
+                          *ngIf="!param.list || param.list.length === 0" />
+                      </div>
+                      <ng-container *ngFor="
+                          let parameters of newitem.executeModel.parameters;
+                          let parametersIndex = index
+                        ">
+                        <ng-container *ngFor="
+                            let concat of newitem.listParam[parametersIndex];
+                            let concatIndex = index
+                          ">
+                          <div class="col-md-6" style="margin-top: 5px"
+                            [ngClass]="[concatIndex > 1 || parametersIndex > 0 ? 'listParam' : '']">
+                            <app-imf-tree-structure *ngIf="concat.label.indexOf('imf_') !== -1"
+                              [index]="a + ',' + parametersIndex + ',' + concatIndex" [imfId]="imfId"
+                              [imfValue]="concat.value" [placeHolder]="concat.name"
+                              (emitIMFValue)="preActionGetImfFn($event, 'listIMF')"></app-imf-tree-structure>
+                            <ng-select [disabled]="readOnlyFlag" appendTo="body" [clearable]="false"
+                              class="filter-shadow" style="width: 100%" [closeOnSelect]="true" bindValue="value"
+                              bindLabel="value" [items]="ipcList" [(ngModel)]="concat.value"
+                              placeholder="{{ concat.name }}" *ngIf="concat.label.indexOf('ipc_') !== -1">
+                            </ng-select>
+                            <ng-select [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+                              style="width: 100%" [closeOnSelect]="true" appendTo="body" bindValue="id" bindLabel="name"
+                              [items]="concat.list" [(ngModel)]="concat.value" placeholder="{{ concat.name }}" *ngIf="
+                                concat.list.length > 0 &&
+                                concat.label.indexOf('imf_') === -1 &&
+                                concat.label.indexOf('ipc_') === -1
+                              ">
+                              <ng-template ng-option-tmp let-item="newitem">
+                                <div [title]="newitem.tooltip">{{ newitem.name }}</div>
+                              </ng-template>
+                            </ng-select>
+                            <input class="toto input-align input-search" style="width: 100%; border-radius: 5px"
+                              type="text" [(ngModel)]="concat.value" placeholder="{{ concat.name }}"
+                              *ngIf="!concat.list || concat.list.length === 0" />
+                          </div>
+                          <div class="col-md-4" style="width: 120px; bottom: 5px; margin-right: 0px; margin-top: 5px"
+                            *ngIf="concatIndex + 1 === newitem.listParam[parametersIndex].length">
+                            <span class="toto input-align rulsCss icon-border-radius postIcon" style="margin-right: 5px"
+                              (click)="addListParam(newitem, concat, parametersIndex)">
+                              <em class="fa fa-plus"></em></span>
+                            <span class="toto input-align rulsCss icon-border-radius postIcon"
+                              (click)="removeListParam(newitem.listParam[parametersIndex])" *ngIf="concatIndex > 0"><em
+                                class="fa fa-minus"></em></span>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngFor="
+                            let concat of newitem.mapParam[parametersIndex];
+                            let concatIndex = index
+                          ">
+                          <div class="col-md-5" style="margin-top: 5px" [ngClass]="[
+                              concatIndex > 1 ||
+                              (concatIndex > 0 &&
+                                concat.label.indexOf('imf_') === -1 &&
+                                concat.label.indexOf('ipc_') === -1) ||
+                              newitem.listParam.length > 0 ||
+                              parametersIndex > 0
+                                ? 'listParam'
+                                : ''
+                            ]">
+                            <app-imf-tree-structure *ngIf="concat.label.indexOf('imf_') !== -1"
+                              [index]="a + ',' + parametersIndex + ',' + concatIndex" [imfId]="imfId"
+                              [imfValue]="concat.value" [placeHolder]="concat.name"
+                              (emitIMFValue)="getImfFn($event, 'map1IMF')"></app-imf-tree-structure>
+                            <ng-select [disabled]="readOnlyFlag" appendTo="body" [clearable]="false"
+                              class="filter-shadow" style="width: 90%" [closeOnSelect]="true" bindValue="value"
+                              bindLabel="value" [items]="ipcList" [(ngModel)]="concat.value"
+                              placeholder="{{ concat.name }}" *ngIf="concat.label.indexOf('ipc_') !== -1">
+                            </ng-select>
+                            <ng-select [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+                              style="width: 90%" [closeOnSelect]="true" appendTo="body" bindValue="id" bindLabel="name"
+                              [items]="concat.list" [(ngModel)]="concat.value" placeholder="{{ concat.name }}" *ngIf="
+                                concat.list.length > 0 &&
+                                concat.label.indexOf('imf_') === -1 &&
+                                concat.label.indexOf('ipc_') === -1
+                              ">
+                              <ng-template ng-option-tmp let-item="newitem">
+                                <div [title]="newitem.tooltip">{{ newitem.name }}</div>
+                              </ng-template>
+                            </ng-select>
+                            <input class="toto input-align input-search" style="width: 100%; border-radius: 5px"
+                              type="text" [(ngModel)]="concat.value" placeholder="{{ concat.name }}"
+                              *ngIf="concat.list.length === 0" />
+                            <span style="margin-left: 40px; font-size: 20px">:</span>
+                          </div>
+                          <div class="col-md-4" style="margin-top: 5px">
+                            <ng-select [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+                              style="width: 25%" [closeOnSelect]="true" appendTo="body" [items]="valueSelectionList"
+                              [(ngModel)]="concat.selection" *ngIf="
+                                concat.list2.length > 0 && concat.label2.indexOf('imf_') !== -1
+                              ">
+                            </ng-select>
+                            <input class="toto input-align input-search"
+                              style="width: 110%; border-radius: 5px; margin-left: 0px !important" type="text"
+                              [(ngModel)]="concat.value2" placeholder="Type value"
+                              *ngIf="concat.list2.length > 0 && concat.selection === 'Text'" />
+                            <ng-container *ngIf="concat.list2.length > 0 && concat.selection === 'List'">
+                              <app-imf-tree-structure *ngIf="concat.label2.indexOf('imf_') !== -1"
+                                [index]="a + ',' + parametersIndex + ',' + concatIndex" [imfId]="imfId"
+                                [imfValue]="concat.value2" [placeHolder]="concat.name2"
+                                (emitIMFValue)="getImfFn($event, 'map2IMF')">
+                              </app-imf-tree-structure>
+                              <ng-select [disabled]="readOnlyFlag" appendTo="body" [clearable]="false"
+                                class="filter-shadow" style="width: 100%" [closeOnSelect]="true" bindValue="value"
+                                bindLabel="value" [items]="ipcList" [(ngModel)]="concat.value2"
+                                placeholder="{{ concat.name2 }}" *ngIf="concat.label2.indexOf('ipc_') !== -1">
+                              </ng-select>
+                              <ng-select [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+                                style="width: 100%" [closeOnSelect]="true" appendTo="body" bindValue="id"
+                                bindLabel="name" [items]="concat.list2" [(ngModel)]="concat.value2"
+                                placeholder="{{ concat.name2 }}" *ngIf="
+                                  concat.label2.indexOf('imf_') === -1 &&
+                                  concat.label2.indexOf('ipc_') === -1
+                                ">
+                                <ng-template ng-option-tmp let-item="newitem">
+                                  <div [title]="newitem.tooltip">{{ newitem.name }}</div>
+                                </ng-template>
+                              </ng-select>
+                            </ng-container>
+                            <input class="toto input-align input-search" style="width: 100%; border-radius: 5px"
+                              type="text" [(ngModel)]="concat.value2" placeholder="{{ concat.name2 }}"
+                              *ngIf="!concat.list2 || concat.list2.length === 0" />
+                          </div>
+                          <div class="col-md-2" style="width: 100px; bottom: 5px; margin-right: 0px; margin-top: 5px"
+                            *ngIf="concatIndex + 1 === newitem.mapParam[parametersIndex].length">
+                            <span class="toto input-align rulsCss icon-border-radius postIcon" style="margin-right: 5px"
+                              (click)="addMapParam(newitem, concat, parametersIndex)">
+                              <em class="fa fa-plus"></em></span>
+                            <span class="toto input-align rulsCss icon-border-radius postIcon"
+                              (click)="removeMapParam(newitem.mapParam[parametersIndex])" *ngIf="concatIndex > 0"><em
+                                class="fa fa-minus"></em></span>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="executeDiv">
+                  <div class="row row-margin row-align row-template">
+                    <div class="row col-md-2">
+                      <label class="required">Set IPC</label>
+                    </div>
+                    <div class="row col-md-6">
+                      <ng-select [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+                        style="width: 75%; margin-left: 10px" [closeOnSelect]="true" bindValue="value" appendTo="body"
+                        bindLabel="value" [items]="ipcList" [(ngModel)]="newitem.IPCvalue" placeholder="Select IPC">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <span *ngIf="newitem.showError" style="color: red; margin-left: 10px">
+                Please provide all mandatory field
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <!--pre Action End -->
+</ng-container>
+<div>
+  <div class="row col-md-4 margin previous-button">
+    <button class="btn btn-primary" type="button" (click)="prevTabValue()">Previous</button>
+    <button class="btn btn-primary" type="button" (click)="showDataModal()"
+      *ngIf="authReqDivShow === 'req' && showRuleConditionList[selectedTransactionType]">
+      Set constant
+    </button>
+    <button class="btn btn-primary" type="button" (click)="openEnrichPopupFn()"
+      *ngIf="authReqDivShow === 'res' && showRuleConditionList[selectedTransactionType]">
+      Set constant
+    </button>
+    <button class="btn btn-primary" *ngIf="selectedTabIndex != 2 && showRuleConditionList[selectedTransactionType] && adapterDataMap"
+      type="button" (click)="opensetCustomMapper()">
+      Set Custom Mapper
+    </button>
+  </div>
+
+  <div class="row col-md-8" *ngIf="showRuleConditionList[selectedTransactionType]"
+    style="margin-right: 0px; padding-right: 0px">
+    <div class="margin pull-right" style="margin-right: -10px">
+      <button *ngIf="!readOnlyFlag"  class="btn btn-primary" type="button"
+        (click)="draftTransform()">
+        Save Draft
+      </button>
+      <button class="btn btn-primary" type="button" (click)="tabChangeValue()">Next</button>
+    </div>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="setCustomMapper" nzClosable="false" [nzTitle]="customMapperMpdalTitle"
+  [nzContent]="customMapperModalContent" [nzFooter]="customMapperModalFooter" [nzWidth]="900"
+  (nzOnCancel)="setCustomMapper = false" [nzStyle]="{ top: '70px' }">
+  <ng-template #customMapperMpdalTitle>
+    Add Custom Mapper {{ selectedTabIndex == 0 ? 'Request' : 'Response' }}:
+    {{ selectedTransactionType }}
+  </ng-template>
+
+  <ng-template #customMapperModalContent>
+    <div class="col-md-12">
+      <nz-spin [nzSpinning]="showLoader" [nzDelay]="500">
+        <div class="col-md-12" *ngIf="isJarUpload">
+          <div class="col-md-2" *ngIf="!readOnlyFlag">
+            <label>Upload Jar:</label>
+          </div>
+          <div class="col-md-2" *ngIf="!readOnlyFlag">
+            <label for="uploadfile" style="cursor: pointer">
+              <em nz-icon nzType="paper-clip" style="font-size: 20px" theme="outline"></em>
+              <input type="file" [disabled]="readOnlyFlag" (change)="uploadFile($event)" id="uploadfile"
+                style="display: none" />
+            </label>
+          </div>
+          <div class="col-md-7">
+            <table>
+              <tr *ngFor="let file of fileInfos; let i = index">
+                <td class="col-md-6">{{ file.name }}</td>
+                <td class="col-md-3" *ngIf="!readOnlyFlag">
+                  <em nz-icon nzType="close" style="font-size: 10px; cursor: pointer; margin-left: 20px; color: red"
+                    nzTheme="outline" (click)="removeFile(i)"></em>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <table class="table">
+          <caption></caption>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Class</th>
+              <th scope="col">IPC</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of customMappings; let i = index">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>
+                <input class="form-control" [disabled]="readOnlyFlag" type="text" placeholder="Enter Value"
+                  [(ngModel)]="item.className" />
+              </td>
+              <td>
+                <ng-select [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag" appendTo="body"
+                  [closeOnSelect]="true" bindValue="value" bindLabel="value" [items]="ipcList" [(ngModel)]="item.ipc"
+                  placeholder="Select IPC">
+                </ng-select>
+              </td>
+              <td>
+                <!-- && i !== 0 -->
+                <span class="toto input-align" (click)="pullCustomMapperItem(i)"
+                  *ngIf="!readOnlyFlag"><em class="fa fa-minus"></em></span>
+                <span class="toto input-align" (click)="pushCustomMapperItem(item)"
+                  *ngIf="i + 1 === customMappings.length && !readOnlyFlag"><em class="fa fa-plus"></em></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </nz-spin>
+    </div>
+    <span class="error ml35" *ngIf="jarFileExistWarning?.length">{{ jarFileExistWarning }}</span>
+  </ng-template>
+  <ng-template #customMapperModalFooter>
+    <button nz-button nzType="primary" (click)="setCustomMapper = false">Cancel</button>
+    <button nz-button nzType="primary" (click)="closeSetCustomMapper()" *ngIf="customMappings.length > 0 && !readOnlyFlag">
+      Save
+    </button>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisible" [nzFooter]="null" [nzTitle]="modalTitle" [nzContent]="modalContent"
+  nzClosable="false" [nzWidth]="1000" [nzStyle]="{ top: '70px' }">
+  <ng-template #modalTitle let-row="row">
+    FLD {{ FldID.id }} {{ selectedTransactionType }} {{ AuthorizationTitle }}</ng-template>
+  <ng-template #modalContent>
+    <transform-action *ngIf="isVisible" [readOnlyFlag]="readOnlyFlag"
+      [transformItem]="transformActionItem[FldID.id + selectedTransactionType]"
+      [transformActionItemRes]="transformActionItemRes[FldID.id + selectedTransactionType]" [scheme]="template"
+      [field]="FldID" [type]="authReqDivShow === 'req' ? true : false"
+      [selectedTransactionType]="selectedTransactionType" (reqIMFObj)="reqValue($event)" (resIMFObj)="resValue($event)"
+      (resIMFLeg)="imfLegValue($event)" [isRequest]="isRequest" (isVisible)="handleSave($event)" [fieldList]="authData"
+      [imfId]="imfId" [elData]="elData" [authData]="authData" [mapperList]="mapperList"
+      (handleCancel)="handleCancel($event)" [serviceList]="serviceList" [jsonData]="jsonData" [contextImf]="contextNew"
+      [stepList]="stepList">
+    </transform-action>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isTransactionCondVisible" nzTitle="Message Type: {{ selectedTransactionType }}"
+  nzClosable="false" [nzFooter]="transactionModalFooter" [nzWidth]="1228">
+  <ng-container *nzModalContent>
+    <h4 *ngIf="requestCon" style="padding-left: 5px; padding-bottom: 0px">Condition</h4>
+  <div class="RuleDiv" *ngIf="
+      readOnlyFlag &&
+      requestCon &&
+      (transactionRequestArray.length > 0 || transactionResponseArray.length > 0)
+    ">
+    <div class="row row-margin row-align marginleft">
+      <div class="row col-md-2" *ngIf="transactionRequestArray.length > 0">
+        <mat-checkbox [(ngModel)]="requestMapping" [disabled]="reqRuleMapDisable || readOnlyFlag"
+          (change)="changeReqMapFn()">
+          Request Mapping From Message</mat-checkbox>
+      </div>
+      <div class="row col-md-3 copyReqRes" *ngIf="transactionRequestArray.length > 0">
+        <ng-container *ngIf="requestMapping">
+          <ng-select appendTo="body" [items]="transactionRequestArray" bindLabel="name" placeholder="Select Message"
+            [clearable]="false" [(ngModel)]="requestMappingTransaction" [disabled]="reqRuleMapDisable || readOnlyFlag">
+          </ng-select>
+        </ng-container>
+      </div>
+      <div class="row col-md-2" *ngIf="transactionResponseArray.length > 0">
+        <mat-checkbox [(ngModel)]="responseMapping" [disabled]="resRuleMapDisable || readOnlyFlag"
+          (change)="changeResMapFn()">
+          Response Mapping From Message</mat-checkbox>
+      </div>
+      <div class="row col-md-3 copyReqRes" *ngIf="transactionResponseArray.length > 0">
+        <ng-container *ngIf="responseMapping">
+          <ng-select appendTo="body" [items]="transactionResponseArray" bindLabel="name" placeholder="Select Message"
+            [clearable]="false" [(ngModel)]="responseMappingTransaction" [disabled]="resRuleMapDisable || readOnlyFlag">
+          </ng-select>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="isTransactionCondVisible && requestCon">
+    <app-packager-condition-builder [readOnlyFlag]="readOnlyFlag" [ruleCondition]="reqCondition" [btnText]="'Save'"
+      [listIdRule]="adapterData && adapterData.transformData && adapterData.transformData.listIdRule"
+      (addSubRule)="saveReqCondition($event)">
+    </app-packager-condition-builder>
+  </ng-container>
+  </ng-container>
+  <ng-template #transactionModalFooter>
+    <button *ngIf="!requestCon" nz-button nzType="primary" style="width: 120px; float: left" (click)="BackFn()">
+      Previous
+    </button>
+    <button nz-button nzType="primary" style="width: 80px;margin-top: 12px;" (click)="cancelFn()">Cancel</button>
+  </ng-template>
+</nz-modal>
+
+<nz-drawer [nzVisible]="showReqEnrichVisible" [nzWidth]="1080" [nzClosable]="true" [nzMaskClosable]="false"
+  (nzOnClose)="closeRes()">
+  <ng-container *nzDrawerContent>
+    <l1-set-constant-response [readOnlyFlag]="readOnlyFlag" [showReqEnrichVisible]="showReqEnrichVisible"
+      [selectedTransactionType]="selectedTransactionType" [adapterData]="adapterData" [jsonData]="jsonData"
+      [enrichfields]="enrichfields" (closePopup)="closePopup($event)" [l1ResConstant]="l1ResConstant">
+    </l1-set-constant-response>
+  </ng-container>
+</nz-drawer>
+
+<nz-drawer [nzVisible]="isDataEnrichmentScreenVisible" [nzWidth]="1080" [nzClosable]="true" (nzOnClose)="close()"
+  [nzMaskClosable]="false">
+  <ng-container *nzDrawerContent>
+    <l1-set-constant-request [readOnlyFlag]="readOnlyFlag" [entityList]="entityList" [entityMappingList]="entityMappingList"
+      [selectedTransactionType]="selectedTransactionType" [isDataEnrichmentScreenVisible]="isDataEnrichmentScreenVisible"
+      [adapterData]="adapterData" [jsonData]="jsonData" [queryObjDropDown]="queryObjDropDown"
+      [enrichModelObject]="enrichModelObject" [enrichfields]="enrichfields" (closePopup)="closeReqConstant($event)"
+      [mappings]="mappings">
+    </l1-set-constant-request>
+  </ng-container>
+</nz-drawer>

@@ -1,0 +1,1 @@
+call gradlew -info npmInstall npm_run_build clean cleanAngularApp copyAngularApp copyLibFromBackendToParent build -x test war cleanAngularAppAgain cleanupLibFromParent artifactoryPublish %1

@@ -1,0 +1,275 @@
+<div class="portal-search">
+  <div class="form-inline">
+    <input
+      class="toto form-control input-search"
+      type="text"
+      placeholder="{{ 'DEVICE_SEARCH_BY_ID' | translate }}"
+      (keyup.enter)="getFilterNameData($event)"
+      [(ngModel)]="place"
+    />
+    <button
+      type="submit"
+      [disabled]="searchResetButton"
+      class="btn btn-primary btn-md btn-flat top-icon"
+      (click)="resetSearch()"
+    >
+      {{ 'RESET' | translate }}
+    </button>
+  </div>
+</div>
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="row col-md-2" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [items]="merchantList"
+        [(ngModel)]="filter.merchant"
+        (change)="getFilterInstitution($event)"
+        placeholder="{{ 'ALL_INSTITUTION' | translate }}"
+      ></ng-select>
+    </div>
+    <div class="row col-md-2" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [items]="locationList"
+        (change)="getFilterLocation($event)"
+        placeholder="{{ 'ALL_LOCATION' | translate }}"
+        [(ngModel)]="filter.location"
+      ></ng-select>
+    </div>
+    <div class="row col-md-2" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="name"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [(ngModel)]="filter.status"
+        [items]="statusList"
+        placeholder="{{ 'ALL_STATUS' | translate }}"
+        (change)="getFilterStatusData($event)"
+      >
+      </ng-select>
+    </div>
+    <a
+      role="button"
+      *ngIf="resetButtonFlag"
+      class="btn-link button-effect"
+      (click)="resetFilterSearch()"
+      >{{ 'RESET_FILTERS' | translate }}</a
+    >
+  </div>
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div style="height: 80vh">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        style="height: 78vh"
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+  <ng-template #date let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span class="row-tag">{{ row.activateOn | newDate }}</span
+      ><br />
+      <!-- <span class="row-tag">{{ row.activateOn | date: 'hh:mm:ss a ' }}</span> -->
+    </ng-container>
+  </ng-template>
+  <ng-template #expiry let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span class="row-tag">{{ row.expiryOn | newDate }}</span
+      ><br />
+      <!-- <span class="row-tag">{{ row.expiryOn | date: 'hh:mm:ss a ' }}</span> -->
+    </ng-container>
+  </ng-template>
+  <ng-template #name let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span class="row-tag">{{ row.name }}</span> <br />
+      <!--<span class="row-tag">{{ 'TERMINAL_ID' | translate }}: {{ row.code }}</span>
+      <br />-->
+      <span class="row-tag" *ngIf="row.location">
+        <label class="row-tag">{{ 'INSTITUTION_STORE' | translate }}</label>
+        <a class="cursor" (click)="locationDetails(row)">
+          {{ row.location.name }}
+        </a>
+      </span>
+    </ng-container>
+  </ng-template>
+  <ng-template #locked let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <div *ngIf="permissionObject.update">
+        <nz-switch
+          [ngModel]="row.locked == '1' ? false : true"
+          (ngModelChange)="changeStatus(row)"
+          [nzLoading]="statusLoading"
+          [nzDisabled]="true"
+        >
+        </nz-switch>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #posSafetyFlag let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <nz-switch [ngModel]="row.posSafetyFlag == '0' ? false : true" [nzDisabled]="true">
+      </nz-switch>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #action let-row="row" ngx-datatable-cell-template>
+    <div>
+      <div>
+        <a role="button" class="btn-link button-effect" (click)="viewDetails(row.id)"
+          >View Details</a
+        >
+      </div>
+    </div>
+  </ng-template>
+  <div
+    class="modal fade"
+    tabindex="-1"
+    [ngClass]="{ in: visibleAnimate }"
+    [ngStyle]="{
+      display: visible ? 'block' : 'none',
+      opacity: visibleAnimate ? 1 : 1
+    }"
+    *ngIf="visible"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{ 'CONFIRMDELETE' | translate }}
+            <button
+              class="close pull-right"
+              data-dismiss="modal"
+              type="button"
+              aria-label="Close"
+              (click)="cancel()"
+            >
+              ×
+            </button>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            {{
+              'DEVICE_DELETE' | translate
+            }}{{
+              objectData.type.code
+            }}
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-flat" (click)="cancel()">
+            {{ 'CLOSE' | translate }}
+          </button>
+          <button class="btn btn-danger btn-flat pull-right" (click)="delete()">
+            {{ 'DELETE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    tabindex="-1"
+    [ngClass]="{ in: visiblePopUpAnimate }"
+    [ngStyle]="{
+      display: visiblePopUp ? 'block' : 'none',
+      opacity: visiblePopUpAnimate ? 1 : 1
+    }"
+    *ngIf="visiblePopUp"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header import-header">
+          <h4 class="modal-title" style="text-align: center">
+            {{ 'IMPORT' | translate }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <p>{{ 'DEVICE_IMPORT_LINE' | translate }}</p>
+          <app-import-file
+            [url]="importUrl"
+            [importPath]="'assets/pages/import.csv'"
+          ></app-import-file>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary btn-md btn-flat" (click)="cancelPopUp()">
+            {{ 'CLOSE' | translate }}
+          </button>
+          <button class="btn btn-primary btn-md btn-flat" (click)="resetUpload()">
+            {{ 'MORE_IMPORT' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isvisibleView">
+  <nz-drawer
+    [nzVisible]="isvisibleView"
+    [nzWidth]="800"
+    (nzOnClose)="close()"
+    [nzMaskClosable]="false"
+    [nzTitle]="title"
+  >
+    <ng-container *nzDrawerContent>
+      <app-device-info
+        [isvisibleView]="isvisibleView"
+        [idView]="idView"
+        (closeDrawer)="close($event)"
+        (create)="create($event)"
+      ></app-device-info>
+    </ng-container>
+  </nz-drawer>
+</div>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>

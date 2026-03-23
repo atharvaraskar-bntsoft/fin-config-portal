@@ -1,0 +1,30 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin" *ngIf="permissionObject.write">
+    <div class="pull-right row button-margin">
+      <button
+        class="btn btn-primary btn-md btn-flat"
+        routerLink="create"
+        *ngIf="!dekData?.custodianTextExist"
+      >
+        <i class="fa fa-plus-circle"></i>
+        {{ 'GENERATE_MEK' | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <h1
+      class="generate-align"
+      *ngIf="!dekData?.custodianTextExist && !dekData?.otherCustodianTextExist"
+    >
+      MEK & DEK keys generated sucessfully on
+      {{ dekData?.lastUpdatedTime | date: 'dd MMM yyyy hh:mm:ss a' }}
+    </h1>
+    <h1 class="generate-align" *ngIf="dekData?.otherCustodianTextExist">
+      <!-- First clear text added by {{ dekData?.user }} -->
+      MEK 1st component already exist, please proceed for MEK 2nd component
+    </h1>
+    <h1 class="generate-align" *ngIf="dekData?.custodianTextExist">
+      Thank you, MEK 1st component exist!
+    </h1>
+  </div>
+</div>

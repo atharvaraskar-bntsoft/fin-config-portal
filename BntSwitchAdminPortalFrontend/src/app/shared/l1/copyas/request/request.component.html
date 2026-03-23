@@ -1,0 +1,91 @@
+<div class="form-pannel">
+  <div class="card-main">
+    <div class="form-group mt-4">
+      <div class="row">
+        <div class="col-md-2 text-label-right">
+          <label class="required">Assign value to internal field</label>
+        </div>
+        <div class="col-md-3">
+          <app-imf-tree-structure-res [imfId]="imfId" [readOnlyFlag] ="readOnlyFlag" [networkService]="networkService" [isRequest]="isRequest"
+            [imfValue]="imfValue" (emitIMFValue)="getImfFn($event, 'CopyIMF')">
+          </app-imf-tree-structure-res>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-label-right">
+          <label for="Post Validation">Post Validation</label>
+        </div>
+        <div class="col-md-2">
+          <span class="toto input-align rulsCss icon-border-radius btn btn-default" *ngIf="!readOnlyFlag" style="margin-right: 5px"
+            (click)="addValidation(copyPostvalidation)"> <i class="fa fa-plus"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" *ngFor="let valid of copyPostvalidation; let j = index">
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-md-3">
+          <ng-select [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag" [closeOnSelect]="true" [items]="validationList"
+            [(ngModel)]="valid['validation']" bindLabel="name" placeholder="Select validation"
+            (change)="validationParam(valid)">
+            <ng-template ng-option-tmp let-item="item">
+              <div [title]="item.parameters.tooltip" *ngIf="item.parameters">
+                {{ item.name }}
+              </div>
+              <div *ngIf="!item.parameters">{{ item.name }}</div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-md-1" *ngIf="valid.operatorList && valid.operatorList.length > 0">
+          <ng-select [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag" [closeOnSelect]="true" [items]="valid.operatorList"
+            [(ngModel)]="valid['operator']" bindLabel="label" placeholder="Select Operator">
+          </ng-select>
+        </div>
+        <div class="col-md-3" *ngFor="let param of valid.params">
+          <ng-select [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag" [closeOnSelect]="true" bindValue="id" bindLabel="name"
+            [items]="param.list" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+            *ngIf="param.label === 'source'">
+            <ng-template ng-option-tmp let-item="item">
+              <div [title]="item.tooltip">{{ item.name }}</div>
+            </ng-template>
+          </ng-select>
+          <ng-select [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag" [closeOnSelect]="true" bindLabel="alias" bindValue="name"
+            [items]="param.list" [(ngModel)]="param.value" placeholder="{{ param.name }}" *ngIf="param.label === 'imf'">
+            <ng-template ng-option-tmp let-item="item">
+              <div [title]="item.name">{{ item.alias }}</div>
+            </ng-template>
+          </ng-select>
+          <input class="toto input-align input-search form-control" [disabled]="readOnlyFlag" type="text" [(ngModel)]="param.value"
+            placeholder="{{ param.name }}" *ngIf="!param.list && param.type !== 'Integer'" />
+          <input class="toto input-align input-search form-control" type="number" [disabled]="readOnlyFlag" [(ngModel)]="param.value"
+            placeholder="{{ param.name }}" *ngIf="!param.list && param.type === 'Integer'" />
+        </div>
+        <div class="col-sm-1 auto-width nopadding-lg">
+          <span class="toto input-align rulsCss icon-border-radius btn btn-default" 
+            *ngIf="copyPostvalidation.length > 0 && !readOnlyFlag" (click)="removeValidation(j)"> <i class="fa fa-minus"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2 text-label-right">
+          <label class="required">Set IPC</label>
+        </div>
+        <div class="col-md-3">
+          <ng-select [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag" appendTo="body" [closeOnSelect]="true" bindValue="value"
+            bindLabel="value" [items]="ipcList" [(ngModel)]="ipcValue" placeholder="Select IPC">
+          </ng-select>
+        </div>
+      </div>
+      <span *ngIf="internalFormatError && (!imfValue || !ipcValue)" style="color: red">Please fill all mandatory
+        fields</span>
+    </div>
+    <div class="pull-right">
+      <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+      <button nz-button nzType="primary"  *ngIf="!readOnlyFlag" style="margin-left: 10px"
+        (click)="saveData()">Save</button>
+    </div>
+  </div>
+</div>

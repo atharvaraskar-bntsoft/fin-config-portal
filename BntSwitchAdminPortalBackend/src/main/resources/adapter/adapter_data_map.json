@@ -1,0 +1,15 @@
+{
+   "custom.jar.files.id":{
+      "field":"custom.jar.files.id",
+      "label":"Upload Jars",
+      "value":"",
+      "format":"",
+      "hidden":"true",
+      "datatype":"file",
+      "fileName":"",
+      "mandatory":"false",
+      "listvalues":[
+         ".JAR"
+      ]
+   }
+}

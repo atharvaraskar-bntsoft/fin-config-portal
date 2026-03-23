@@ -1,0 +1,167 @@
+
+  <ng-container>
+    <span>Set constant values to internal fields (Enrich message)</span>
+    <div class="configDiv">
+      <div class="row mt-4" style="padding-top: 15px;">
+        <div class="col-sm-12">
+          <nz-radio-group [(ngModel)]="enrichfields" [disabled]="readOnlyFlag" class="nzRadio"
+            (ngModelChange)="enrichChangeFn()">
+            <label nz-radio nzValue="configuration">Enrich fields from configuration</label>
+            <label nz-radio nzValue="constValue">Enrich fields from constant value</label>
+          </nz-radio-group>
+        </div>
+      </div>
+
+      <div *ngIf="enrichfields === 'configuration'" style="margin-top: 5px">
+        <div class="row" *ngIf="!readOnlyFlag">
+          <div class="col-sm-12 text-right">
+            <span class="btn btn-default" (click)="addEntityFn()"><i class="fa fa-plus"></i></span>
+          </div>
+        </div>
+        <div class="row mt-4" *ngIf="queryObjDropDown && queryObjDropDown.length > 0">
+          <div class="col-sm-10">
+            <label class="pull-left">Configuration</label>
+          </div>
+          <div class="col-sm-2 text-right" *ngIf="!readOnlyFlag">
+            <span class="btn btn-default" (click)="removeEntityItem()"
+              *ngIf="queryObjDropDown && queryObjDropDown.length > 0"><i class="fa fa-minus"></i></span>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <mat-chip-list class="example-chip" *ngIf="queryObjDropDown && queryObjDropDown.length > 0">
+              <mat-chip class="example-box" *ngFor="let tab of queryObjDropDown; let i = index"
+                (click)="selectConfigFn(tab)">
+                {{ tab.name }}_{{ tab.id }}
+                <mat-icon matChipRemove *ngIf="!readOnlyFlag" (click)="removeEntityFn(tab, i)"><i
+                    class="fa fa-minus"></i></mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+        </div>
+        <div *ngIf="enrichModelObject">
+          <div class="row mt-4">
+            <div class="col-md-2">
+              <label>Entity<span style="color: red">*</span> </label>
+            </div>
+            <div class="col-sm-8">
+              <ng-select appendTo="body" [disabled]="readOnlyFlag" bindLabel="value" autofocus bindValue="value"
+                [(ngModel)]="enrichModelObject.lookupType.query.from.mapName" [clearable]="false"
+                placeholder="Select Entity" [items]="entityMappingList" (change)="entityMapChange(enrichModelObject)"
+                style="width: 100%">
+              </ng-select>
+            </div>
+            <div class="col-sm-2 text-right" *ngIf="!readOnlyFlag">
+              <span class="btn btn-default" (click)="pushrepeatImfList(enrichModelObject)">
+                <i class="fa fa-plus"></i></span>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+              <div class="list-row row" *ngFor="let data of enrichModelObject.fields; let i = index">
+                <div class="col-md-5">
+                  <app-tree-constant [readOnlyFlag]="readOnlyFlag" [jsonData]="jsonData" [resimf]="data.destination"
+                    (ImfValue)="changeDestination(data, $event)">
+                  </app-tree-constant>
+                </div>
+                <div class="col-md-5">
+                  <ng-select appendTo="body" [disabled]="readOnlyFlag" bindLabel="value" autofocus bindValue="value"
+                    [(ngModel)]="data.source" [clearable]="false" placeholder="Select Available Configuration"
+                    [items]="entityColumn">
+                  </ng-select>
+                </div>
+                <div class="col-md-2 text-right" *ngIf="!readOnlyFlag">
+                  <span class="btn btn-default" (click)="pullrepeatImfList(enrichModelObject, i)"><i
+                      class="fa fa-minus"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4" *ngFor="
+              let element of enrichModelObject.lookupType.query.condition.conditions;
+              let i = index
+            ">
+            <div class="col-md-2">
+              <label style="padding-left: 0px">Which field in IMF has Entity field?<span
+                  style="color: red">*</span></label>
+            </div>
+            <div class="col-md-8">
+              <app-tree-constant [readOnlyFlag]="readOnlyFlag" [jsonData]="jsonData" [resimf]="element.value"
+                (ImfValue)="selectWhereField(element, $event)"></app-tree-constant>
+            </div>
+            <div class="col-md-2 text-right" *ngIf="!readOnlyFlag">
+              <span class="btn btn-default" *ngIf="i >= 1" (click)="pullWhereConditions(i)"><i
+                  class="fa fa-minus"></i></span>
+            </div>
+          </div>
+          <span class="btn btn-default" *ngIf="
+              i + 1 === enrichModelObject.lookupType.query.condition.conditions.length &&
+              !readOnlyFlag
+            " (click)="pushWhereConditions()"><i class="fa fa-plus"></i></span>
+        </div>
+      </div>
+      <div *ngIf="enrichfields === 'constValue'">
+        <div class="row" *ngIf="!readOnlyFlag">
+          <div class="col-sm-12 text-right">
+            <span class="btn btn-default" (click)="pushConstItem(item)"><i class="fa fa-plus"></i></span>
+          </div>
+        </div>
+        <nz-spin nzTip="Loading..." [nzSpinning]="loading">
+        <div class="row mt-4 entity imfMerchant" *ngFor="let item of mappings; let i = index">
+          <div class="col-md-2" style="padding-top: 5px;">
+            <a *ngIf="item.condition == null && !readOnlyFlag" class="fonsize" (click)="addCondition(item)">{{
+              'ADD_CONDITION' | translate }}</a>
+            <a *ngIf="item.condition != null" class="fonsize" (click)="addCondition(item)">Edit Condition</a>
+            <span *ngIf="item.condition != null"><a (click)="removeCondition(item)"><i
+                  style="color: red; margin-right: 2px;" class="fa fa-trash"></i></a></span>
+          </div>
+          <div class="col-md-3">
+            <app-tree-structure [readOnlyFlag]="readOnlyFlag" [jsonData]="jsonData" [resimf]="item?.resImfValue"
+              [useCase]="item.useCase" (ImfValue)="changeDestination(item, $event)">
+            </app-tree-structure>
+          </div>
+          <div class="col-md-1 auto-width nopadding-lg">
+            <span>=</span>
+          </div>
+          <div class="col-md-3">
+            <input class="form-control" inputTrim pattern="/^(\s+\S+\s*)*(?!\s).*$/" [disabled]="readOnlyFlag"
+              type="text" placeholder="Enter Value" [(ngModel)]="item.source" />
+          </div>
+          <div class="col-sm-1 text-right" *ngIf="!readOnlyFlag">
+            <span class="btn btn-default" (click)="pullConstItem(i)"><i class="fa fa-minus"></i></span>
+          </div>
+          <nz-modal [(nzVisible)]="item.isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent"
+            [nzFooter]="modalFooter" [nzWidth]="1150" nzClosable="false">
+            <ng-template #modalTitle>Condition</ng-template>
+            <ng-template #modalContent>
+              <app-packager-condition-builder [readOnlyFlag]="readOnlyFlag" [ruleCondition]="item.condition"
+                [btnText]="'Save'"
+                [listIdRule]="adapterData && adapterData.transformData && adapterData.transformData.listIdRule"
+                (addSubRule)="saveReqCondition($event,item)">
+              </app-packager-condition-builder>
+            </ng-template>
+            <ng-template #modalFooter>
+              <button nz-button nzType="primary" style="width: 80px" (click)="cancel(item)">
+                Cancel
+              </button>
+            </ng-template>
+          </nz-modal>
+        </div>
+      </nz-spin>
+      </div>
+      <div class="row mt-4" style="text-align: center;">
+        <span style="color: red" *ngIf="dataEnrichmentScreenError">Please fill all mandatory fields.</span>
+        <span style="color: red" *ngIf="valueValidError && !dataEnrichmentScreenError">Please enter valid data.</span>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-sm-12 text-right">
+        <button nz-button nzType="primary" (click)="closeReqConstant()">Cancel</button>
+        <button nz-button nzType="primary" *ngIf="!valueValidError && !readOnlyFlag && mappings.length > 0"
+          (click)="saveDataModal()">
+          Save
+        </button>
+      </div>
+    </div>
+  </ng-container>

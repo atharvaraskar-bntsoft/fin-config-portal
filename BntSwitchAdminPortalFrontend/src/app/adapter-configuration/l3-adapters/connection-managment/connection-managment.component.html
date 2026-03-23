@@ -1,0 +1,410 @@
+<div>
+  <h2 mat-dialog-title>Connection Management</h2>
+  <!----- Form1-------->
+  <form [formGroup]="form">
+    <div class="form-group" *ngIf="selectedValue">
+      <div class="card-details">
+        <div class="card-details-header">
+          <div class="row">
+            <div class="col-md-10">
+              <label for="connection Details">Connection Details</label>
+            </div>
+            <div class="col-md-2 text-right">
+              <span class="toto input-align rulsCss icon-border-radius btn btn-default" style="margin-right: 5px"
+                *ngIf="!sharedData.readOnlyFlag" (click)="addconnectionList()">
+                <i class="fa fa-plus"></i></span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <ng-container class="card-details-body" formArrayName="connections">
+          <table class="table table-borderless">
+            <thead>
+              <tr>
+                <th class="required">Connection Name</th>
+                <th class="required">Port</th>
+                <th>Label</th>
+                <th>Timeout (ms)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let data of connectionFormGroup.controls; let i = index">
+              <tr [formGroupName]="i">
+                <td>
+                  <input type="text" class="form-control textbox-border" [disabled]="sharedData.readOnlyFlag" #label placeholder="Enter Connection Name"
+                    formControlName="connection" />
+                  <app-field-error-display [displayError]="
+                  getConnectionFormGroup(i).controls['connection'].touched &&
+                  getConnectionFormGroup(i).controls['connection'].hasError('required')
+                " errorMsg="Please enter
+                  connection name!">
+                  </app-field-error-display>
+                  <app-field-error-display [displayError]="
+                  getConnectionFormGroup(i).controls['connection'].touched &&
+                  getConnectionFormGroup(i).controls['connection'].hasError('unique')
+                " errorMsg="Please enter unique
+                connection name!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input [disabled]="sharedData.readOnlyFlag" type="text" class="form-control textbox-border" placeholder="Enter Port"
+                    formControlName="port" />
+                  <app-field-error-display [displayError]="
+                      getConnectionFormGroup(i).controls['port'].touched &&
+                      getConnectionFormGroup(i).controls['port'].hasError('required')
+                    " errorMsg="Please enter
+                      port!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Label"
+                    formControlName="label" />
+                </td>
+                <td>
+                  <!-- onkeydown="javascript: return event.keyCode === 8 ? true : !isNaN(Number(event.key))" -->
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Timeout"
+                    formControlName="timeOut" />
+                </td>
+                <td>
+                  <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                    *ngIf="!sharedData.readOnlyFlag" style="margin-right: 5px;" (click)="removeconnectionList(i)">
+                    <i class="fa fa-minus"></i></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="!selectedValue">
+      <div class="card-details">
+        <div class="card-details-header">
+          <div class="row">
+            <div class="col-md-10">
+              <label for="connection Details">Connection Details</label>
+            </div>
+            <div class="col-md-2 text-right">
+              <span class="toto input-align rulsCss icon-border-radius btn btn-default" *ngIf="!sharedData.readOnlyFlag"
+                style="margin-right: 5px" (click)="addconnectionList()">
+                <i class="fa fa-plus"></i></span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <ng-container class="card-details-body" formArrayName="connections">
+          <table class="table table-borderless">
+            <thead>
+              <tr>
+                <th class="required">Connection Name</th>
+                <th class="required">IP</th>
+                <th class="required">Port</th>
+                <th>Label</th>
+                <th>Timeout (ms)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let data of connectionFormGroup.controls; let i = index">
+              <tr [formGroupName]="i">
+                <td>
+                  <input type="text" class="form-control textbox-border" [disabled]="sharedData.readOnlyFlag" #label
+                    placeholder="Enter Connection Name" formControlName="connection" />
+                  <app-field-error-display [displayError]="
+                  getConnectionFormGroup(i).controls['connection'].touched &&
+                  getConnectionFormGroup(i).controls['connection'].hasError('required')
+                " errorMsg="Please enter
+                      connection name!">
+                  </app-field-error-display>
+                  <app-field-error-display [displayError]="
+                  getConnectionFormGroup(i).controls['connection'].touched &&
+                  getConnectionFormGroup(i).controls['connection'].hasError('unique')
+                " errorMsg="Please enter unique
+                      connection name!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter IP" formControlName="ip" />
+                  <app-field-error-display [displayError]="
+                    getConnectionFormGroup(i).controls['ip'].touched &&
+                    getConnectionFormGroup(i).controls['ip'].hasError('required')
+                  " errorMsg="Please enter
+                        IP!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Port"
+                    formControlName="port" />
+                  <app-field-error-display [displayError]="
+                    getConnectionFormGroup(i).controls['port'].touched &&
+                    getConnectionFormGroup(i).controls['port'].hasError('required')
+                  " errorMsg="Please enter
+                        port!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Label"
+                    formControlName="label" />
+                </td>
+                <td>
+                  <!-- onkeydown="javascript: return event.keyCode === 8 ? true : !isNaN(Number(event.key))" -->
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Timeout"
+                    formControlName="timeOut" />
+                </td>
+                <td>
+                  <span class="toto input-align rulsCss icon-border-radius btn btn-default" style="margin-right: 5px;"
+                    (click)="removeconnectionList(i)" *ngIf="!sharedData.readOnlyFlag">
+                    <i class="fa fa-minus"></i></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-2">
+          <label class="required">Connection Strategy</label>
+        </div>
+        <div class="col-md-3">
+          <ng-select [items]="strategy" placeholder="Connection Strategy" bindLabel="label" bindvalue="label" name="strategy" required
+            formControlName="strategyConnections" [(ngModel)]="selectedStrategy">
+          </ng-select>
+          <app-field-error-display [displayError]="
+              form.controls['strategyConnections'].touched &&
+              form.controls['strategyConnections'].hasError('required')
+            " errorMsg="Please enter
+            connection name!">
+          </app-field-error-display>
+        </div>
+        <div class="col-md-3" style="margin-top: 10px">
+          <label class="check_box_container" style="width: 100%" *ngIf="selectedStrategy == 'STATION_GROUPS'">Copy in
+            message (cart)
+            <input formControlName="inMessage" type="checkbox" />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="selectedStrategy == 'CUSTOM'">
+      <ng-container>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <label class="required">Custom Implementation Class</label>
+              <input type="text" class="form-control textbox-border" #label placeholder="Enter Custum Strategy"
+                formControlName="custumStrategy" />
+              <app-field-error-display [displayError]="
+                  form.controls['custumStrategy'].touched &&
+                  form.controls['custumStrategy'].hasError('required')
+                " errorMsg="Please enter Custom Implementation Class!">
+              </app-field-error-display>
+              <app-field-error-display [displayError]="
+                  form.controls['custumStrategy'].touched &&
+                  form.controls['custumStrategy'].hasError('pattern')
+                " errorMsg="Please enter Custom Implementation Class!">
+              </app-field-error-display>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </form>
+  <!----- Form1 END-------->
+
+  <!----- Form2-------->
+  <form *ngIf="selectedStrategy == 'STATION_GROUPS'" [formGroup]="form2">
+    <div class="form-group" *ngIf="selectedStrategy == 'STATION_GROUPS'">
+      <div class="form-group">
+        <div class="card-details">
+          <div class="card-details-header">
+            <div class="row">
+              <div class="col-md-10">
+                <label for="Connection Group">Connection Group</label>
+              </div>
+              <div class="col-md-2 text-right">
+                <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                  *ngIf="!sharedData.readOnlyFlag" style="margin-right: 5px" (click)="addStationGroupList()">
+                  <i class="fa fa-plus"></i></span>
+              </div>
+            </div>
+          </div>
+          <ng-container class="card-details-body" formArrayName="stationGroup">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="required">Group</th>
+                  <th class="required">Connection</th>
+                  <th>Is LB Group</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let data of statonFormGroup.controls; let i = index">
+                <tr [formGroupName]="i">
+                  <td>
+                    <input type="text" class="form-control textbox-border" #label placeholder="Enter Group Name"
+                      formControlName="group" />
+                    <app-field-error-display [displayError]="
+          getStatonFormGroup(i).controls['group'].touched &&
+          getStatonFormGroup(i).controls['group'].hasError('required')
+        " errorMsg="Please enter
+          group name!">
+                    </app-field-error-display>
+                    <app-field-error-display [displayError]="
+          getStatonFormGroup(i).controls['group'].touched &&
+          getStatonFormGroup(i).controls['group'].hasError('unique')
+        " errorMsg="Please enter unique
+          group name!">
+                    </app-field-error-display>
+                  </td>
+                  <td>
+                    <nz-select nzMode="multiple" nzPlaceHolder="Inserted are removed"
+                      (nzOpenChange)="openChange($event)" (ngModelChange)="isSelectedConnectionName()"
+                      formControlName="connections">
+                      <nz-option *ngFor="let option of listOfConnectionName" [nzLabel]="option" [nzValue]="option">
+                      </nz-option>
+                    </nz-select>
+                    <app-field-error-display [displayError]="
+              getStatonFormGroup(i).controls['connections'].touched &&
+              getStatonFormGroup(i).controls['connections'].hasError('required')
+            " errorMsg="Please select connections!">
+                    </app-field-error-display>
+
+                  </td>
+                  <td>
+                    <label class="check_box_container" style="width: 100%">
+                      <input formControlName="isLBGroup" type="checkbox" (change)="checkValue($event, i)" />
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <td>
+                    <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                      *ngIf="!sharedData.readOnlyFlag" style="margin-right: 5px;" (click)="removeStationGroupList(i)">
+                      <i class="fa fa-minus"></i></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </ng-container>
+          <div class="card-details-body">
+            <div class="row">
+              <div class="col-md-4">
+                <label class="required">Intra Group Stratagy</label>
+                <ng-select [items]="interGroupStrategy" formControlName="strategyIntraGroups"></ng-select>
+              </div>
+              <div class="col-md-4">
+                <label class="required">Group Strategy</label>
+                <ng-select [items]="groupStrategy" formControlName="strategyGroups"></ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="selectedStrategy == 'STATION_GROUPS'">
+      <div class="form-group">
+        <div class="card-details">
+          <div class="card-details-header">
+            <div class="row">
+              <div class="col-md-10">
+                <label for="Connection Group">Connection DataCenter</label>
+              </div>
+              <div class="col-md-2 text-right">
+                <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                  *ngIf="!sharedData.readOnlyFlag" style="margin-right: 5px" (click)="addStationDataCenterList()">
+                  <i class="fa fa-plus"></i></span>
+              </div>
+            </div>
+          </div>
+          <ng-container class="card-details-body" formArrayName="stationDataCenter">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="required">Data Center</th>
+                  <th class="required">LB Group</th>
+                  <th class="required">Group</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let data of stationDataFormGroup.controls; let i = index">
+                <tr [formGroupName]="i">
+                  <td>
+                    <input type="text" class="form-control textbox-border" #label placeholder="Enter DataCenter Name"
+                      formControlName="dataCenter" />
+                    <app-field-error-display [displayError]="
+                      getstationDataFormGroup(i).controls['dataCenter'].touched &&
+                      getstationDataFormGroup(i).controls['dataCenter'].hasError('required')
+                    " errorMsg="Please enter
+                      data center name!">
+                    </app-field-error-display>
+                    <app-field-error-display [displayError]="
+                      getstationDataFormGroup(i).controls['dataCenter'].touched &&
+                      getstationDataFormGroup(i).controls['dataCenter'].hasError('unique')
+                    " errorMsg="Please enter unique
+                    data center name!">
+                    </app-field-error-display>
+
+                  </td>
+                  <td>
+                    <nz-select nzPlaceHolder="LB Group" (ngModelChange)="isSelectedloadBalancer($event)"
+                      (nzOpenChange)="openChangeLoadBalancer($event)" formControlName="loadBalancer">
+                      <nz-option *ngFor="let option of loadBalancerList" [nzLabel]="option" [nzValue]="option">
+                      </nz-option>
+                    </nz-select>
+                  </td>
+                  <td>
+                    <nz-select nzMode="multiple" nzPlaceHolder="Group Name" (nzOpenChange)="openChangeGroup($event)"
+                      (ngModelChange)="isSelectedGroupName()" formControlName="group">
+                      <nz-option *ngFor="let option of listOfGroupName" [nzLabel]="option" [nzValue]="option">
+                      </nz-option>
+                    </nz-select>
+                    <app-field-error-display [displayError]="
+                      getstationDataFormGroup(i).controls['group'].touched &&
+                      getstationDataFormGroup(i).controls['group'].hasError('required')
+                    " errorMsg="Please select
+                      group!">
+                    </app-field-error-display>
+                  </td>
+                  <td>
+                    <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                      *ngIf="!sharedData.readOnlyFlag" style="margin-right: 5px;"
+                      (click)="removeStationDataCenterList(i)">
+                      <i class="fa fa-minus"></i></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-container>
+          <div class="card-details-body">
+            <div class="row">
+              <div class="col-md-4">
+                <label class="required">LB Strategy</label>
+                <ng-select [items]="lbStrategy" formControlName="strategyLoadBalancers"></ng-select>
+              </div>
+              <div class="col-md-4">
+                <label class="required">DC Strategy</label>
+                <ng-select [items]="dcStrategy" formControlName="strategyDataCenter"></ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!----- Form2 End-------->
+
+  <div class="row" style="margin-bottom: 30px">
+    <div class="col-md-12 text-right">
+      <button nz-button nzType="primary" (click)="close()">Close</button>
+      <button nz-button nzType="primary" *ngIf="selectedStrategy !== 'STATION_GROUPS' && !sharedData.readOnlyFlag"
+        [disabled]="form.invalid" (click)="saveForm()">
+        Save
+      </button>
+      <button nz-button nzType="primary" *ngIf="selectedStrategy == 'STATION_GROUPS' && !sharedData.readOnlyFlag"
+        [disabled]="form.invalid || form2.invalid" (click)="saveForm()">
+        Save
+      </button>
+    </div>
+  </div>
+</div>

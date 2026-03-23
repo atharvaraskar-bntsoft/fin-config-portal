@@ -1,0 +1,146 @@
+<ul>
+  <li *ngFor="let result of items; let pi = index">
+    <div class="treeview__levels">
+      <span class="level-title">
+        <ng-select [disabled]="readOnlyFlag" clearable="true" appendTo="body" bindValue="name"
+          [(ngModel)]="result.serviceName" bindLabel="name" (change)="getDependsOn(result, $event)"
+          [closeOnSelect]="true" (click)="getOldValue(result)" [items]="globalList" [clearable]="false">
+        </ng-select>
+      </span>
+      <span class="treeview__level-btns" *ngIf="!readOnlyFlag">
+        <a class="btn-link button-effect" role="button" [matMenuTriggerFor]="belowMenu">{{
+          'ACTIONS' | translate
+          }}</a>
+        <mat-menu #belowMenu="matMenu">
+          <button  mat-menu-item (click)="AddParallel(items)">
+            <i class="fa fa-bars fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+            <span style="color: #3c8dbc; margin-left: 10px">{{ 'ADD_PARALLEL' | translate }}</span>
+          </button>
+          <mat-divider></mat-divider>
+          <ng-container>
+            <button mat-menu-item (click)="AddSequential(result)">
+              <i class="fa fa-signal fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                'ADD_SEQUENTIAL' | translate
+                }}</span>
+            </button>
+          </ng-container>
+          <mat-divider *ngIf="result.precedingDecisionUi && readOnlyFlag"></mat-divider>
+          <mat-divider></mat-divider>
+          <ng-container>
+            <button mat-menu-item (click)="AddDecision(result)">
+              <i class="fa fa-gavel fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.precedingDecisionUi ? 'Edit Decision' : 'Add Decision'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.precedingDecisionUi && readOnlyFlag">
+            <button mat-menu-item (click)="AddDecision(result)">
+              <i class="fa fa-gavel fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">View Decision</span>
+            </button>
+          </ng-container>
+          <mat-divider></mat-divider>
+          <mat-divider *ngIf="result.safingConditionJson && readOnlyFlag"></mat-divider>
+          <ng-container>
+            <button mat-menu-item (click)="addSafDecision(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.safingConditionJson ? 'Edit SAF Decision' : 'Add SAF Decision'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.safingConditionJson && readOnlyFlag">
+            <button mat-menu-item (click)="addSafDecision(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">View SAF Decision</span>
+            </button>
+          </ng-container>
+
+          <mat-divider></mat-divider>
+          <mat-divider *ngIf="result.autoReversalEligibilityCondition && readOnlyFlag"></mat-divider>
+          <ng-container>
+            <button mat-menu-item (click)="addAutoReversalEligibilityCondition(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.autoReversalEligibilityCondition ? 'Edit Auto Reversal Eligibility Condition' : 'Add Auto Reversal Eligibility Condition'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.autoReversalEligibilityCondition && readOnlyFlag">
+            <button mat-menu-item (click)="addAutoReversalEligibilityCondition(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">View Auto Reversal Eligibility Condition</span>
+            </button>
+          </ng-container>
+          <mat-divider></mat-divider>
+          <mat-divider *ngIf="result.autoReversalFinalCondition && readOnlyFlag"></mat-divider>
+          <ng-container>
+            <button mat-menu-item (click)="addAutoReversalFinalCondition(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.autoReversalFinalCondition ? 'Edit Auto Reversal Final Condition' : 'Add Auto Reversal Final Condition'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.autoReversalFinalCondition && readOnlyFlag">
+            <button mat-menu-item (click)="addAutoReversalFinalCondition(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">View Auto Reversal Final Condition</span>
+            </button>
+          </ng-container>
+          
+          <mat-divider></mat-divider>
+          <mat-divider *ngIf="result.safingExceptionConditionJson && readOnlyFlag"></mat-divider>
+          <ng-container>
+            <button mat-menu-item (click)="addExceptionSafDecision(result)">
+              <i class="fa fa-exclamation-circle icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.safingExceptionConditionJson
+                ? 'Edit SAF Exception Decision'
+                : 'Add SAF Exception Decision'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.safingExceptionConditionJson && readOnlyFlag">
+            <button mat-menu-item (click)="addExceptionSafDecision(result)">
+              <i class="fa fa-exclamation-circle icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">Viewe SAF Exception Decision</span>
+            </button>
+          </ng-container>
+          <mat-divider></mat-divider>
+          <ng-container>
+            <button mat-menu-item (click)="removeParent(result, pi)">
+              <i class="fa fa-trash fa-sm" aria-hidden="true" style="color: #f46771"></i>
+              <span class="delete-color" style="margin-left: 10px">{{ 'DELETE' | translate }}</span>
+            </button>
+          </ng-container>
+        </mat-menu>
+      </span>
+    </div>
+    <ul *ngIf="result.precedingDecisionUi && result.precedingDecisionUi.onfalse">
+      <li>
+        <div class="treeview__level">
+          <span class="decisionType"> (False) </span>
+          <span class="level-title" style="margin-left: -37px">{{ result.precedingDecisionUi.onfalse }}
+          </span>
+        </div>
+      </li>
+    </ul>
+    <ul *ngIf="result.precedingDecisionUi && result.precedingDecisionUi.ontrue">
+      <li>
+        <div [ngClass]="[result.precedingDecisionUi.onfalse ? 'treeview__levels' : 'treeview__level']">
+          <span class="decisionType">(True) </span>
+          <span class="level-title" style="margin-left: -37px" (click)="showGroup(result.precedingDecisionUi.ontrue)">{{
+            result.precedingDecisionUi.ontrue }}
+          </span>
+        </div>
+      </li>
+    </ul>
+    <app-child-workflows-v1 *ngIf="result.services?.length !== 0" [items]="result.services" [servicelist]="servicelist"
+      [globalList]="globalList" [readOnlyFlag]="readOnlyFlag" [decisionGroup]="decisionGroup" [usedList]="usedList"
+      [workflowObj]="workflowObj">
+    </app-child-workflows-v1>
+  </li>
+</ul>

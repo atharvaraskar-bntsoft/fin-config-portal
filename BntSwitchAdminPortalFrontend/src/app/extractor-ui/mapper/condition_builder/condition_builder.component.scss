@@ -1,0 +1,370 @@
+// @import "../../../common/scss/main-app";
+// @import "../../../common/scss/main";
+// @import "../../../common/scss/conditions";
+// @import "../../../common/scss/equals";
+// @import "../../../common/scss/and-or";
+// @import "../../../common/scss/main-field";
+// @import "../../../common/scss/tabs";
+
+::ng-deep .ng-select.custom .ng-select-container {
+}
+::ng-deep .ng-select.custom .ng-placeholder {
+  font-size: 14px;
+  font-weight: 300;
+}
+::ng-deep .ng-value-label {
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.ant-radio-button-wrapper {
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 15px;
+  line-height: 20px;
+  color: #000;
+}
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  z-index: 1;
+  color: #1890ff !important;
+  background: #fff;
+  border-color: #1890ff;
+}
+.groupChild_rule {
+  border: solid 1px #cccccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 1px;
+  border-radius: 4px;
+  background-color: #f4f6f9;
+  padding-right: 92px;
+  transition: border 0.15s linear;
+  width: 100%;
+  float: left;
+  position: relative;
+}
+
+// width: 31%;
+.field {
+  position: relative;
+  flex-basis: 22%;
+  float: left;
+  padding: 10px;
+  display: flex;
+  align-self: flex-start;
+  flex-wrap: wrap;
+}
+.groupAction {
+  position: absolute;
+  right: 20px;
+  top: 19px;
+}
+// .group {
+//   // margin-top: 10px;
+//   padding: 0px 5px 0px 5px;
+//   // position: relative;
+//   // overflow: hidden;
+//   width: 98%;
+// }
+.grouporder {
+  // margin-left: 10px;
+  // border: solid 1px #ececec;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.1);
+  // display: flex;
+  // background: #f7f7f7;
+}
+.addfiled {
+  cursor: pointer;
+  float: right;
+  margin-right: 65px;
+  color: #007bff;
+}
+.addfiled:hover {
+  color: #035fc1;
+  font-weight: bold;
+}
+.creategroup {
+  color: #007bff;
+  // margin-left: 7px;
+  // position: absolute;
+  //   top: 22px;
+  //   right: 100;
+  cursor: pointer;
+  padding-right: 10px;
+}
+
+.creategroup:hover {
+  color: #035fc1;
+  font-weight: bold;
+}
+.creategroup:hover {
+  color: #035fc1;
+  font-weight: bold;
+}
+.deletetext {
+  cursor: pointer;
+  //   margin-left: 7px;
+  //   position: absolute;
+  // top: 22px;
+  // right: 40px;
+  color: #ff0000;
+}
+.deletetext:hover {
+  font-weight: bold;
+}
+
+.grouporder {
+  // margin-left: 10px;
+  border: solid 1px #ececec;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.1);
+  display: flex;
+  padding: 10px 5px;
+  margin: 4px;
+  // background: #f7f7f7;
+}
+
+.groupheader {
+  // background: #ececec;
+  // padding: 3px;
+  // position: relative;
+}
+.icons {
+  font-size: 20px;
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+.ad.error {
+  border: solid #ff0000 1px;
+}
+.addicon {
+  cursor: pointer;
+  &:before {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+    //  background-image: url(../../../../../../assets/img/add.svg);
+    background-size: contain;
+    content: '';
+  }
+}
+.minusicon {
+  cursor: pointer;
+  &:before {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    top: -1px;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+    //  background-image: url(../../../../../../assets/img/minus.svg);
+    background-size: contain;
+    content: '';
+  }
+}
+
+.deleteicon {
+  cursor: pointer;
+  &:before {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    top: -7px;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+    color: #ff0000;
+    //  background-image: url(../../../../../../assets/img/trash.svg);
+    background-size: contain;
+    position: absolute;
+    right: -10px;
+    content: '';
+  }
+}
+.addfiled {
+  cursor: pointer;
+  float: right;
+  margin-right: 65px;
+  color: #007bff;
+}
+.valueField {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  color: #007bff !important;
+  cursor: pointer;
+}
+.valueField:hover {
+  display: block;
+  color: #007bff !important;
+}
+.dropDownFileds {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  color: #007bff !important;
+  cursor: pointer;
+}
+.dropDownFileds:hover {
+  display: block;
+  color: #007bff !important;
+}
+.error {
+  color: #ff0000;
+}
+.error-message {
+  color: #ff0000;
+}
+
+.addCondtion {
+  color: #007bff !important;
+}
+
+.and-or {
+  height: 32px;
+  //   width: 50px;
+  position: relative;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 0.71;
+  color: #9ba1b9;
+  text-align: center;
+  //   text-transform: uppercase;
+  cursor: pointer;
+  &:before {
+    top: 0;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    width: 2px;
+    height: 8px;
+    background: #dde1ee;
+    content: '';
+  }
+  &:after {
+    margin-top: 19px;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    width: 2px;
+    height: 9px;
+    background: #dde1ee;
+    content: '';
+  }
+}
+.text {
+  cursor: pointer;
+  position: absolute;
+  left: 14px;
+  top: 13px;
+}
+.text:hover {
+  color: #4e9ff8;
+}
+.group {
+  position: relative;
+  width: 100%;
+  margin-top: 5px;
+}
+span.deleteicon {
+  position: absolute;
+  right: 5px;
+  width: 30px;
+  border: #eaeaea solid 1px;
+  text-align: center;
+  background: #e8e8e8;
+  height: 30px;
+  line-height: 30px;
+  color: #e23434;
+  z-index: 9999;
+}
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+.context {
+  list-style-type: none;
+}
+
+.withNotClass {
+  width: 174px;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+}
+.toggle-collapse {
+  margin-right: 8px;
+}
+.toggle-rotate {
+  transform: rotate(180deg);
+  transition: ease all 1s;
+}
+.withoutNotClass {
+  width: 140px;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+}
+.saveConditionCss {
+  float: right;
+  margin-right: 0px;
+  margin-top: 33px;
+  margin-left: 5px;
+}
+.dropbtn {
+  //   background-color: #4caf50;
+  color: #40a9ff;
+  padding: 0px;
+  font-size: 13px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 83px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  //   color: black;
+ 
+  padding: 8px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  //   background-color: #3e8e41;
+}

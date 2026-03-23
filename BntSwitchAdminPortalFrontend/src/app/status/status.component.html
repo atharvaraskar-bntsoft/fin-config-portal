@@ -1,0 +1,74 @@
+<div class="fade-in template">
+  <h4 class="leftHead" *ngIf="server_port && server_port[0]">
+    {{ 'SERVER_PORT' | translate }} : {{ server_port }}
+  </h4>
+  <h4 class="leftHead" *ngIf="version && version[0]">
+    {{ 'VERSION1' | translate }} : {{ version }}
+  </h4>
+  <h4 class="leftHead" *ngIf="monitoringCoreDetail && monitoringCoreDetail[0]">
+    {{ 'MONITORING_CORE_DETAIL' | translate }} : {{ monitoringCoreDetail }} ({{
+      'ALERT_SCREEN' | translate
+    }})
+  </h4>
+  <h4 class="leftHead" *ngIf="monitoringHazlecastDetail && monitoringHazlecastDetail[0]">
+    {{ 'MONITORING_HAZELCAST_DETAIL' | translate }} : {{ monitoringHazlecastDetail }} ({{
+      'MONITORING_SCREEN' | translate
+    }}
+    , {{ 'DEPLOYED_ROUTER_SCREEN' | translate }})
+  </h4>
+  <div class="col-md-6">
+    <h5>{{ 'TABLE_NAME' | translate }}</h5>
+    <div class="scroll">
+      <ul class="row-li-tag-export">
+        <li *ngFor="let item of table_titles">{{ item }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <h5>{{ 'JVM_INFO' | translate }} Updated Information</h5>
+    <div class="scroll">
+      <ul class="row-li-tag-export">
+        <li *ngFor="let item of jvm_titles">
+          <small>{{ item['property'] }}</small
+          ><br /><span style="font-weight: bold">{{ item['value'] }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <!--<button class="btn btn-primary btn-md btn-flat export-button" (click)="openLink(swagger)">
+      <i class="fa fa-link"></i> {{ 'SWAGGER_LINK' | translate }}
+    </button>-->
+
+    <button class="btn btn-primary btn-md btn-flat export-button" (click)="txnKey()">
+      <i class="fa fa-medkit"></i> {{ 'TXNKEYLABLE' | translate }}
+    </button>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  tabindex="-1"
+  [ngClass]="{ in: visibleAnimate }"
+  [ngStyle]="{
+    display: visible ? 'block' : 'none',
+    opacity: visibleAnimate ? 1 : 1
+  }"
+  *ngIf="visible"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">{{ 'SWITCH_PORTAL_HEALTH' | translate }}</div>
+      <div class="modal-body" style="max-height: 450px; overflow: auto">
+        <rv-pretty-json [obj]="jsonObj"></rv-pretty-json>
+      </div>
+      <div class="modal-footer">
+        <button class="btn col-md-3 btn-flat pull-right" (click)="close()">
+          {{ 'CLOSE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,130 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <a class="btn" (click)="location.back()">
+      <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+      {{ 'BACK' | translate }}</a
+    >
+  </div>
+
+  <div class="row row-margin">
+    <div class="row col-md-4 dropDownmargin margin-filter">
+      <ng-select
+        class="filter-shadow"
+        [(ngModel)]="selectedId"
+        bindValue="id"
+        bindLabel="bin"
+        (change)="binFileChange($event)"
+        [closeOnSelect]="true"
+        [items]="fileNames"
+        placeholder="{{ 'ALL_BIN' | translate }}"
+      ></ng-select>
+    </div>
+    <a
+      *ngIf="resetButtonFlag"
+      role="button"
+      class="btn-link button-effect"
+      (click)="resetFilter()"
+      >{{ 'RESET_FILTERS' | translate }}</a
+    >
+  </div>
+
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div>
+      <ngx-datatable
+        [loadingIndicator]="loading"
+        class="bootstrap fullscreen striped"
+        [rows]="accountTypeData"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+      </ngx-datatable>
+    </div>
+  </div>
+
+  <ng-template #linkedTransactionTypes let-row="row" ngx-datatable-cell-template>
+    <div>
+      <a class="btn-link button-effect" role="button" (click)="openModal(row)">{{
+        'LINKED_TRANSACTION_TYPE' | translate
+      }}</a>
+    </div>
+  </ng-template>
+  <ng-template #budgetPeriods let-row="row" ngx-datatable-cell-template>
+    <div>
+      <a class="btn-link button-effect" role="button" (click)="openBudget(row)">{{
+        'BUDGET_PERIODS' | translate
+      }}</a>
+    </div>
+  </ng-template>
+
+  <nz-modal
+    [(nzVisible)]="isAttributesVisible"
+    [nzTitle]="attributesModalTit"
+    [nzContent]="attributesModalCont"
+    [nzFooter]="attributesModalFooter"
+    nzClosable="true"
+    (nzOnCancel)="isAttributesVisible = false"
+    [nzWidth]="650"
+    [nzStyle]="{ top: '90px' }"
+  >
+    <ng-template #attributesModalTit let-row="row">
+      {{ 'LINKED_TRANSACTION_TYPE' | translate }}
+    </ng-template>
+    <ng-template #attributesModalCont>
+      <nz-table #schemaTable nzBordered [nzData]="['']" [nzFrontPagination]="false">
+        <thead>
+          <tr>
+            <th *ngFor="let title of tableHeaders" [style.color]="'#1890ff'">
+              {{ title }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of attributeData | keyvalue">
+            <!-- <td>{{ keyName(item.key) }}</td> -->
+            <td>{{ item?.value?.txnTypeCode }}</td>
+            <td>{{ item.value.transactionType.value }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+    <ng-template #attributesModalFooter>
+      <button nz-button nzType="default" (click)="closeModal()">
+        {{ 'CLOSE' | translate }}
+      </button>
+    </ng-template>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isBudgetVisible"
+    [nzTitle]="attributesModalTitle"
+    [nzContent]="attributesModalContent"
+    [nzFooter]="attributeModalFooter"
+    nzClosable="true"
+    (nzOnCancel)="isBudgetVisible = false"
+    [nzWidth]="650"
+    [nzStyle]="{ top: '90px' }"
+  >
+    <ng-template #attributesModalTitle let-row="row">
+      {{ 'BUDGET_PERIODS' | translate }}
+    </ng-template>
+    <ng-template #attributesModalContent>
+      <nz-table #schemaTable nzBordered>
+        <tbody>
+          <tr *ngFor="let item of budgetData | keyvalue">
+            <td>{{ keyName(item.key) }}</td>
+            <td>{{ item.value }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+    <ng-template #attributeModalFooter>
+      <button nz-button nzType="default" (click)="closeBudget()">
+        {{ 'CLOSE' | translate }}
+      </button>
+    </ng-template>
+  </nz-modal>
+</div>

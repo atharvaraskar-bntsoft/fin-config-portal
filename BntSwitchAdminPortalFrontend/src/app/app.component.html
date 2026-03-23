@@ -1,0 +1,63 @@
+<ng-container *ngIf="customLayout; else noCustomLayout">
+  <router-outlet></router-outlet>
+</ng-container>
+<ng-template #noCustomLayout>
+  <ng-container *ngIf="currentLangflag">
+    <rv-layout-wrapper>
+      <rv-layout-header logoLink="/" [currentLang]="currentLang">
+        <rv-layout-header-logo>
+          <div style="width: 5%; margin-top: 1%; float: left">
+            <img
+              src="assets/img/bnt-switch-icon.png"
+              width="40px"
+              height="40px"
+              viewBox="0 0 24 24"
+            />
+          </div>
+          <div style="color: #525977; width: 85%; margin-top: 3%; float: right; font-weight: bold">
+            BNT-Switch
+          </div>
+        </rv-layout-header-logo>
+        <rv-layout-header-logo-mini>
+          <div style="margin-top: 1%">
+            <img
+              src="assets/img/bnt-switch-icon.png"
+              width="40px"
+              height="40px"
+              viewBox="0 0 24 24"
+            />
+          </div>
+        </rv-layout-header-logo-mini>
+        <app-header-inner></app-header-inner>
+      </rv-layout-header>
+      <rv-layout-sidebar-left
+        *ngIf="permissions"
+        [permissions]="permissions"
+        [currentLang]="currentLang"
+        [approvalCount]="count"
+      >
+        <app-sidebar-left-inner></app-sidebar-left-inner>
+      </rv-layout-sidebar-left>
+      <rv-layout-sidebar-right>
+        <app-sidebar-right-inner></app-sidebar-right-inner>
+      </rv-layout-sidebar-right>
+      <rv-layout-content [currentLang]="currentLang">
+        <router-outlet></router-outlet>
+      </rv-layout-content>
+      <rv-layout-footer>
+        <rv-layout-footer-left>
+          <strong>
+            © {{ currentYear | date: 'yyyy' }} BNT Technologies, Inc. All Rights
+            Reserved.</strong
+          >
+          <strong>Powered by <a href="https://bnt.com">BNT</a>.</strong>
+        </rv-layout-footer-left>
+        <rv-layout-footer-right> <b>Version</b> {{ versionDetail }} </rv-layout-footer-right>
+      </rv-layout-footer>
+    </rv-layout-wrapper>
+  </ng-container>
+</ng-template>
+<ng-snotify class="material"></ng-snotify>
+<ngx-spinner bdColor="rgba(255,255,255, 0.9)">
+  <p style="font-size: 20px; color: #000">BNT-Switch...</p>
+</ngx-spinner>

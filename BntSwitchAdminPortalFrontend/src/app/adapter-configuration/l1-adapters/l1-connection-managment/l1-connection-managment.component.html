@@ -1,0 +1,190 @@
+<div>
+  <h2 mat-dialog-title>Connection Management</h2>
+  <!----- Form1-------->
+  <form [formGroup]="form">
+    <div class="form-group" *ngIf="selectedValue">
+      <div class="card-details">
+        <div class="card-details-header">
+          <div class="row">
+            <div class="col-md-10">
+              <label for="connection Details">Connection Details</label>
+            </div>
+            <div class="col-md-2 text-right" *ngIf="!sharedData.readOnlyFlag">
+              <span class="toto input-align rulsCss icon-border-radius btn btn-default" style="margin-right: 5px"
+                (click)="addconnectionList()">
+                <i class="fa fa-plus"></i></span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <ng-container class="card-details-body" formArrayName="connections">
+          <table class="table table-borderless">
+            <thead>
+              <tr>
+                <th class="required">Connection Name</th>
+                <th class="required">Port</th>
+                <th>Label</th>
+                <th>Timeout (ms)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let data of connectionFormGroup.controls; let i = index">
+              <tr [formGroupName]="i">
+                <td>
+                  <input type="text" class="form-control textbox-border" #label placeholder="Enter Connection Name"
+                    formControlName="connection" />
+                  <app-field-error-display [displayError]="
+                    getConnectionFormGroup(i).controls['connection'].touched &&
+                    getConnectionFormGroup(i).controls['connection'].hasError('required')
+                  " errorMsg="Please enter
+                    connection name!">
+                  </app-field-error-display>
+                  <app-field-error-display [displayError]="
+                    getConnectionFormGroup(i).controls['connection'].touched &&
+                    getConnectionFormGroup(i).controls['connection'].hasError('unique')
+                  " errorMsg="Please enter unique
+                  connection name!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Port"
+                    formControlName="port" />
+                  <app-field-error-display [displayError]="
+                        getConnectionFormGroup(i).controls['port'].touched &&
+                        getConnectionFormGroup(i).controls['port'].hasError('required')
+                      " errorMsg="Please enter
+                        port!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Label"
+                    formControlName="label" />
+                </td>
+                
+                <td>
+                  <!-- onkeydown="javascript: return event.keyCode === 8 ? true : !isNaN(Number(event.key)) -->
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Timeout"
+                    formControlName="timeOut" />
+                </td>
+                <td>
+                  <span class="toto input-align rulsCss icon-border-radius btn btn-default" 
+                  style="margin-right: 5px;" *ngIf="!sharedData.readOnlyFlag"
+                    (click)="removeconnectionList(i)">
+                    <i class="fa fa-minus"></i></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="!selectedValue">
+      <div class="card-details">
+        <div class="card-details-header">
+          <div class="row">
+            <div class="col-md-10">
+              <label for="connection Details">Connection Details</label>
+            </div>
+            <div class="col-md-2 text-right">
+              <span class="toto input-align rulsCss icon-border-radius btn btn-default" style="margin-right: 5px"
+                (click)="addconnectionList()" *ngIf="!sharedData.readOnlyFlag">
+                <i class="fa fa-plus"></i></span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <ng-container class="card-details-body" formArrayName="connections">
+          <table class="table table-borderless">
+            <thead>
+            <tr>
+              <th class="required">Connection Name</th>
+              <th class="required">IP</th>
+              <th class="required">Port</th>
+              <th>Label</th>
+              <th>Timeout (ms)</th>
+              <th></th>
+            </tr>
+          </thead>
+            <tbody *ngFor="let data of connectionFormGroup.controls; let i = index">
+              <tr [formGroupName]="i">
+                <td>
+                  <input type="text" class="form-control textbox-border" #label placeholder="Enter Connection Name"
+                    formControlName="connection" />
+                  <app-field-error-display [displayError]="
+                    getConnectionFormGroup(i).controls['connection'].touched &&
+                    getConnectionFormGroup(i).controls['connection'].hasError('required')
+                  " errorMsg="Please enter
+                        connection name!">
+                  </app-field-error-display>
+                  <app-field-error-display [displayError]="
+                    getConnectionFormGroup(i).controls['connection'].touched &&
+                    getConnectionFormGroup(i).controls['connection'].hasError('unique')
+                  " errorMsg="Please enter unique
+                        connection name!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter IP" formControlName="ip" />
+                  <app-field-error-display [displayError]="
+                      getConnectionFormGroup(i).controls['ip'].touched &&
+                      getConnectionFormGroup(i).controls['ip'].hasError('required')
+                    " errorMsg="Please enter
+                          IP!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Port"
+                    formControlName="port" />
+                  <app-field-error-display [displayError]="
+                      getConnectionFormGroup(i).controls['port'].touched &&
+                      getConnectionFormGroup(i).controls['port'].hasError('required')
+                    " errorMsg="Please enter
+                          port!">
+                  </app-field-error-display>
+                </td>
+                <td>
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Label"
+                    formControlName="label" />
+                </td>
+                <td>
+                  <!-- onkeydown="javascript: return event.keyCode === 8 ? true : !isNaN(Number(event.key)) -->
+                  <input type="text" class="form-control textbox-border" placeholder="Enter Timeout"
+                    formControlName="timeOut" />
+                </td>
+                <td>
+                  <span class="toto input-align rulsCss icon-border-radius btn btn-default" 
+                  *ngIf="!sharedData.readOnlyFlag" 
+                  style="margin-right: 5px;"
+                    (click)="removeconnectionList(i)">
+                    <i class="fa fa-minus"></i></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </ng-container>
+      </div>
+    </div>
+    <div *ngIf="!selectedValue" class="form-group">
+      <div class="row">
+        <div class="col-md-3" style="margin-top: 10px">
+          <label class="check_box_container" style="width: 100%">Alternate Connection
+            <input formControlName="alternateConnection" type="checkbox" />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!----- Form1 END-------->
+
+
+  <div class="row" style="margin-bottom: 30px">
+    <div class="col-md-12 text-right">
+      <button nz-button nzType="primary" (click)="close()">Close</button>
+      <button nz-button nzType="primary" *ngIf="!sharedData.readOnlyFlag" [disabled]="form.invalid" (click)="saveForm()">
+        Save
+      </button>
+    </div>
+  </div>
+</div>

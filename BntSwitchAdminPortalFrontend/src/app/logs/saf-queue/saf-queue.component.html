@@ -1,0 +1,185 @@
+<!-- style="margin-right: 6px; -->
+<nz-spin [nzSpinning]="loading" nzTip="Loading...">
+  <div class="col-md-12 fade-in template">
+    <div class="row">
+      <div class="row row-margin">
+        <div
+          class="col-md-2 inputBox"
+          style="margin-left: 7px; border-radius: 100px; margin-right: 0px; height: 20px"
+        >
+          <!-- (keyup)="searchTerm$.next($event.target.value)" -->
+          <input
+            nz-input
+            placeholder="Enter Id"
+            [(ngModel)]="filterData.id"
+            (keyup)="getSafId($event)"
+          />
+        </div>
+        <div
+          class="row col-md-2"
+          style="margin-left: 0px; margin-top: 3px; height: 4px; margin-right: 5px"
+          *ngIf="!isException"
+        >
+          <ng-select
+            class="filter-shadow"
+            [clearable]="true"
+            [closeOnSelect]="true"
+            [items]="safeStatusDDL"
+            bindValue="id"
+            bindLabel="name"
+            (change)="getFilterData($event, 'status')"
+            placeholder="Select SAF Status"
+            [(ngModel)]="filterData.status"
+          ></ng-select>
+        </div>
+        <button
+          style="margin-top: 3px; margin-right: 10px"
+          (click)="resetFilter()"
+          name="Reset"
+          class="btn btn-primary btn-md btn-flat top-icon"
+          type="submit"
+          [disabled]="searchResetButton"
+        >
+          Reset
+        </button>
+        <button
+          style="margin-top: 3px"
+          (click)="refreshPage()"
+          name="Reset"
+          class="btn btn-primary btn-md btn-flat top-icon"
+          type="submit"
+        >
+          Refresh
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div style="padding-left: 8px">
+        <mat-checkbox
+          (change)="selectAllComponent($event)"
+          [(ngModel)]="isChecked"
+          class="matCheckboxClass"
+          >Select All
+        </mat-checkbox>
+        <span *ngIf="warningError" class="row" style="text-align: center; color: red"
+          >Please select at least one Record.</span
+        >
+      </div>
+    </div>
+
+    <div class="row" [ngClass]="{ loading: loading }" style="height: 85vh">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        style="height: 70vh"
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        columnMode="force"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ng-template> </ng-template>
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div style="width: 100%; margin-top: 17px">
+              <div style="text-align: left; width: 45%; float: left; padding-top: 10px">
+                <b>Showing {{ rows?.length }} out of {{ totalRecords }} records</b>
+
+                <datatable-pager
+                  appNgxDatatableWatcher
+                  [pagerLeftArrowIcon]="'datatable-icon-left'"
+                  [pagerRightArrowIcon]="'datatable-icon-right'"
+                  [pagerPreviousIcon]="'datatable-icon-prev'"
+                  [pagerNextIcon]="'datatable-icon-skip'"
+                  [page]="curPage"
+                  [size]="pageSize"
+                  [count]="rowCount"
+                  [hidden]="!(rowCount / pageSize > 1)"
+                  (change)="table.onFooterPage($event)"
+                >
+                </datatable-pager>
+              </div>
+              <div style="margin-top: 7px">
+                <button class="btn btn-danger btn-md btn-flat pull-right" (click)="deleteFilter()">
+                  <i class="fa fa-trash"></i> {{ 'Delete' | translate }}
+                </button>
+                <button
+                  class="btn btn-primary btn-md btn-flat pull-right"
+                  (click)="navigateToSAF()"
+                  *ngIf="checkPage()"
+                >
+                  <i class="fa fa-reply"></i> Move TO SAF Queue
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+
+    <ng-template #action let-row="row" ngx-datatable-cell-template>
+      <a class="btn-link button-effect" role="button" [matMenuTriggerFor]="belowMenu">
+        {{ 'Actions' | translate }}</a
+      >
+      <mat-menu #belowMenu="matMenu"> </mat-menu>
+    </ng-template>
+
+    <ng-template let-row="row" #attemptTime ngx-datatable-cell-template>
+      {{ row.lastAttemptTime ? (row.lastAttemptTime | newDate) : 'N/A' }}
+    </ng-template>
+
+    <ng-template let-row="row" #nextAttemptTemplate ngx-datatable-cell-template>
+      {{ row.nextAttemptTime ? (row.nextAttemptTime | newDate) : 'N/A' }}
+    </ng-template>
+
+    <ng-template let-row="row" #dependentData ngx-datatable-cell-template>
+      <button
+        [disabled]="!row.dependentData"
+        type="button"
+        class="btn btn-link"
+        (click)="viewData(row)"
+      >
+        View
+      </button>
+    </ng-template>
+    <ng-template #select let-row="row" ngx-datatable-cell-template>
+      <mat-checkbox [checked]="row.select" [(ngModel)]="row.select"></mat-checkbox>
+    </ng-template>
+  </div>
+</nz-spin>
+<nz-modal
+  [nzWidth]="540"
+  [(nzVisible)]="isTableVisible"
+  [nzTitle]="'Dependent Data'"
+  (nzOnCancel)="isTableVisible = false"
+>
+  <ng-container *nzModalContent>
+    <table class="table table-striped">
+      <tbody>
+        <tr *ngFor="let item of dependentValues | keyvalue">
+          <td>{{ item.key }}</td>
+          <td>{{ item.value | json }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <div *nzModalFooter>
+    <button class="btn btn-primary btn-md btn-flat" (click)="isTableVisible = false">
+      {{ 'Close' | translate }}
+    </button>
+  </div>
+</nz-modal>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>

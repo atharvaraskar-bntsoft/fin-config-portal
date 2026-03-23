@@ -1,0 +1,145 @@
+<ng-container>
+  <div class="col-md-12" class="margin: 10px;">
+    <span style="color: red" *ngIf="paramError">Please enter all mandatory fields</span>
+  </div>
+  <ng-container *ngFor="let parameter of selectedStepParameter.listParameters; let idx = index">
+    <div class="col-md-12">
+      <label class="required">Parameter {{ idx + 1 }}</label>
+    </div>
+    <ng-container *ngIf="parameter.dataType.toLowerCase() === 'map'">
+      <div class="col-md-12" *ngFor="let param of parameter.valueMap; let id = index">
+        <div class="col-md-4">
+          <ng-container>
+            <nz-select class="form-control" [(ngModel)]="param.key" [disabled]="readOnlyFlag" bindLabel="list"
+              nzPlaceHolder="Select Type">
+              <nz-option *ngFor="let list of parameter.possibleValue[0]" [nzValue]="list" [nzLabel]="list">
+              </nz-option>
+            </nz-select>
+            <span class="error" *ngIf="((param.key===null || param.key==='') && submit)">This field is
+              required.</span>
+          </ng-container>
+        </div>
+        <div class="col-md-1  auto-width nopadding-lg">
+          <label>:</label>
+        </div>
+        <div class="col-md-6  nopadding-lg">
+          <div class="col-md-8">
+            <nz-tree-select *ngIf="checkNameHavingImfKeyword(parameter) && !param.isText"
+              [nzDropdownMatchSelectWidth]="true" style="width: 100%;" nz-tooltip [nzTooltipTitle]="imfToolTip"
+              [disabled]="readOnlyFlag" nzTooltipPlacement="right" [nzAllowClear]="!readOnlyFlag"
+              [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true" [nzNodes]="imfListNew"
+              [nzShowSearch]="true" [nzHideUnMatched]="true" nzPlaceHolder="Select IMF" [(ngModel)]="param.value.text"
+              (ngModelChange)="selectImf($event, param)">
+            </nz-tree-select>
+            <input class="toto input-align input-search" style="width: 100%; border-radius: 5px"
+              [disabled]="readOnlyFlag" type="text" *ngIf="param.isText" [(ngModel)]="param.value.text"
+              placeholder="" />
+            <span class="error" *ngIf="((param.value.text===null || param.value.text==='') && submit)">This field is
+              required.</span>
+          </div>
+          <div class="col-md-4">
+            <label nz-checkbox nzTooltipTitle="prompt text" [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button
+              nz-tooltip [(ngModel)]="param.isText">Text</label>
+          </div>
+        </div>
+        <div class="col-md-1  auto-width nopadding-lg">
+          <span class="toto input-align rulsCss icon-border-radius" (click)="addParamNew('map', parameter, idx)"
+            style="margin-right: 5px" *ngIf="!readOnlyFlag">
+            <i class="fa fa-plus"></i></span>
+          <span class="toto input-align rulsCss icon-border-radius" *ngIf="id > 0 && !readOnlyFlag"
+            (click)="removeParamNew('map', parameter, id)"><i class="fa fa-minus"></i></span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="parameter.dataType.toLowerCase() === 'list'">
+      <div class="col-md-12" *ngFor="let param of parameter.value; let id = index">
+        <div class="col-md-8">
+          <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+            type="text" [(ngModel)]="param.textValue" placeholder="{{ parameter.name }}" />
+          <span class="error" *ngIf="((param.textValue===null || param.textValue==='') && submit)">This field is
+            required.</span>
+        </div>
+        <div class="col-md-2 plusMinusCss">
+          <span class="toto input-align rulsCss icon-border-radius" (click)="addParamNew('list', parameter, idx)"
+            style="margin-right: 5px" *ngIf="id + 1 === parameter.value.length && !readOnlyFlag">
+            <i class="fa fa-plus"></i></span>
+          <span class="toto input-align rulsCss icon-border-radius" *ngIf="id > 0 && !readOnlyFlag"
+            (click)="removeParamNew('list', parameter, id)"><i class="fa fa-minus"></i></span>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="parameter.dataType.toLowerCase() === 'string'" class="col-md-12">
+      <div class="col-md-8" *ngIf="parameter.possibleValue">
+        <nz-select *ngIf="parameter.possibleValue" class="form-control" [(ngModel)]="parameter.value"
+          [disabled]="readOnlyFlag" bindLabel="list" nzPlaceHolder="{{ parameter.name }}">
+          <nz-option *ngFor="let list of parameter.possibleValue" [nzValue]="list" [nzLabel]="list">
+          </nz-option>
+        </nz-select>
+        <span class="error"
+          *ngIf="((!parameter.value || parameter.value===null || parameter.value==='') && submit)">This field is
+          required.</span>
+      </div>
+      <div class="col-md-8" *ngIf="!parameter.possibleValue">
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+          type="text" [(ngModel)]="parameter.value" placeholder="{{ parameter.label }}"
+          *ngIf="!parameter.possibleValue" />
+        <span class="error" *ngIf="((parameter.value===null || parameter.value==='') && submit)">This field is
+          required.</span>
+      </div>
+      <div class="col-md-4" *ngIf="checkNameHavingSourceKeyword(parameter)">
+        <label nz-checkbox nzTooltipTitle="prompt text" [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button
+          nz-tooltip [(ngModel)]="parameter.checked">Text</label>
+      </div>
+      <div class="col-md-4" *ngIf="checkNameHavingSourceKeyword(parameter) && parameter.checked">
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+          type="text" [(ngModel)]="parameter.text" placeholder="{{ parameter.label }}"
+          *ngIf="!parameter.possibleValue" />
+      </div>
+    </div>
+    <div *ngIf="parameter.dataType.toLowerCase() === 'integer'" class="col-md-12">
+      <div class="col-md-12">
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+          type="number" [(ngModel)]="parameter.value" placeholder="{{ parameter.label }}"
+          *ngIf="!parameter.possibleValue" />
+        <span class="error" *ngIf="((parameter.value===null || parameter.value==='') && submit)">This field is
+          required.</span>
+      </div>
+    </div>
+    <div *ngIf="parameter.dataType.toLowerCase() === 'object'" class="col-md-12">
+      <div class="col-md-12">
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+          type="text" [(ngModel)]="parameter.value" placeholder="{{ parameter.label }}"
+          *ngIf="!parameter.possibleValue" />
+        <span class="error" *ngIf="((parameter.value===null || parameter.value==='') && submit)">This field is
+          required.</span>
+      </div>
+    </div>
+    <div *ngIf="parameter.dataType.toLowerCase() === 'long'" class="col-md-12">
+      <div class="col-md-12">
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+          type="number" [(ngModel)]="parameter.value" placeholder="{{ parameter.label }}"
+          *ngIf="!parameter.possibleValue" />
+        <span class="error" *ngIf="((parameter.value===null || parameter.value==='') && submit)">This field is
+          required.</span>
+      </div>
+    </div>
+  </ng-container>
+  <div class="row row-margin row-align row-template pull-right">
+    <div class="col-sm-12">
+      <button nz-button nzType="default" *ngIf="showCancelBtn" (click)="cancel()" style="margin-top: 50px">
+        Cancel
+      </button>
+      <nz-divider nzType="vertical"></nz-divider>
+      <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px; margin-top: 50px"
+        (click)="savedata()">
+        Save
+      </button>
+      <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px; margin-top: 50px"
+        (click)="saveAndClose()">
+        Save & Close
+      </button>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,85 @@
+@import '../../../../../variable.scss';
+.buttons_color {
+  background-color: $main-color;
+  color: #ffffff;
+  &.button_space {
+    margin: 0 10px;
+  }
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.table_container {
+  font-family: 'lato', sans-serif;
+  height: 500px;
+  margin-top: 10px;
+}
+
+th {
+  // text-align: center;
+  // vertical-align: middle !important;
+  color: $main-color;
+  font-weight: normal;
+  &.table_header {
+    font-weight: bold;
+  }
+}
+
+.show_info {
+  &:focus + .pattern-info {
+    // margin-left: -18px;
+    display: block;
+    width: 200px;
+  }
+}
+
+ol {
+  margin-left: -18px;
+}
+
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+
+.pattern-info {
+  display: none;
+  font-size: 10px;
+  color: gray;
+  line-height: 18px;
+}
+
+// nz-switch {
+//     margin-left: 60px;
+// }
+.curly_show {
+  position: relative;
+}
+
+.curly_show_text {
+  position: absolute;
+  top: 56px;
+  right: 27px;
+  background: #fff;
+  width: 20px;
+  text-align: center;
+}
+
+::ng-deep .material-tooltip {
+  white-space: pre-line;
+  max-width: 500px !important;
+}
+
+mat-icon {
+  margin-left: 4px;
+  position: relative;
+  top: 3px;
+}

@@ -1,0 +1,143 @@
+<div class="col-md-12 margintop fade-in template">
+  <div>
+    <a class="btn" routerLink="/approvals/notifications"
+      ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+    >
+    <a class="btn-link button-effect" style="float: right" role="button" (click)="open()">{{
+      'VIEW_JSON' | translate
+    }}</a>
+  </div>
+  <table class="table" *ngIf="notificationsdetails.length === 0">
+    <thead class="header-color">
+      <tr>
+        <th class="header-text-color" scope="col">ID</th>
+        <th class="header-text-color" scope="col">operationType</th>
+        <th class="header-text-color" scope="col">entityType</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">{{ rows.id }}</th>
+        <td>CREATE</td>
+        <td>{{ rows.entityType }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="notificationsdetails.length">
+    <div class="defaultDataTable">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        class="bootstrap fullscreen striped dataTableHeight"
+        [rows]="notificationsdetailsData"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="dimensions.headerHeight"
+        [footerHeight]="dimensions.footerHeight"
+        [rowHeight]="dimensions.rowHeight"
+        [scrollbarH]="true"
+      >
+      </ngx-datatable>
+    </div>
+    <ng-template #newValue let-row="row" ngx-datatable-cell-template>
+      <ng-container>
+        <span data-toggle="tooltip" title="{{ row.newValue }}"
+          >{{ row.newValue | slice: 0:20 }}<span *ngIf="row.newValue.length > 20">...</span></span
+        >
+      </ng-container>
+    </ng-template>
+    <ng-template #oldValue let-row="row" ngx-datatable-cell-template>
+      <ng-container>
+        <span data-toggle="tooltip" title="{{ row.oldValue }}"
+          >{{ row.oldValue | slice: 0:20 }}<span *ngIf="row.oldValue.length > 20">...</span></span
+        >
+      </ng-container>
+    </ng-template>
+    <ng-template #operationType let-row="row" ngx-datatable-cell-template>
+      <ng-container>
+        <span>{{ row.operationType }}</span>
+      </ng-container>
+    </ng-template>
+  </div>
+
+  <!-- <div class="defaultDataTable">
+    <ngx-datatable
+        appNgxDatatableWatcher
+      class="bootstrap fullscreen striped dataTableHeight"
+      [rows]="notificationsdetails"
+      [columns]="columns"
+      [columnMode]="'force'"
+      [headerHeight]="dimensions.headerHeight"
+      [footerHeight]="dimensions.footerHeight"
+      [rowHeight]="dimensions.rowHeight"
+      [scrollbarH]="true"
+    >
+    </ngx-datatable>
+  </div>
+
+  <ng-template #newValue let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span
+        *ngIf="row.newValue && row.newValue.length < 20"
+        data-toggle="tooltip"
+        title="{{ row.newValue }}"
+        >{{ row.newValue | slice: 0:12 }}</span
+      >
+      <span
+        *ngIf="row.newValue && row.newValue.length >= 20"
+        data-toggle="tooltip"
+        title="{{ row.newValue }}"
+        >{{ row.newValue | slice: 0:12 }}...</span
+      >
+    </ng-container>
+  </ng-template>
+
+  <ng-template #oldValue let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span
+        *ngIf="row.oldValue && row.oldValue.length < 20"
+        data-toggle="tooltip"
+        title="{{ row.oldValue }}"
+        >{{ row.oldValue | slice: 0:12 }}</span
+      >
+      <span
+        *ngIf="row.oldValue && row.oldValue.length >= 20"
+        data-toggle="tooltip"
+        title="{{ row.oldValue }}"
+        >{{ row.oldValue | slice: 0:12 }}...</span
+      >
+    </ng-container>
+  </ng-template> -->
+
+  <fieldset class="main-field">
+    <div class="main__head-btns">
+      <button class="btn btn-primary" [routerLink]="'/approvals/notifications'">
+        {{ 'CANCEL' | translate }}
+      </button>
+    </div>
+  </fieldset>
+
+  <div
+    class="modal fade"
+    tabindex="-1"
+    [ngClass]="{ in: visibleAnimate }"
+    [ngStyle]="{
+      display: visible ? 'block' : 'none',
+      opacity: visibleAnimate ? 1 : 1
+    }"
+    *ngIf="visible"
+  >
+    <div class="modal-dialog" style="width: 630px">
+      <div class="modal-content">
+        <div class="modal-header">JSON View</div>
+        <div class="modal-body" style="height: 70vh; overflow: auto">
+          <rv-pretty-json [obj]="jsonView"></rv-pretty-json>
+        </div>
+        <div class="modal-footer">
+          <button class="btn col-md-3 btn-flat pull-right" (click)="close()">
+            {{ 'CLOSE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

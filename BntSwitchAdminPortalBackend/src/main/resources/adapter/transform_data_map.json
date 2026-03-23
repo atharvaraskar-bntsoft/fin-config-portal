@@ -1,0 +1,194 @@
+{
+	"track2": {
+		"name": "",
+		"type": "",
+		"expression": ""
+	},
+	"data_enrichment_mapping_destination_field": {
+		"type": "field",
+		"source": "",
+		"destination": [
+			"message_exchange[GATEWAY_SERVICE].request_message[]"
+		],
+		"ipc": "SYSTEM_ERROR"
+	},
+	"echoRequestMappingField": {
+		"type": "field",
+		"source": "${fieldId}",
+		"destination": [
+			"message_exchange[GATEWAY_SERVICE].additional_fields[fieldId]"
+		],
+		"ipc": "SYSTEM_ERROR"
+	},
+	"echoResponseMappingField": {
+		"type": "field",
+		"source": "${message_exchange[GATEWAY_SERVICE].additional_fields[fieldId]}",
+		"destination": [
+			"fieldId"
+		],
+		"ipc": "SYSTEM_ERROR"
+	},
+	"length": {
+		"name": "",
+		"type": "",
+		"expression": ""
+	},
+	"elExpressionBlankStruct": {
+		"name": "",
+		"type": "",
+		"expression": ""
+	},
+	"mandatory_field_function": {
+		"name": "mandatory",
+		"type": "el_expression",
+		"expression": "isNotNull"
+	},
+	"transactions": {
+		"type": "transactions",
+		"transactions": []
+	},
+	"imfBlankStructureField": {
+		"type": "field",
+		"source": "message_exchange[Selected_Service_Type].response_message[imf-field-name]",
+		"destination": [
+			"message_exchange[GATEWAY_SERVICE].request_message[imf-field-name]"
+		]
+	},
+	"substring": {
+		"name": "",
+		"type": "",
+		"expression": ""
+	},
+	"conditional_field_function": {
+		"name": "conditional",
+		"type": "el_expression",
+		"expression": "isExist(${CONDITIONAL_FIELDID})"
+	},
+	"mappings": {
+		"type": "field",
+		"source": "${FIELDID}",
+		"destination": "",
+		"ipc": ""
+	},
+	"transactions.$.mappings.$": {
+		"type": "field",
+		"source": "${FIELDID}",
+		"destination": "",
+		"ipc": ""
+	},
+	"req_blank_structure_field": {
+		"type": "field",
+		"source": "",
+		"destination": [
+			"message_exchange[GATEWAY_SERVICE].request_message[imf-field-name]"
+		],
+		"ipc": "SYSTEM_ERROR"
+	},
+	"mappings.$.validationFunctions.$": {
+		"type": "el_expression",
+		"name": "",
+		"expression": "some valid expression"
+	},
+	"transactions.$": {
+		"name": "$",
+		"type": "fields",
+		"condition": {
+			
+		},
+		"mappings": []
+	},
+	"data_enrichment_mapping": {
+		"type": "imdg_enrich",
+		"fields": [],
+		"lookupType": {
+			"type": "imdg_enrich",
+			"query": {
+				"type": "search",
+				"select": {
+					"type": "select",
+					"columns": []
+				},
+				"from": {
+					"type": "from",
+					"mapName": ""
+				},
+				"condition": {
+					"type": "and",
+					"conditions": []
+				}
+			}
+		},
+		"ipc": "SYSTEM_ERROR"
+	},
+	"data_enrichment_mapping_alias_field": {
+		"type": "aliasColumn",
+		"alias": {
+			"type": "alias",
+			"name": "",
+			"alias": ""
+		}
+	},
+	"transactions.$.condition": {
+		"type": "and/or",
+		"conditions": [
+			{
+				"type": "equal",
+				"fieldName": "${}",
+				"value": "some-value"
+			},
+			{
+				"type": "equal",
+				"fieldName": "${}",
+				"value": "somevalue"
+			}
+		]
+	},
+	"mappings.$.functions": {
+		"functions": []
+	},
+	"data_enrichment_mapping_condition_field": {
+		"type": "equal",
+		"fieldName": "",
+		"value": "${message_exchange[GATEWAY_SERVICE].request_message[]}"
+	},
+	"mappings.$.functions.$": {
+		"type": "el_expression",
+		"name": "",
+		"expression": "some valid expression"
+	},
+	"mappings.$.validationFunctions": {
+		"validationFunctions": []
+	},
+	"res_blank_structure_field": {
+		"type": "field",
+		"source": "message_exchange[Selected_Service_Type].response_message[imf-field-name]",
+		"destination": [
+			"${FieldId}"
+		],
+		"ipc": "SYSTEM_ERROR"
+	},
+	"custom.jar.files.id": {
+		"field": "custom.jar.files.id",
+		"label": "Upload Jars",
+		"value": "",
+		"format": "",
+		"hidden": "true",
+		"datatype": "file",
+		"fileName": "",
+		"mandatory": "false",
+		"listvalues": [
+         ".JAR"
+      ]
+	},
+	"api_transactionSet": {
+		"transactions": [
+			{
+				"messageIntentifier": "",
+				"contractIntentifier": "",
+				"condition": null,
+				"request": null,
+				"response": null
+			}
+		]
+	}
+}

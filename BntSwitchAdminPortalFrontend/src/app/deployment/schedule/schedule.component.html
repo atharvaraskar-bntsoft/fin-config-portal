@@ -1,0 +1,103 @@
+<nz-spin  [nzSpinning]="loading" nzTip="Loading...">
+<div class="col-md-12 fade-in template">
+  <div class="add_new_deployment_btn">
+    <h4 class="current_schedule_title">{{ 'CURRENT_SCHEDULE_DEPLOYMENTS' | translate }}</h4>
+    <button
+      class="btn btn-primary btn-md btn-flat"
+      (click)="createDeployment()"
+      *ngIf="permissionObject.write"
+    >
+      <i class="fa fa-plus-circle"></i>
+      {{ 'CREATE_NEW_DEPLOYMENT' | translate }}
+    </button>
+  </div>
+  <hr />
+  <div [ngClass]="{ loading: loading }"  *ngIf="rowData?.length">
+    <div style="min-height: 47vh">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        style="min-height: 47vh !important"
+        [loadingIndicator]="loading"
+        class="bootstrap fullscreen striped"
+        [rows]="rowData"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+      >
+      </ngx-datatable>
+    </div>
+  </div>
+  <div
+    class="row"
+    [style.margin-left.px]="20"
+    [ngClass]="{ loading: loading }"
+  >
+    <h3>{{ 'NO_SCHEDULED_DEPLOYMENTS_FOUND' | translate }}</h3>
+  </div>
+  <hr />
+
+  <h4 class="current_schedule_title">
+    {{ 'NEW_DEPLOYMENT_OR_UPGRADES' | translate }}
+  </h4>
+  <div [ngClass]="{ loading: loading }">
+    <div>
+      <ngx-datatable
+        appNgxDatatableWatcher
+        style="height: 46vh"
+        [loadingIndicator]="loading"
+        class="bootstrap fullscreen striped"
+        [rows]="newDeploymentData"
+        [columns]="newDeploymentColumns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+      >
+      </ngx-datatable>
+    </div>
+  </div>
+</div>
+</nz-spin>
+<ng-template #action let-row="row" ngx-datatable-cell-template>
+  <span class="edit_link" (click)="editOrView(row)" *ngIf="permissionObject.update">Edit</span>
+</ng-template>
+
+<ng-template #history let-row="row" ngx-datatable-cell-template>
+  <span class="row-tag">{{ row.lastDeploymentHistory.message | slice: 0:20 }}</span>
+  <br />
+  <span class="row-tag">{{ row.lastDeploymentHistory.message | slice: 20 }}</span>
+</ng-template>
+
+<ng-template #modifiedBy let-row="row" ngx-datatable-cell-template>
+  <span class="row-tag">{{ row.userName }}</span>
+</ng-template>
+
+<ng-template #version let-row="row" ngx-datatable-cell-template>
+  <div class="filteroverlapTemplate">
+    <ng-select
+      class="filter-shadow"
+      [ngModel]="row.currentVersion"
+      appendTo="body"
+      bindLabel="version"
+      bindValue="id"
+      [closeOnSelect]="true"
+      [items]="row.idVersionListToSchedule"
+      [clearable]="false"
+    >
+    </ng-select>
+  </div>
+</ng-template>
+
+<ng-template #scheduledDate let-row="row" ngx-datatable-cell-template>
+  <span>{{ row.lastModifiedOn | newDate  }}</span>
+</ng-template>
+
+<ng-template #scheduledOn let-row="row" ngx-datatable-cell-template>
+  <span>{{ row.scheduledOn | newDate  }}</span>
+</ng-template>
+
+<ng-template #type let-row="row" ngx-datatable-cell-template>
+  <span>{{ deploymentService.renderType(row) }}</span>
+</ng-template>

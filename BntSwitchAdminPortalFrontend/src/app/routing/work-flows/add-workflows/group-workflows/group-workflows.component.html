@@ -1,0 +1,119 @@
+<ul>
+  <li *ngFor="let result of items; let pi = index">
+    <div class="treeview__levels">
+      <span class="level-title" style="width: 300px;">
+        <ng-select clearable="true" appendTo="body" bindValue="name" [(ngModel)]="result.serviceName" bindLabel="name"
+          (change)="getDependsOn($event)" [closeOnSelect]="true" (click)="getOldValue(result)" [disabled]="readOnlyFlag"
+          [items]="globalList" [clearable]="false">
+        </ng-select>
+      </span>
+      <span class="treeview__level-btns">
+        <a class="btn-link button-effect" role="button" *ngIf="!readOnlyFlag"
+          [matMenuTriggerFor]="belowMenu">Actions</a>
+        <mat-menu #belowMenu="matMenu">
+          <button *ngIf="!readOnlyFlag" mat-menu-item (click)="AddParallel(items)">
+            <i class="fa fa-bars fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+            <span style="color: #3c8dbc; margin-left: 10px">{{ 'ADD_PARALLEL' | translate }}</span>
+          </button>
+          <mat-divider *ngIf="!readOnlyFlag"></mat-divider>
+          <ng-container>
+            <button *ngIf="!readOnlyFlag" mat-menu-item (click)="AddSequential(result)">
+              <i class="fa fa-signal fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                'ADD_SEQUENTIAL' | translate
+                }}</span>
+            </button>
+          </ng-container>
+          <mat-divider *ngIf="result.precedingDecisionUi && readOnlyFlag"></mat-divider>
+          <mat-divider *ngIf="!readOnlyFlag"></mat-divider>
+          <ng-container *ngIf="!readOnlyFlag">
+            <button mat-menu-item (click)="AddDecision(result)">
+              <i class="fa fa-gavel fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.precedingDecisionUi ? 'Edit Decision' : 'Add Decision'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.precedingDecisionUi && readOnlyFlag">
+            <button mat-menu-item (click)="AddDecision(result)">
+              <i class="fa fa-gavel fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">View Decision</span>
+            </button>
+          </ng-container>
+          <mat-divider *ngIf="!readOnlyFlag"></mat-divider>
+          <mat-divider *ngIf="result.safingConditionJson && readOnlyFlag"></mat-divider>
+          <ng-container *ngIf="!readOnlyFlag">
+            <button mat-menu-item (click)="addSafDecision(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.safingConditionJson ? 'Edit SAF Decision' : 'Add SAF Decision'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.safingConditionJson && readOnlyFlag">
+            <button mat-menu-item (click)="addSafDecision(result)">
+              <i class="fa fa-caret-square-o-right icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">View SAF Decision</span>
+            </button>
+          </ng-container>
+          <mat-divider *ngIf="!readOnlyFlag"></mat-divider>
+          <mat-divider *ngIf="result.safingExceptionConditionJson && readOnlyFlag"></mat-divider>
+          <ng-container *ngIf="!readOnlyFlag">
+            <button mat-menu-item (click)="addExceptionSafDecision(result)">
+              <i class="fa fa-exclamation-circle icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">{{
+                result.safingExceptionConditionJson
+                ? 'Edit SAF Exception Decision'
+                : 'Add SAF Exception Decision'
+                }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="result.safingExceptionConditionJson && readOnlyFlag">
+            <button mat-menu-item (click)="addExceptionSafDecision(result)">
+              <i class="fa fa-exclamation-circle icon_color" aria-hidden="true"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">Viewe SAF Exception Decision</span>
+            </button>
+          </ng-container>
+          <mat-divider *ngIf="!readOnlyFlag"></mat-divider>
+          <ng-container *ngIf="!readOnlyFlag">
+            <button mat-menu-item (click)="removeParent(result, pi)">
+              <i class="fa fa-trash fa-sm" aria-hidden="true" style="color: #f46771"></i>
+              <span class="delete-color" style="margin-left: 10px">{{ 'DELETE' | translate }}</span>
+            </button>
+          </ng-container>
+        </mat-menu>
+      </span>
+    </div>
+    <ul *ngIf="result.precedingDecisionUi && result.precedingDecisionUi.onfalse">
+      <li>
+        <div class="treeview__level">
+          <span class="decisionType"> (False) </span>
+          <span class="level-title" style="margin-left: -37px">{{ result.precedingDecisionUi.onfalse }}
+          </span>
+        </div>
+      </li>
+    </ul>
+    <ul *ngIf="result.precedingDecisionUi && result.precedingDecisionUi.ontrue">
+      <li>
+        <div [ngClass]="[result.precedingDecisionUi.onfalse ? 'treeview__levels' : 'treeview__level']"
+          *ngIf="isGroup(result.precedingDecisionUi.ontrue)">
+          <span class="decisionType">(True) </span>
+          <span class="level-title" style="margin-left: -37px" ngi
+            (click)="showGroup(result.precedingDecisionUi.ontrue)">{{ result.precedingDecisionUi.ontrue }}
+          </span>
+        </div>
+        <div [ngClass]="[result.precedingDecisionUi.onfalse ? 'treeview__levels' : 'treeview__level']"
+          *ngIf="!isGroup(result.precedingDecisionUi.ontrue)">
+          <span class="decisionType">(True) </span>
+          <span class="level-title" style="margin-left: -37px">{{ result.precedingDecisionUi.ontrue }}
+          </span>
+        </div>
+      </li>
+    </ul>
+    <ng-container *ngIf="result.services.length !== 0">
+      <app-group-workflows [readOnlyFlag]=readOnlyFlag [items]="result.services" [servicelist]="servicelist"
+        [globalList]="globalList" [usedList]="usedList" [decisionGroup]="decisionGroup" [groupJson]="workflowObj">
+      </app-group-workflows>
+    </ng-container>
+  </li>
+</ul>

@@ -1,0 +1,41 @@
+<div class="table-height" >
+  <table class="table table-bordered table-hover" >
+    <thead>
+      <tr>
+        <th class="th-color" *ngFor="let header of headers; let i = $index">{{ header.key }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container [ngSwitch]="screen">
+        <tr *ngFor="let data of rows">
+          <ng-container *ngSwitchCase="'l1SchemaTable'">
+            <ng-template *ngTemplateOutlet="l1Schema; context: { $implicit: data }"> </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchCase="'l1SaopTable'">
+            <ng-template *ngTemplateOutlet="l1SchemaSoap; context: { $implicit: data }">
+            </ng-template>
+          </ng-container>
+          <div *ngSwitchDefault></div>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+
+<!-- It will render all the Table Rows of L1 Schema -->
+<ng-template #l1Schema let-data>
+  <td class="td-color joined-word-break" style="width: 70px;">{{ data.id }}</td>
+  <td class="td-color joined-word-break">{{ data.name }}</td>
+  <td class="td-color joined-word-break" style="width: 70px;">{{ data.length }}</td>
+  <td class="td-color joined-word-break" style="width: 130px;">{{ trimData(data) }}</td>
+  <td class="td-color joined-word-break" style="width: 70px;" *ngIf="data.pad === true || data.pad === false">
+    {{ data.pad }}
+  </td>
+  <td class="td-color joined-word-break" style="width: 70px;" *ngIf="data.pad !== true && data.pad !== false">N/A</td>
+</ng-template>
+
+<!-- It will render all the Table rows of L1 schema Table if Selected Template is `SOAP` -->
+<ng-template #l1SchemaSoap let-data>
+  <td class="td-color joined-word-break">{{ data.id }}</td>
+  <td class="td-color joined-word-break">{{ data.value }}</td>
+</ng-template>

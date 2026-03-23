@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>Add Decision</h2>
+<div class="conditionScroll">
+  <mat-dialog-content class="mat-typography mat-body" style="margin-bottom: 20px">
+    <div class="col-md-4" style="padding-left: 3px">
+      <label></label>
+      <ng-select
+        [disabled]="readOnlyFlag"
+        clearable="false"
+        appendTo="body"
+        bindValue="name"
+        [disabled]="true"
+        [(ngModel)]="item.serviceName"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [items]="item.tempService"
+        [clearable]="false"
+      >
+      </ng-select>
+    </div>
+    <div class="col-md-4">
+      <label class="required">On True</label>
+      <ng-select
+        [disabled]="readOnlyFlag"
+        clearable="false"
+        appendTo="body"
+        [(ngModel)]="onTrue"
+        [closeOnSelect]="true"
+        [disabled]="readOnlyFlag"
+        [items]="item.output"
+        [clearable]="false"
+      >
+      </ng-select>
+    </div>
+    <div class="col-md-4">
+      <label class="required">On False</label>
+      <ng-select
+        [disabled]="readOnlyFlag"
+        clearable="false"
+        appendTo="body"
+        [(ngModel)]="onFalse"
+        [closeOnSelect]="true"
+        [disabled]="readOnlyFlag"
+        [items]="item.output1"
+        [clearable]="false"
+      >
+      </ng-select>
+    </div>
+    <mat-divider></mat-divider>
+  </mat-dialog-content>
+  <app-condition-builder
+    *ngIf="jsonData && this.onTrue && this.onFalse"
+    [jsonData]="jsonData"
+    [readOnlyFlag] = "readOnlyFlag"
+    [ruleCondition]="postDecisionRuleJson"
+    (addSubRule)="Submit($event)"
+  ></app-condition-builder>
+  <mat-dialog-actions align="end">
+    <button class="btn" (click)="close()" style="margin-top: 27px">Cancel</button>
+  </mat-dialog-actions>
+</div>

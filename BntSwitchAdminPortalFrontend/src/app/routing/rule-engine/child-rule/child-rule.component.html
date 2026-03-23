@@ -1,0 +1,170 @@
+<div
+  *ngIf="node.group && !node.delete"
+  [ngClass]="{ groupheader: node.group && node.nodes.length > 0 }"
+>
+  <span class="deleteicon" (click)="delete(node, id)"
+    ><i class="fa fa-trash" aria-hidden="true"></i>
+  </span>
+</div>
+<div
+  class="fileds"
+  [ngClass]="{ grouporder: node.group && node.nodes.length > 0 }"
+  *ngIf="!node.delete"
+>
+  <div class="group" *ngIf="showhideflag">
+    <div class="groupChild_rule">
+      <div id="{{ node.id }}" style="display: none">
+        {{ 'ENTER_REQUIRED' | translate }}
+      </div>
+      <div class="field">
+        <ng-select
+          [clearable]="false"
+          class="custom"
+          [items]="ruleData"
+          bindLabel="text"
+          bindValue="value"
+          placeholder="{{ 'SELECT_FIELDS' | translate }} *"
+          (change)="filedsData($event, true)"
+          [(ngModel)]="keyType"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            <div title="{{ item?.toolTip }}">{{ item.text }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="field">
+        <ng-select
+          class="custom"
+          [clearable]="false"
+          [items]="operator"
+          [(ngModel)]="operatorType"
+          (change)="opratersData($event)"
+          bindLabel="text"
+          bindValue="value"
+          placeholder="{{ 'SELECT_OPERATOR' | translate }} *"
+        >
+        </ng-select>
+      </div>
+      <div class="field" *ngIf="!valueFileds && !enum">
+        <ng-select
+          [clearable]="false"
+          class="custom"
+          [items]="ruleData"
+          [(ngModel)]="valueType"
+          (change)="toData($event)"
+          bindLabel="text"
+          bindValue="value"
+          placeholder="{{ 'SELECT_FIELDS' | translate }}*"
+        >
+        </ng-select>
+      </div>
+      <div class="field" *ngIf="enum">
+        <ng-select
+          [clearable]="false"
+          [items]="enumRuleData"
+          [(ngModel)]="valueType"
+          (change)="toData($event)"
+          bindLabel="text"
+          bindValue="value"
+          placeholder="{{ 'SELECT_FIELDS' | translate }} *"
+        >
+        </ng-select>
+      </div>
+      <div class="imputText field" *ngIf="!enum">
+        <input
+          class="form-control"
+          [(ngModel)]="valueType"
+          style="width: 100%"
+          [ngClass]="{ error: error }"
+          [disabled]="inputDisbale"
+          type="text"
+          (focusout)="validation($event)"
+          value="{{ node.value }}"
+          (keyup)="toDataInput($event)"
+        />
+        <span *ngIf="error && valueFileds" class="error-message com-error">
+          {{ 'ONLY' | translate }} {{ validation_Type }} {{ 'ALLOWED' | translate }}</span
+        >
+      </div>
+    </div>
+    <!-- <div class="groupAction field">
+      <span
+        class="creategroup"
+        (click)="createGroup(node, id)"
+        *ngIf="!node.group"
+      >
+        {{
+          node.nodes.length > 0
+            ? ("ADD_FIELD" | translate)
+            : ("CREATE_GROUP" | translate)
+        }}</span
+      >
+      <span class="deletetext" (click)="delete(node, id)" *ngIf="!node.group">
+        {{ "DELETE" | translate }}
+      </span>
+    </div> -->
+    <div class="groupAction field">
+      <a
+        *ngIf="!node.group"
+        class="btn-link button-effect"
+        role="button"
+        [matMenuTriggerFor]="belowMenu"
+        >{{ 'ACTIONS' | translate }}</a
+      >
+      <mat-menu #belowMenu="matMenu">
+        <ng-container class="creategroup" *ngIf="!node.group">
+          <button mat-menu-item (click)="createGroup(node, id)">
+            {{ node.nodes.length > 0 ? ('ADD_FIELD' | translate) : ('CREATE_GROUP' | translate) }}
+          </button></ng-container
+        >
+        <mat-divider></mat-divider>
+        <ng-container *ngIf="!node.group">
+          <button mat-menu-item (click)="delete(node, id)">
+            <i class="fa fa-trash fa-sm" aria-hidden="true" style="color: #f46771"></i>
+            <span class="delete-color" style="margin-left: 10px">{{ 'DELETE' | translate }}</span>
+          </button></ng-container
+        >
+      </mat-menu>
+    </div>
+    <div style="clear: both"></div>
+    <div *ngIf="!isLeaf(node) && !node.delete">
+      <span *ngFor="let innerNode of node.nodes; let i = index">
+        <div *ngIf="!innerNode.delete">
+          <div
+            style="width: 10%; text-align: center; margin: 0px; padding: 0px"
+            *ngIf="node.length - 1 !== i"
+          >
+            <div
+              class="and-or"
+              style="text-align: enableProdModenter; font-size: 14px"
+              *ngIf="!node.delete"
+            >
+              <span
+                class="text"
+                (click)="innerNode.relation = innerNode.relation === 'AND' ? 'OR' : 'AND'"
+                >{{ innerNode.relation }}</span
+              >
+            </div>
+          </div>
+          <app-child-rule
+            [node]="innerNode"
+            [id]="i"
+            [allnode]="node"
+            style="width: 60%"
+            [inputruleData]="inputruleData"
+          >
+          </app-child-rule>
+        </div>
+      </span>
+    </div>
+    <a
+      class="fonsize"
+      href="javascript:;"
+      *ngIf="node.group"
+      style="margin: 7px 10px"
+      (click)="createGroup(node, id)"
+      [ngClass]="{ addbutton: node.length > 5 }"
+      ><i class="fa fa-plus-square" aria-hidden="true"></i> {{ 'ADD_CONDITION' | translate }}</a
+    >
+  </div>
+</div>

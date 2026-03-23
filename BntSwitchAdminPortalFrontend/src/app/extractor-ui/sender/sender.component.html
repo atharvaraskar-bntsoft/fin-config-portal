@@ -1,0 +1,41 @@
+<nz-spin [nzSpinning]="loading">
+    <div class="col-md-12 text-right" style="margin: 10px;">
+        <button class="btn btn-primary btn-md btn-flat" (click)="addSender()">
+            <i class="fa fa-plus-circle"></i> Add Sender
+        </button>
+    </div>
+    <div style="margin: 15px 15px 0 15px">
+        <ng-container *ngIf="rows.length; else no_found">
+            <nz-table #senderTable nzBordered [nzData]="rows" [nzPageSize]="totals" [nzShowPagination]="false"
+                [nzScroll]="{ y: '65vh' }" [nzSize]="tableSize">
+                <thead>
+                    <tr>
+                        <th nzWidth="50%">{{ 'Type' }}</th>
+                        <th nzWidth="50%">{{ 'Sender Type' }}</th>
+                        <th nzWidth="50%">{{ 'Action' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let data of senderTable.data; let i = index">
+                        <tr>
+                            <td class="td-color joined-word-break">
+                                {{data.type}}
+                            </td>
+                            <td class="td-color joined-word-break">
+                                {{data.senderType}}
+                            </td>
+                            <td class="td-color joined-word-break">
+                                <a class="text-primary view-btn" (click)="editItem(data, i)">Edit</a>&#x000A0;
+                                <a class="delete_align" nz-popconfirm nzPopconfirmTitle="Do you want to delete?"
+                                    (nzOnConfirm)="removeItem(i)"><i class="fa fa-trash fa-lg"></i></a>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </ng-container>
+        <ng-template #no_found>
+            <nz-empty></nz-empty>
+        </ng-template>
+    </div>
+</nz-spin>

@@ -1,0 +1,24 @@
+{
+  "name": "bnt",
+  "version": "2.0.0",
+  "author": {
+    "name": "Bnt"
+  },
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "angular 2",
+    "angular 4",
+    "angular 5",
+    "angular 6",
+    "angular 7",
+    "typescript"
+  ],
+  "dependencies": {
+    "bootstrap-css-only": "^3.3.7",
+    "admin-lte-css": "^2.4.3"
+  },
+  "peerDependencies": {
+    "@angular/core": "^7.2.3"
+  }
+}

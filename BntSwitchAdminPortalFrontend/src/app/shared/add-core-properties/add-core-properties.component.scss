@@ -1,0 +1,28 @@
+.delete_align {
+  position: relative;
+  left: 200px;
+  bottom: 25px;
+  color: #f46771;
+  width: 50% !important;
+  margin: 0 auto !important;
+  display: block !important;
+  float: none !important;
+}
+:host .modal.fade .modal-dialog {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 15%;
+}
+.add-color {
+  color: #3c8dbc;
+}
+.label-width {
+  width: 100% !important;
+}
+:host ::ng-deep .ant-table-body {
+  overflow-x: hidden;
+}

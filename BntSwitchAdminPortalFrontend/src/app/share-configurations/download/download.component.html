@@ -1,0 +1,231 @@
+<app-loader *ngIf="isLoading"></app-loader>
+<!-- ===================== L1 SECTION ===================== -->
+<p class="mb-4 adapter-tag">
+   <strong>L1 Adapter</strong> Configuration Files
+</p>
+
+<div class="adapter-download-section mb-5">
+  <div class="col-md-12">
+    <ngx-datatable
+      class="bootstrap striped"
+      [rows]="adaptorMenu"
+      [columns]="columns"
+      [loadingIndicator]="loading"
+      [columnMode]="'force'"
+      [footerHeight]="0"
+      [rowHeight]="50"
+      [scrollbarV]="false">
+    </ngx-datatable>
+  </div>
+</div>
+
+<div style="width: 100%; text-align: center; ">
+  <span style="display: inline-block; width: 100%; height: 2px; background-color: rgb(86, 85, 82);"></span>
+</div>
+
+
+<!-- ===================== L3 SECTION ===================== -->
+<p class="mt-5 mb-4 adapter-tag">
+   <strong>L3 Adapter</strong> Configuration Files
+</p>
+
+<div class="adapter-download-section mb-5">
+  <div class="col-md-12">
+    <ngx-datatable
+      class="bootstrap striped"
+      [rows]="l3AdaptorMenu"
+      [columns]="l3Columns"
+      [loadingIndicator]="loading"
+      [columnMode]="'force'"
+      [footerHeight]="0"
+      [rowHeight]="50"
+      [scrollbarV]="false">
+    </ngx-datatable>
+  </div>
+</div>
+
+<div style="width: 100%; text-align: center; ">
+  <span style="display: inline-block; width: 100%; height: 2px; background-color: rgb(86, 85, 82);"></span>
+</div>
+
+<!-- ===================== L2 SECTION ===================== -->
+
+<!--
+<p class="mt-5 mb-4 adapter-tag">
+  Download <strong>L2 Adapter</strong> Configuration Files
+</p>
+-->
+<p class="mt-5 mb-4 adapter-tag">
+  <strong>L2 Adapter</strong> Configuration Files
+</p>
+
+<!-- L2 i. Workflow -->
+
+<div class="adapter-download-section mb-5">
+  <div class="col-md-12">
+	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700;">1]<strong> Workflow</strong> File</p>
+    <ngx-datatable
+      class="bootstrap striped"
+      [rows]="l2Rows"
+      [columns]="l2Columns"
+	  [columnMode]="'force'"
+      [loadingIndicator]="loading"
+      [footerHeight]="0"
+      [rowHeight]="50"
+      [scrollbarV]="false">
+    </ngx-datatable>
+  </div>
+</div>
+
+
+<!-- ===================== L2 IMF SECTION ===================== -->
+
+
+
+<div class="adapter-download-section mb-5">
+  <div class="col-md-12">
+	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700;">2]<strong> IMF</strong> File</p>
+    <ngx-datatable
+      class="bootstrap striped"
+      [rows]="l2ImfRows"
+      [columns]="l2ImfColumns"
+	  [columnMode]="'force'"
+      [loadingIndicator]="loading"
+      [footerHeight]="0"
+      [rowHeight]="50"
+      [scrollbarV]="false">
+    </ngx-datatable>
+  </div>
+</div>
+
+
+
+<!-- ===================== CORE PROPERTIES SECTION ===================== -->
+
+<div class="adapter-download-section mb-5">
+  <div class="col-md-12">
+	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700;">3]<strong> Core Properties</strong> File</p>
+    <ngx-datatable
+      class="bootstrap striped"
+      [rows]="coreProperties"
+      [columns]="coreColumns"
+      [loadingIndicator]="loading"
+      [columnMode]="'force'"
+      [footerHeight]="0"
+      [rowHeight]="50"
+      [scrollbarV]="false"
+    >
+    </ngx-datatable>
+  </div>
+</div>
+
+
+
+
+
+<!-- ===================== SHARED TEMPLATES ===================== -->
+
+<!-- Version Column -->
+<ng-template #version let-row="row" ngx-datatable-cell-template>
+  <ng-select
+    class="version-dropdown"
+    [items]="row.adapterConfigSummaryUIWapper"
+    bindLabel="version"
+    [(ngModel)]="row.selectedVersion"
+    [clearable]="false"
+    [searchable]="false"
+    appendTo="body"
+    (change)="onVersionChange($event, row)">
+  </ng-select>
+</ng-template>
+
+<!-- Status Column -->
+<ng-template #status let-row="row" ngx-datatable-cell-template>
+  {{ row.selectedVersion?.status || 'N/A' }}
+</ng-template>
+
+<!-- L1 Action -->
+<ng-template #action let-row="row" ngx-datatable-cell-template>
+  <button class="btn btn-primary btn-sm" (click)="downloadRow(row)">
+    Download
+  </button>
+</ng-template>
+
+<!-- L3 Action -->
+<ng-template #l3Action let-row="row" ngx-datatable-cell-template>
+  <button class="btn btn-primary btn-sm" (click)="downloadL3Row(row)">
+    Download
+  </button>
+</ng-template>
+
+<!-- L2 Action -->
+<ng-template #l2Action let-row="row" ngx-datatable-cell-template>
+  <button class="btn btn-primary btn-sm" (click)="downloadL2Workflow(row)">
+    Download
+  </button>
+</ng-template>
+
+<!-- L2 Name -->
+<ng-template #l2Name let-row="row" ngx-datatable-cell-template>
+  {{ row.deploymentDto?.name }}
+</ng-template>
+
+
+
+<!-- L2 IMF Version -->
+<ng-template #l2ImfVersion let-row="row" ngx-datatable-cell-template>
+	<ng-select
+	  class="version-dropdown"
+	  [items]="row.versions"
+	  bindLabel="version"
+	  [(ngModel)]="row.selectedVersion"
+	  [clearable]="false"
+	  [searchable]="false"
+	  appendTo="body">
+	</ng-select>
+
+</ng-template>
+
+
+<ng-template #l2ImfName let-row="row" ngx-datatable-cell-template>
+  {{ row.selectedVersion?.name }}
+</ng-template>
+
+<!-- L2 IMF Action -->
+<ng-template #l2ImfAction let-row="row" ngx-datatable-cell-template>
+  <button class="btn btn-primary btn-sm" (click)="downloadL2Imf(row)">
+    Download
+  </button>
+</ng-template>
+
+<!-- Core Properties Version -->
+<ng-template #coreVersionTemplate let-row="row" ngx-datatable-cell-template>
+  <ng-select
+    class="version-dropdown"
+    [items]="row.corePropertiesDetails"
+    bindLabel="version"
+    [(ngModel)]="row.selectedVersion"
+    [clearable]="false"
+    [searchable]="false"
+    appendTo="body"
+    (change)="onCoreVersionChange($event, row)">
+  </ng-select>
+</ng-template>
+
+<!-- Core Properties Action -->
+<ng-template #coreActionTemplate let-row="row" ngx-datatable-cell-template>
+  <button class="btn btn-primary btn-sm" (click)="downloadCoreProperties(row)">
+    Download
+  </button>
+</ng-template>
+
+<ng-template #naVersionTemplate ngx-datatable-cell-template>
+  N/A
+</ng-template>
+
+
+
+
+
+
+

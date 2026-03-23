@@ -1,0 +1,55 @@
+<ng-container>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-12 text-right">
+        <span class="btn btn-default" *ngIf="!readOnlyFlag" (click)="addBlockStep()">
+          <i class="fa fa-plus"></i></span>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngFor="let block of listFunction; let i = index">
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-2 text-label-right">
+        <label>Step {{ i + 1 }}</label>
+      </div>
+      <div class="col-md-6">
+        <nz-select class="form-control" [(ngModel)]="block.value" [disabled]="readOnlyFlag" bindLabel="actionName"
+          placeholder="Select Value" (ngModelChange)="stepFunction(block.value, i,'create')">
+          <nz-option *ngFor="let list of stepList" [nzValue]="list" [nzLabel]="list.actionName">
+          </nz-option>
+        </nz-select>
+        <span class="error" *ngIf="((block.value===null || block.value==='') && submit)">Please select field.</span>
+      </div>
+      <div class="col-md-2 auto-width nopadding-lg" *ngIf="block?.value && block?.listParameters?.length != 0">
+        <a (click)="stepFunction(block.value,i,'edit')" style="font-size: 11px">{{
+          readOnlyFlag ? 'View Parameter' : 'Edit Parameter'
+          }}</a>
+      </div>
+      <div class="col-md-2 auto-width">
+        <span class="btn btn-default" *ngIf="listFunction.length > 0 && !readOnlyFlag" (click)="removeBlockStep(i)"><i
+            class="fa fa-minus"></i></span>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<div class="row row-margin row-align row-template pull-right">
+  <div class="col-sm-12">
+    <button nz-button nzType="default" (click)="cancel()" style="margin-top: 50px">Cancel</button>
+    <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px; margin-top: 50px"
+      (click)="saveSteps()">
+      Save
+    </button>
+  </div>
+</div>
+
+<nz-drawer [nzMaskClosable]="false" [nzClosable]="true" [nzWidth]="820" [nzContent]="item" [nzVisible]="childrenVisible"
+  nzTitle="Common Parameter" (nzOnClose)="closeChildren()">
+  <ng-template #item>
+    <extractor-common-parameter *ngIf="childrenVisible" [readOnlyFlag]="readOnlyFlag" [sourceList]="authData"
+      [ipcList]="ipcList" [imfList]="jsonData" [selectedStepParameterStringify]="selectedStepParameterStringify"
+      (parameter)="addParam($event)" (saveAndclose)="saveAndclose($event)">
+    </extractor-common-parameter>
+  </ng-template>
+</nz-drawer>

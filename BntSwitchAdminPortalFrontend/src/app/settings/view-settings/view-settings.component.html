@@ -1,0 +1,36 @@
+<div class="fade-in template">
+  <form [formGroup]="fg" (ngSubmit)="onSubmit(fg)">
+    <div class="col-md-5">
+      <div class="form-group">
+        <label>{{ 'LANGUAGE' | translate }}</label>
+        <ng-select
+          *ngIf="language"
+          [clearable]="false"
+          bindValue="id"
+          formControlName="language"
+          [closeOnSelect]="true"
+          [items]="language"
+          [(ngModel)]="defaultlanguage"
+        ></ng-select>
+      </div>
+      <div class="form-group">
+        <label>{{ 'PAGINATION' | translate }}</label>
+        <ng-select
+          *ngIf="pagination"
+          bindValue="id"
+          [clearable]="false"
+          formControlName="pagination"
+          [closeOnSelect]="true"
+          [items]="pagination"
+          [(ngModel)]="defaultpagination"
+        ></ng-select>
+      </div>
+      <button class="btn" routerLink="" type="button">
+        {{ 'CANCEL' | translate }}
+      </button>
+      <button class="btn btn-primary pull-right" [disabled]="fg.invalid" type="submit">
+        {{ 'SUBMIT' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

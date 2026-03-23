@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-md-12">
+        <form nz-form [formGroup]="submitForm" (ngSubmit)="onSubmit(submitForm.value)">
+            <div class="row">
+                <div class="col-md-4">
+                    <nz-form-item>
+                        <label class="required col-md-3">Name :</label>
+                        <div class="col-md-9">
+                            <nz-form-control nzErrorTip="Please Enter Name">
+                                <input nz-input formControlName="jobName" placeholder="Enter Name" maxlength="100" />
+                            </nz-form-control>
+                        </div>
+                    </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                    <nz-form-item>
+                        <label class="required col-md-3">Group :</label>
+                        <div class="col-md-9">
+                            <nz-form-control nzErrorTip="Please Enter Group">
+                                <input nz-input formControlName="jobGroup" placeholder="Enter Group" maxlength="100" />
+                            </nz-form-control>
+                        </div>
+                    </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                    <nz-form-item>
+                        <label class="required col-md-3">Type :</label>
+                        <div class="col-md-9">
+                            <nz-form-control nzErrorTip="Please Select Type">
+                                <nz-select nzPlaceHolder="Select Type" formControlName="type" [nzDisabled]="disable">
+                                    <nz-option *ngFor="let list of type" [nzValue]="list.name" [nzLabel]="list.name">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </div>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <nz-form-item>
+                        <label class="required col-md-3">Description :</label>
+                        <div class="col-md-9">
+                            <nz-form-control nzErrorTip="Please Enter Description">
+                                <textarea nz-input formControlName="jobDesc" placeholder="Enter Description"
+                                    maxlength="100">
+                          </textarea>
+                            </nz-form-control>
+                        </div>
+                    </nz-form-item>
+                </div>
+                <div class="col-md-3">
+                    <nz-form-item>
+                        <label class="col-md-3">Active :</label>
+                        <div class="col-md-9">
+                            <nz-form-control>
+                                <input class="create-look-up-checkbox" formControlName="active" type="checkbox"
+                                    [attr.disabled]="disable ? true : null" checked />
+                            </nz-form-control>
+                        </div>
+                    </nz-form-item>
+                </div>
+                <div class="col-md-3" style="text-align: right; pe-4px">
+                    <nz-form-item>
+                        <nz-form-control>
+                            <button nz-button nzType="primary" [disabled]="!submitForm.valid">Next</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

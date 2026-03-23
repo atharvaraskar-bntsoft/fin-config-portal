@@ -1,0 +1,498 @@
+<section class="content ">
+  <div class="container-fluid px-0">
+	
+	
+	<div class="card shadow-sm mt-3">
+
+		  <div class="card-body p-0">
+			
+			
+		    <div class="adapter-tag mb-2">
+			<i class="fa fa-folder-open mr-2"></i> <!-- Open folder -->	
+		      <strong> L1 Adapter </strong>Configuration Files:-
+		    </div>
+
+		    <table class="table table-bordered mb-0">
+		      <thead class="bg-primary">
+		        <tr>
+		          <th style="width:30%">Select Adapter Files (5 files)</th>
+		          <th style="width:25%">Adapter Instance</th>
+		          <th style="width:25%">Version (Optional)</th>
+		          <th style="width:20%" class="text-center">Action</th>
+		        </tr>
+		      </thead>
+
+		      <tbody>
+		        <tr>
+
+		          <!-- File input -->
+				  <td>
+				  			    <div class="mb-2">
+				  			      <label>1] adapter_conf.properties</label>  <!--  properties File -->
+				  			      <input type="file" class="form-control"
+				  			             accept=".properties"
+				  			             (change)="onAdapterFileChange($event,'properties')">
+										
+				  			    </div>
+
+				  			    <div class="mb-2">
+				  			      <label>2] response_code.properties</label> <!--  Response Code File -->
+				  			      <input type="file" class="form-control"
+				  			             accept=".properties"
+				  			             (change)="onAdapterFileChange($event,'responseCode')">
+				  			    </div>
+
+				  			    <div class="mb-2">
+				  			      <label>3] Packager.json</label>             <!--  Packager File-->
+				  			      <input type="file" class="form-control"
+				  			             accept=".json"
+				  			             (change)="onAdapterFileChange($event,'packager')">
+				  			    </div>
+
+				  			    <div class="mb-2">
+				  			      <label>4] adapter_transactions_mapping.json</label><!--  Request Mapping File-->
+				  			      <input type="file" class="form-control"
+				  			             accept=".json"
+				  			             (change)="onAdapterFileChange($event,'requestMapping')">
+				  			    </div>
+
+				  			    <div>
+				  			      <label>5] IMF File</label>
+				  			      <input type="file" class="form-control"
+				  			             accept=".json"
+				  			             (change)="onAdapterFileChange($event,'imf')">
+				  			    </div>
+				  			  </td>
+
+		          <!-- Adapter Instance Dropdown -->
+		          <td>
+		            <select
+		              class="form-control"
+		              [(ngModel)]="selectedAdapterId"
+		              [ngModelOptions]="{ standalone: true }">
+		              <option [ngValue]="null">-- Select Adapter Instance --</option>
+		              <option *ngFor="let adapter of adapterList" [value]="adapter.id">
+		                {{ adapter.name }}
+		              </option>
+		            </select>
+		          </td>
+
+		          <!-- Version -->
+		          <td>
+		            <input
+		              type="number"
+		              class="form-control"
+		              [(ngModel)]="adapterVersion"
+		              min="1"
+		              placeholder="Specify version or leave blank">
+		            <small style="color:#dc3545; font-size:12px;">
+		              If left blank, system will auto-assign next version
+		            </small>
+		          </td>
+
+		          <!-- Upload Button -->
+		          <td class="text-center align-middle">
+		            <button
+		              class="btn btn-success"
+					  [disabled]="
+					  !adapterFiles.properties ||
+					  !adapterFiles.responseCode ||
+					  !adapterFiles.packager ||
+					  !adapterFiles.requestMapping ||
+					  !adapterFiles.imf ||
+					  selectedAdapterId === null
+					  "
+		              (click)="uploadL1AdapterFiles()">
+		              <i class="fa fa-cloud-upload mr-1"></i>
+		              Upload
+		            </button>
+		          </td>
+
+		        </tr>
+		      </tbody>
+		    </table>
+
+		  </div>
+		</div>
+		
+	
+		
+		 
+		
+		<div style="width: 100%; text-align: center; ">
+		  <span style="display: inline-block; width: 100%; height: 2px; background-color: rgb(86, 85, 82);"></span>
+		</div>
+		
+		
+		<div class="card shadow-sm mt-3">
+
+				  <div class="card-body p-0">
+					<div class="adapter-tag mb-2">
+					  <i class="fa fa-folder-open mr-2"></i> <!-- Open folder -->  
+					  <strong> L3 Adapter</strong> Configuration Files:-
+					</div>
+
+				    <table class="table table-bordered mb-0">
+				      <thead class="bg-primary">
+				        <tr>
+				          <th style="width:30%">Select L3 Files (5 files)</th>
+				          <th style="width:25%">L3 Instance</th>
+				          <th style="width:25%">Version (Optional)</th>
+				          <th style="width:20%" class="text-center">Action</th>
+				        </tr>
+				      </thead>
+
+				      <tbody> 
+				        <tr>
+
+				<td>
+
+				<div class="mb-2">
+				<label>1] cart_conf.properties</label>
+				<input type="file" class="form-control"
+				accept=".properties"
+				(change)="onL3FileChange($event,'properties')">
+				</div>
+
+				<div class="mb-2">
+				<label>2] response_code.properties</label>
+				<input type="file" class="form-control"
+				accept=".properties"
+				(change)="onL3FileChange($event,'responseCode')">
+				</div>
+
+				<div class="mb-2">
+				<label>3] packager.xml</label>
+				<input type="file" class="form-control"
+				accept=".xml"
+				(change)="onL3FileChange($event,'packager')">
+				</div>
+
+				<div class="mb-2">
+				<label>4] cart_transactions_mapping.json</label>
+				<input type="file" class="form-control"
+				accept=".json"
+				(change)="onL3FileChange($event,'requestMapping')">
+				</div>
+
+				<div>
+				<label>5] imf.json</label>
+				<input type="file" class="form-control"
+				accept=".json"
+				(change)="onL3FileChange($event,'imf')">
+				</div>
+				
+				<div class="mb-2">
+				  <label>6] network_handler.json</label>
+				  <input type="file" class="form-control"
+				         accept=".json"
+				         (change)="onL3FileChange($event,'networkHandler')">
+				</div>
+
+				</td>
+
+				<!-- L3 Instance -->
+				<td>
+				<select class="form-control"
+				[(ngModel)]="selectedL3Id"
+				[ngModelOptions]="{ standalone: true }">
+
+				<option [ngValue]="null">-- Select L3 Instance --</option>
+
+				<option *ngFor="let l3 of l3List" [value]="l3.id">
+				{{ l3.name }}
+				</option>
+
+				</select>
+				</td>
+
+				<!-- Version -->
+				<td>
+				<input type="number"
+				class="form-control"
+				[(ngModel)]="l3Version"
+				min="1"
+				placeholder="Specify version or leave blank">
+
+				<small style="color:#dc3545;font-size:12px;">
+				If left blank, system will auto assign next version
+				</small>
+				</td>
+
+				<td class="text-center align-middle">
+
+				<button class="btn btn-success"
+				[disabled]="
+				!l3Files.properties ||
+				!l3Files.responseCode ||
+				!l3Files.packager ||
+				!l3Files.requestMapping ||
+				!l3Files.imf ||
+				selectedL3Id === null
+				"
+				(click)="uploadL3AdapterFiles()">
+
+				<i class="fa fa-cloud-upload mr-1"></i>
+				Upload
+
+				</button>
+
+				</td>
+
+				        </tr>
+				      </tbody>
+				    </table>
+
+				  </div>
+				</div>
+				
+				
+				
+				
+				
+				<div style="width: 100%; text-align: center; ">
+				  <span style="display: inline-block; width: 100%; height: 2px; background-color: rgb(86, 85, 82);"></span>
+				</div>				
+
+
+    <!-- IMF Upload Table -->
+    <div class="card shadow-sm mb-0">
+		
+      <div class="card-body p-0">
+		<div class="adapter-tag mb-2">
+			        <i class="fa fa-folder-open mr-2"></i> <!-- Open folder -->
+				    <strong> L2 Adapter</strong> Configuration Files:-
+				  </div>
+		<div class="adapter-tag mb-2">
+		    1] <strong>IMF</strong>Configuration File
+		  </div>
+
+        <table class="table table-bordered mb-0 mt-2">
+          <thead class="bg-primary">
+            <tr>
+              <th style="width: 30%">Select IMF JSON File</th>
+			  <th style="width: 25%">Imf Instance</th>
+			  <th style="width: 25%">Version (Optional)</th>
+              <th style="width: 20%" class="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+
+              <!-- File -->
+              <td>
+				<input
+				  #fileInput
+				  type="file"
+				  class="form-control"
+				  accept=".json"
+				  (change)="onFileSelected($event)">
+              </td>
+			  
+			  <!-- imf Instance (Not applicable) -->
+			  <td class="text-center">
+			      <button class="btn btn-default btn-sm" disabled>
+			          N/A
+			      </button>
+			  </td>
+			  
+			  <!-- Version -->
+           <td>
+             <input
+               type="number"
+               class="form-control"
+               [(ngModel)]="imfVersion"
+               min="1"
+               placeholder="Specify version or leave blank to create new version(optional)">
+			   <small style="color: #dc3545; font-size: 12px; ">
+				If left blank, system will auto-assign the next version.
+             </small>
+           </td>		
+
+
+              <!-- Button -->
+              <td class="text-center align-middle">
+                <button
+                  class="btn btn-success"
+				  [disabled]="!selectedFile"
+                  (click)="uploadImf()">
+                  <i class="fa fa-cloud-upload mr-1"></i>
+                  Upload
+                </button>
+              </td>
+
+            </tr>
+          </tbody>
+
+        </table>
+
+      </div>
+    </div>
+
+	 <div class="card shadow-sm">
+
+	      <div class="card-body p-0">
+	        <div class="adapter-tag mb-2">
+	          2] <strong>Core Properties</strong> Configuration File
+	        </div>
+			
+
+	        <table class="table table-bordered mb-0 ">
+	          <thead class="bg-primary">
+	            <tr>
+	              <th style="width: 30%">Select Core Properties File</th>
+	              <th style="width: 25%">Core Instance</th>
+	              <th style="width: 25%">Version (Optional)</th>
+	              <th style="width: 20%" class="text-center">Action</th>
+	            </tr>
+	          </thead>
+
+	          <tbody>
+	            <tr>
+
+	              <!-- File -->
+	              <td>
+	                <input
+	                  #coreFileInput
+	                  type="file"
+	                  class="form-control"
+					  accept=".properties"
+	                  (change)="onCoreFileSelected($event)">
+	              </td>
+
+	              <!-- Core Instance Dropdown -->
+	              <td>
+					<select
+					  class="form-control"
+					  [(ngModel)]="selectedCorePropertyId"
+					  [ngModelOptions]="{ standalone: true }">
+
+					  <option [ngValue]="null">-- Select Core Instance --</option>
+					  <option
+					    *ngFor="let core of corePropertiesList"
+					    [value]="core.id">
+					    {{ core.name }}
+					  </option>
+
+					</select>
+	              </td>
+
+	              <!-- Version -->
+	              <td>
+	                <input
+	                  type="number"
+	                  class="form-control"
+	                  [(ngModel)]="coreVersion"
+	                  min="1"
+	                  placeholder="Specify version or leave blank">
+	                <small style="color:#dc3545; font-size:12px;">
+	                  If left blank, system will auto-assign next version.
+	                </small>
+	              </td>
+
+	              <!-- Upload Button -->
+	              <td class="text-center align-middle">
+	                <button
+	                  class="btn btn-success"
+					  [disabled]="!coreSelectedFile || selectedCorePropertyId === null"
+	                  (click)="uploadCoreProperties()">
+	                  <i class="fa fa-cloud-upload mr-1"></i>
+	                  Upload
+	                </button>
+	              </td>
+
+	            </tr>
+	          </tbody>
+	        </table>
+
+	      </div>
+	    </div>
+		
+		
+		
+		<div class="card shadow-sm mt-3">
+
+		  <div class="card-body p-0">
+		    <div class="adapter-tag mb-2">
+		      <strong>3] Workflow</strong> Configuration File
+		    </div>
+
+		    <table class="table table-bordered mb-0">
+		      <thead class="bg-primary">
+		        <tr>
+					  <th style="width:30%">Select Workflow JSON</th>
+					  <th style="width:25%">Core Property Detail ID</th>
+					  <th style="width:25%">Version (Optional)</th>
+					  <th style="width:20%" class="text-center">Action</th>
+		        </tr>
+		      </thead>
+
+		      <tbody>
+		        <tr>
+
+		          <!-- File -->
+		          <td>
+		            <input
+		              type="file"
+		              class="form-control"
+		              accept=".json"
+		              (change)="onWorkflowFileSelected($event)">
+		          </td>
+
+		          <!-- Core Property Detail ID -->
+                  <td>
+					<select
+					  class="form-control"
+					  [(ngModel)]="selectedWorkflowCorePropertyDetailId"
+					  [ngModelOptions]="{ standalone: true }">
+
+					  <option [ngValue]="null">-- Select Core Property Instace --</option>
+
+					  <option
+					    *ngFor="let item of workflowCorePropertyDetailsList"
+					    [ngValue]="item.id">
+
+					    {{ item.name }}
+
+					  </option>
+
+					</select>
+				  </td>
+				  
+				  
+				  <!-- Version -->
+				  <td class="text-center">
+				  		      <button class="btn btn-default btn-sm" disabled>
+				  		          N/A
+				  		      </button>
+				  </td>
+
+		          <!-- Upload -->
+		          <td class="text-center align-middle">
+		            <button
+		              class="btn btn-success"
+					  [disabled]="!workflowFile || !selectedWorkflowCorePropertyDetailId"
+		              (click)="uploadWorkflow()">
+
+		              <i class="fa fa-cloud-upload mr-1"></i>
+		              Upload
+		            </button>
+		          </td>
+
+		        </tr>
+		      </tbody>
+		    </table>
+
+		  </div>
+		</div>
+		
+		
+	
+		
+		
+		
+		
+
+	  </div>
+	</section>

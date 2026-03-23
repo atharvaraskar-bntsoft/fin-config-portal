@@ -1,0 +1,7 @@
+VisaVTS-ISO,11111,,,
+Generic FieldName,ISO 8583 Field (OUT),L1FieldName,ISO 8583 Field(IN),L3FieldName
+Transaction Date,Local Transaction Date,message_collection[0].message_exchange.response.audit_info.created_on,Local Transaction Date,message_collection[1].message_exchange.response.audit_info.created_on
+Approval Code,Response,message_collection[0].message_exchange.response.response_code,Response,message_collection[1].message_exchange.response.response_code
+Auth Code,AuthorisationCode,message_collection[0].message_exchange.response.transaction_response.auth_code,AuthorisationCode,message_collection[1].message_exchange.response.transaction_response.auth_code
+Authorized Amount,TotalAmount,message_collection[0].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.amount,TotalAmount,message_collection[1].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.amount
+Authorized Amount Currency,Currency,message_collection[0].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.currency_code,Currency,message_collection[1].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.currency_code

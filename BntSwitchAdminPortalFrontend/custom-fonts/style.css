@@ -1,0 +1,133 @@
+@font-face {
+    font-family: 'icomoon';
+    src: url('fonts/icomoon.eot?a6s3xy');
+    src: url('fonts/icomoon.eot?a6s3xy#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?a6s3xy') format('truetype'), url('fonts/icomoon.woff?a6s3xy') format('woff'), url('fonts/icomoon.svg?a6s3xy#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'icomoon';
+    src: url('fonts/icomoon1.eot?a6s3xy');
+    src: url('fonts/icomoon1.eot?a6s3xy#iefix') format('embedded-opentype'), url('fonts/icomoon1.ttf?a6s3xy') format('truetype'), url('fonts/icomoon1.woff?a6s3xy') format('woff'), url('fonts/icomoon1.svg?a6s3xy#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-size {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.icon-Exports:before {
+    content: "\e90a";
+}
+
+.icon-Reports:before {
+    content: "\e90c";
+}
+
+.icon-approvals:before {
+    content: "\e901";
+}
+
+.icon-processor_config:before {
+    content: "\e902";
+}
+
+.icon-limits:before {
+    content: "\e903";
+}
+
+.icon-routing:before {
+    content: "\e904";
+}
+
+.icon-network_response:before {
+    content: "\e905";
+}
+
+.icon-Institution_group:before {
+    content: "\e906";
+}
+
+.icon-logs:before {
+    content: "\e907";
+}
+
+.icon-dashbard:before {
+    content: "\e908";
+}
+
+.icon-cogs:before {
+    content: "\e900";
+}
+
+.icon-file-text2:before {
+    content: "\e926";
+}
+
+.icon-wrench:before {
+    content: "\e991";
+}
+
+.delete-color {
+    color: #f46771;
+}
+
+.delete-color:hover {
+    color: #f46771;
+}
+
+.button-effect {
+    font-weight: normal;
+    text-shadow: 0px 0px;
+}
+
+.portal-search {
+    position: absolute;
+    top: 10px;
+    z-index: 1841;
+    left: calc(50% - 170px);
+}
+
+.row-margin {
+    margin-bottom: 8px !important;
+    margin-left: -12px;
+}
+
+.top-icon {
+    height: 32px;
+    margin-left: 0px;
+    background: #3c8dbc;
+}
+
+.search-icon {
+    z-index: 50;
+    position: absolute;
+    height: 31px;
+    top: 8px;
+}
+
+input.input-calender {
+    background-image: url('../src/assets/img/calender.png');
+    background-position: 6px 7px;
+    padding: 12px 20px 12px 36px;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+}

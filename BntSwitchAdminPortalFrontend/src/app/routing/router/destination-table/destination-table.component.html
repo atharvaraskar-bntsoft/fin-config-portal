@@ -1,0 +1,90 @@
+<div style="margin-top: 20px">
+  <ul class="rulelist fade-in template" *ngIf="routerList?.length">
+    <li *ngFor="let router of routerList">
+      <div class="RouterList">
+        <h3 class="font-header">
+          {{ router.name }}
+          <span class="hfour"
+            >{{ editType === 'workflow' ? '' : 'Service :' }} {{ router.routetypevalue }}</span
+          >
+          <a
+            *ngIf="permissionObject.delete"
+            class="pull-right"
+            nzType="primary"
+            nzDanger
+            nz-popconfirm
+            style="color: #f46771; font-size: 14px"
+            nzPopconfirmTitle="Are you sure to delete this record?"
+            nzPopconfirmPlacement="bottom"
+            [nzIcon]="iconTpl"
+            (nzOnConfirm)="deleteRoute(router)"
+            >{{ 'DELETE' | translate }}</a
+          >
+          <ng-template #iconTpl>
+            <span nz-icon nzType="question-circle-o" style="color: red"></span>
+          </ng-template>
+        </h3>
+        <ul>
+          <li class="versionList" *ngFor="let version of router.routingVersion">
+            <div>
+              <span class="versiontitle">
+                {{ 'VERSION' | translate }}:
+                {{ version.version === 0 ? 'Not Versioned' : version.version }}
+              </span>
+              <span class="routercolumn pull-right">
+                <a
+                  *ngIf="permissionObject.update"
+                  class="actions button-effect viewEdit"
+                  href="javascript:;"
+                  (click)="edit(version.id)"
+                  >Edit</a
+                >
+                <br />
+
+                <a
+                  *ngIf="permissionObject.read"
+                  role="button"
+                  class="btn-link button-effect viewrules viewEdit"
+                  href="javascript:;"
+                  (click)="openVersion(version)"
+                  >{{ 'VIEW_RULE' | translate }}</a
+                >
+                <br />
+              </span>
+              <br />
+              <div *ngIf="permissionObject.update">
+                <div *ngIf="version.version === 0">
+                  <nz-switch
+                    [ngModel]="version.live ? true : false"
+                    (ngModelChange)="editLive(version)"
+                    [nzDisabled]="false"
+                  >
+                  </nz-switch>
+                </div>
+                <div *ngIf="version.version !== 0">
+                  <nz-switch
+                    [ngModel]="version.live ? true : false"
+                    (ngModelChange)="editLive(version)"
+                    [nzDisabled]="true"
+                  >
+                  </nz-switch>
+                </div>
+              </div>
+              <div *ngIf="!permissionObject.update">
+                <nz-switch
+                  [ngModel]="version.live ? true : false"
+                  (ngModelChange)="editLive(version)"
+                  [nzDisabled]="true"
+                >
+                </nz-switch>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+  <strong *ngIf="routerList?.length && editType !== 'workflow'"> </strong>
+</div>
+
+<app-not-found [isVisible]="!routerList?.length && !loading"></app-not-found>

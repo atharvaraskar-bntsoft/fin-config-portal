@@ -1,0 +1,302 @@
+<nz-spin [nzSpinning]="loading">
+  <form
+    class="form-horizontal"
+    class="form-signin"
+    [formGroup]="infoForm"
+    (ngSubmit)="draftNetwork()"
+    *ngIf="rows.length"
+  >
+    <div class="table-height">
+      <table class="table table-bordered table-hover">
+        <caption></caption>
+        <thead>
+          <tr>
+            <th class="col-sm-5 th-color">{{ 'FIELD_NAME' | translate }}</th>
+            <th class="col-sm-5 th-color">
+              {{ 'FIELD_VALUE' | translate }}
+              <i
+                class="fa fa-plus-square-o fa-2x pull-right add-color"
+                *ngIf="!readOnlyFlag"
+                aria-hidden="true"
+                (click)="addItem()"
+                title="Add Property"
+              ></i>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of rows; let i = index">
+            <tr *ngIf="data.field !== 'network--custom.jar.files.id'">
+              <td class="td-color joined-word-break" [ngClass]="{ required: data.mandatory }">
+                {{ data.label }}
+              </td>
+              <td class="td-color joined-word-break">
+                <div [ngClass]="adpaterCommonService.displayF1FieldCss(data.field, infoForm)">
+                  <span *ngIf="data.datatype === 'int'" style="margin-left: -5px">
+                    <input
+                      class="form-control input-response"
+                      type="text"
+                      [(ngModel)]="data.value"
+                      formControlName="{{ data.field }}"
+                      [pattern]="adpaterCommonService.patternFormat(data.format, 'int')"
+                      (keypress)="numbersOnly($event)"
+                    />
+                  </span>
+                  <span
+                    *ngIf="data.datatype === 'String' && !data.listvalues"
+                    style="margin-left: -5px"
+                  >
+                    <input
+                      *ngIf="data?.mandatory"
+                      class="form-control input-response"
+                      type="text"
+                      [(ngModel)]="data.value"
+                      formControlName="{{ data.field }}"
+                      [pattern]="adpaterCommonService.patternFormat(data.format, 'alpha')"
+                    />
+
+                    <input
+                      *ngIf="!data?.mandatory"
+                      class="form-control input-response"
+                      type="text"
+                      [(ngModel)]="data.value"
+                      formControlName="{{ data.field }}"
+                      [pattern]="adpaterCommonService.patternFormat(data.format, 'alpha')"
+                    />
+                  </span>
+                  <span *ngIf="data.datatype === ''" style="margin-left: -5px">
+                    <input
+                      class="form-control input-response"
+                      type="text"
+                      [(ngModel)]="data.value"
+                      formControlName="{{ data.field }}"
+                      [pattern]="data.format"
+                    />
+                  </span>
+                  <span
+                    *ngIf="
+                      data.datatype === 'String' &&
+                      data.listvalues &&
+                      data.field !== 'network--tcp.mode'
+                    "
+                    style="margin-left: -5px"
+                  >
+                    <select
+                      formControlName="{{ data.field }}"
+                      class="form-control"
+                      [(ngModel)]="data.value"
+                      style="border-radius: 5px"
+                    >
+                      <option *ngFor="let item of data.listvalues" [ngValue]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                  </span>
+                  <span *ngIf="data.datatype === 'file'" style="margin-left: -5px">
+                    <label
+                      for="{{ data.field }}"
+                      style="cursor: pointer"
+                      data-toggle="tooltip"
+                      [nz-tooltip]="uploadMessage"
+                    >
+                      <ng-template #uploadMessage>
+                        <span>{{ adpaterCommonService.getToolTipMessage(data) }}</span>
+                      </ng-template>
+                      <em nz-icon nzType="paper-clip" style="font-size: 20px" theme="outline"></em>
+                      {{ 'FIELD_Z' | translate }}
+                      <ng-container *ngIf="data.fileName; else elseTemplate">
+                        <span style="color: #1890ff; font-style: italic"
+                          >({{ data.fileName }})</span
+                        >
+                      </ng-container>
+                      <ng-template #elseTemplate>
+                        <ng-container *ngIf="data.listvalues && data.listvalues.length">
+                          <ng-container>
+                            ( {{ adpaterCommonService.formatName(data) }}
+                            file format only)
+                          </ng-container>
+                        </ng-container>
+                      </ng-template>
+                      <input
+                        type="file"
+                        (change)="uploadFile($event, data)"
+                        accept="{{ adpaterCommonService.checkFileType(data) }}"
+                        id="{{ data.field }}"
+                        [disabled]="readOnlyFlag"
+                        style="display: none"
+                      />
+                    </label>
+                  </span>
+                  <span
+                    *ngIf="
+                      data.field === 'network--tcp.mode' &&
+                      data.datatype === 'String' &&
+                      !connectionManagementflag
+                    "
+                    style="margin-left: -5px"
+                  >
+                    <select
+                      formControlName="{{ data.field }}"
+                      class="form-control"
+                      [(ngModel)]="data.value"
+                      style="border-radius: 5px"
+                    >
+                      <option *ngFor="let item of data.listvalues" [ngValue]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                  </span>
+                  <span
+                    *ngIf="
+                      data.field === 'network--tcp.mode' &&
+                      data.datatype === 'String' &&
+                      connectionManagementflag
+                    "
+                    style="margin-left: -5px"
+                  >
+                    <select
+                      formControlName="{{ data.field }}"
+                      class="form-control"
+                      [(ngModel)]="data.value"
+                      style="border-radius: 5px"
+                      disabled
+                    >
+                      <option *ngFor="let item of data.listvalues" [ngValue]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                  </span>
+                  <span *ngIf="data.datatype === 'password'" style="margin-left: -5px">
+                    <div>
+                      <nz-input-group [nzSuffix]="suffixTemplate" style="width: 30%">
+                        <input
+                          style="border-radius: 5px"
+                          [type]="showPasswrd ? 'text' : 'password'"
+                          [(ngModel)]="data.value"
+                          formControlName="{{ data.field }}"
+                          maxlength="50"
+                          nz-input
+                        />
+                      </nz-input-group>
+                      <ng-template #suffixTemplate>
+                        <i
+                          *ngIf="!showPasswrd"
+                          class="fa fa-eye-slash"
+                          aria-hidden="true"
+                          (click)="showPasswrd = !showPasswrd"
+                        ></i>
+                        <i
+                          *ngIf="showPasswrd"
+                          class="fa fa-eye"
+                          aria-hidden="true"
+                          (click)="showPasswrd = !showPasswrd"
+                        ></i>
+                      </ng-template>
+                    </div>
+                  </span>
+                  <span *ngIf="data.datatype === 'boolean'" style="padding-left: 10px">
+                    <input
+                      formControlName="{{ data.field }}"
+                      class="form-control input-response"
+                      type="checkbox"
+                      checked="{{ isCheck }}"
+                      [(ngModel)]="data.value"
+                    />
+                  </span>
+                  <br />
+                  <div *ngIf="this.infoForm.controls[data.field]?.errors?.pattern">
+                    <app-field-error-display
+                      [displayError]="true"
+                      errorMsg="{{
+                        data.label +
+                          ' is not
+                                      Valid' | translate
+                      }}"
+                    >
+                    </app-field-error-display>
+                  </div>
+                  <app-field-error-display
+                    *ngIf="!this.infoForm.controls[data.field]?.errors?.pattern"
+                    [displayError]="adpaterCommonService.isF1Valid(data.field, this.infoForm)"
+                    errorMsg="{{ 'This field is required' | translate }}"
+                  >
+                  </app-field-error-display>
+                </div>
+                <span
+                class="delete_align"
+                  [ngStyle]="
+                    adpaterCommonService.isTopAllowed(data) ? { top: '-10px', left: '200px' } : null
+                  "
+                  nzDanger
+                  nz-popconfirm
+                  nzPopconfirmTitle="Are you sure to delete this record?"
+                  nzPopconfirmPlacement="bottom"
+                  [nzIcon]="iconTpl"
+                  (nzOnConfirm)="removeItem(data, i)"
+                  *ngIf="data.field !== 'network--tcp.mode' && !readOnlyFlag"
+                  ><em class="fa fa-trash fa-lg"></em
+                >
+                <ng-template #iconTpl>
+                  <span nz-icon nzType="question-circle-o" style="color: red"></span>
+                </ng-template></span>
+                <span class="delete_align" *ngIf="data.field === 'network--tcp.mode'">
+                  <label
+                    class="required"
+                    style="cursor: pointer"
+                    (click)="connectionManagementDetails(data.value)"
+                    ><u>Connection details</u></label
+                  >
+                </span>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div class="row col-md-4 margin previous-button">
+      <button class="btn btn-primary" type="button" (click)="prevTabValue()">
+        {{ 'PREVIOUS' | translate }}
+      </button>
+    </div>
+    <div class="margin pull-right" style="margin-right: 0px" *ngIf="tcpmodeflag">
+      <div>
+        <button
+          class="btn btn-primary"
+          *ngIf="!readOnlyFlag"
+          type="submit"
+          [disabled]="infoForm.invalid || fileValid || !connectionDetailsFormFlag"
+        >
+          {{ 'SAVE_DRAFT' | translate }}
+        </button>
+        <button
+          class="btn btn-primary"
+          [disabled]="infoForm.invalid || fileValid || !connectionDetailsFormFlag"
+          type="button"
+          (click)="tabChange()"
+        >
+          {{ 'NEXT' | translate }}
+        </button>
+      </div>
+    </div>
+    <div class="margin pull-right" style="margin-right: 0px" *ngIf="!tcpmodeflag">
+      <div>
+        <button
+          *ngIf="!readOnlyFlag"
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="infoForm.invalid || fileValid"
+        >
+          {{ 'SAVE_DRAFT' | translate }}
+        </button>
+        <button
+          class="btn btn-primary"
+          [disabled]="infoForm.invalid || fileValid"
+          type="button"
+          (click)="tabChange()"
+        >
+          {{ 'NEXT' | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</nz-spin>

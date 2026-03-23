@@ -1,0 +1,20 @@
+.box-scroll{
+  border: 1px solid;
+  height: 350px;
+  overflow-y: scroll;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+.bottom{
+  margin-top: 10px;
+  padding: 5px;
+}

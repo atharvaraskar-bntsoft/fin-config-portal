@@ -1,0 +1,68 @@
+<div class="col-md-12">
+  <div class="row row-margin">
+    <div class="col-md-12">
+      <div class="pull-left col-md-6">
+        <nz-select style="width: 200px;" nzPlaceHolder="Select a version" (ngModelChange)="ngModelChange($event)" [(ngModel)]="selectedVersion">
+          <nz-option nzLabel="All Version" nzValue="0"></nz-option>
+          <nz-option nzLabel="Show Latest Version" nzValue="1"></nz-option>
+        </nz-select>
+      </div>
+      <div class="col-md-6" style="text-align: right;">
+        <button *ngIf="permissionObject.write" class="btn btn-primary btn-md btn-flat" routerLink="create">
+          <i class="fa fa-plus-circle"></i> {{ 'CREATE_WORKFLOW' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="workflow_container">
+    <nz-spin nzTip="Loading..." [nzSpinning]="isSpinning">
+      <div class="workflow-group title"  infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollUpDistance]="1.5"
+      [infiniteScrollThrottle]="50"
+      (scrolledUp)="onScroll()"
+      (scrolled)="onScroll()" [scrollWindow]="false">
+        <div class="workflow" *ngFor="let item of rows; let i = index" id="workflow_container">
+          <nz-card  nzTitle="Workflow ID: {{ item.workflowId }}, Version: {{ item.version }}" [nzExtra]="extraTemplate"
+          >
+            <nz-tree [nzData]="dataTransformation(item)" nzShowLine [nzExpandedIcon]="multiExpandedIconTpl">
+              <ng-template #nzTreeTemplate let-node let-origin="origin">
+                <span class="custom-node">
+                  <span *ngIf="!node.isLeaf">
+                    <span class="folder-name" style="margin-right: 10px;">{{ node.title }}</span>
+                    <i *ngIf="origin.isDecison" [nzRotate]="90" nz-icon nzType="branches"
+                      class="ant-tree-switcher-line-icon"></i>
+                  </span>
+                  <span *ngIf="node.isLeaf">
+                    <span class="file-name" style="margin-right: 10px;">{{ node.title }}</span>
+                    <i *ngIf="origin.isDecison" [nzRotate]="90" nz-icon nzType="branches"
+                      class="ant-tree-switcher-line-icon"></i>
+                  </span>
+                </span>
+              </ng-template>
+            </nz-tree>
+          </nz-card>
+          <ng-template #extraTemplate>
+            <a nz-dropdown [nzDropdownMenu]="menu">Actions<i nz-icon nzType="down"></i></a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item *ngIf="permissionObject.update">
+                  <a href="javascript:void(0)" (click)="editItem(item)">{{
+                    'EDIT' | translate
+                    }}</a>
+                </li>
+                <li nz-menu-item *ngIf="permissionObject.read">
+                  <a href="javascript:void(0)" (click)="viewItem(item)">{{
+                    'VIEW' | translate
+                    }}</a>
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </ng-template>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+  <strong *ngIf="totalRecords"><b>Showing {{ rows.length }} out of {{ totalRecords }} records</b></strong>
+</div>
+<app-not-found [isVisible]="!rows?.length"></app-not-found>

@@ -1,0 +1,30 @@
+export const ImportFileConfig = {
+  texts: {
+    en_EN: {
+      ANOTHER_FILE: 'Upload Another File',
+      CANCEL_UPLOAD: 'Cancel Upload',
+      DEVICE_COUNT: 'Device Count',
+      ERROR: 'Error',
+      FILE_ID: 'File ID',
+      FILE_UPLOAD: 'File records has been imported successfully',
+      INSTITUTE_COUNT: 'Merchant Institution Count',
+      LOCATION_COUNT: 'Location Count',
+      MERCHANT_COUNT: 'Merchant Count',
+      RESET: 'Reset',
+      UPLOADING: 'Uploading',
+    },
+    fr_FR: {
+      ANOTHER_FILE: 'Télécharger un autre fichier',
+      CANCEL_UPLOAD: 'Annuler le téléchargement',
+      DEVICE_COUNT: "Nombre d'appareils",
+      ERROR: 'Erreur',
+      FILE_ID: 'ID de fichier',
+      FILE_UPLOAD: 'Le fichier a été téléchargé avec succès!',
+      INSTITUTE_COUNT: "Nombre d'instituts",
+      LOCATION_COUNT: "Nombre d'emplacement",
+      MERCHANT_COUNT: 'Compte marchand',
+      RESET: 'Réinitialiser',
+      UPLOADING: 'Téléchargement',
+    },
+  },
+};

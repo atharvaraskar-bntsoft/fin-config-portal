@@ -1,0 +1,50 @@
+<nz-drawer
+  [nzClosable]="true"
+  [nzVisible]="visibleMat"
+  nzPlacement="right"
+  [nzTitle]="title"
+  (nzOnClose)="close()"
+  [nzWidth]="1000"
+>
+  <ng-container *nzDrawerContent>
+    <nz-spin style="height: 1200px" nzTip="Loading..." [nzSpinning]="isloading">
+      <nz-card>
+        <div *ngIf="headers">
+          <h1 class="head_title">
+            <span class="requestHeader"
+              >{{ 'LOG_ID' | translate }}: {{ headers.transactionId }}</span
+            >
+            {{ headers.posTransactionType }}
+            ( {{ headers.headerLabel }} )
+          </h1>
+        </div>
+        <div>
+          <table class="table table-striped">
+            <thead>
+              <tr class="word-align">
+                <th scope="col" *ngIf="dataHeader">
+                  {{ dataHeader.genericFieldName }}
+                </th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.request.key }}</th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.request.value }}</th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.response.key }}</th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.response.value }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="word-align" *ngFor="let item of dataValue">
+                <td *ngIf="item.genericFieldName != null">
+                  {{ item.genericFieldName }}
+                </td>
+                <td *ngIf="item.request.key != null">{{ item.request.key }}</td>
+                <td *ngIf="item.request.value != null">{{ item.request.value }}</td>
+                <td *ngIf="item.response.key != null">{{ item.response.key }}</td>
+                <td *ngIf="item.response.value != null">{{ item.response.value }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </nz-card>
+    </nz-spin>
+  </ng-container>
+</nz-drawer>

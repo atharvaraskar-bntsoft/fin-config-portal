@@ -1,0 +1,372 @@
+<div class="fade-in template">
+  <div>
+    <a class="btn" routerLink="/limits/velocity-limits"
+      ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+    >
+  </div>
+  <div class="col-md-7">
+    <nz-spin nzTip="Loading..." [nzSpinning]="isSpinning">
+      <form
+        [formGroup]="velocityFormGroup"
+        (ngSubmit)="velocityFormGroup.valid && onSubmit(velocityFormGroup)"
+      >
+        <div class="form-group">
+          <label
+            class="required"
+            tooltip="{{ 'VELOCITY_LABEL.APPLY_LIMIT_TO' | translate }}"
+            placement="right"
+            delay="500"
+            >{{ 'APPLY_LIMIT_TO' | translate }}</label
+          >
+
+          <ng-select
+            bindLabel="code"
+            (change)="applyLimitToChange($event)"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            [items]="applyLimitTo"
+            placeholder="{{ 'APPLY_LIMIT_TO' | translate }}"
+            formControlName="type"
+            required
+          >
+            <ng-template ng-label-tmp ng-option-tmp let-item="item">
+              {{ item.code | translate }}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group">
+          <label
+            class="required"
+            tooltip="{{ 'VELOCITY_LABEL.INSTITUTION_GROUP' | translate }}"
+            placement="right"
+            delay="500"
+            >{{ 'INSTITUTION_GROUP' | translate }}</label
+          >
+          <ng-select
+            bindLabel="name"
+            (change)="onInstitutionGroupChange($event)"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            [items]="institutionGroupDataRow"
+            placeholder="{{ 'INSTITUTION_GROUP' | translate }}"
+            formControlName="institutionGroup"
+          >
+          </ng-select>
+        </div>
+
+        <div class="form-group" *ngIf="checkType >= 2">
+          <label
+            [ngClass]="{ required: checkType >= 2 }"
+            tooltip="{{ 'VELOCITY_LABEL.INSTITUTION' | translate }}"
+            placement="right"
+            delay="500"
+            >{{ 'INSTITUTION' | translate }}</label
+          >
+          <ng-select
+            bindLabel="name"
+            (change)="onInstitutionChange($event)"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            [items]="rowsInstitutionData"
+            placeholder="{{ 'INSTITUTION' | translate }}"
+            formControlName="institution"
+          >
+          </ng-select>
+        </div>
+
+        <div class="form-group" *ngIf="checkType >= 3">
+          <label
+            [ngClass]="{ required: checkType >= 3 }"
+            tooltip="{{ 'VELOCITY_LABEL.LOCATION' | translate }}"
+            placement="right"
+            delay="500"
+            >{{ 'LOCATION' | translate }}</label
+          >
+          <ng-select
+            bindLabel="name"
+            (change)="onLocationChange($event)"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            [items]="rowsLocationData"
+            placeholder="{{ 'LOCATION' | translate }}"
+            formControlName="location"
+          >
+          </ng-select>
+        </div>
+
+        <div class="form-group" *ngIf="checkType >= 4">
+          <label
+            [ngClass]="{ required: checkType >= 4 }"
+            tooltip="{{ 'VELOCITY_LABEL.DEVICE' | translate }}"
+            placement="right"
+            delay="500"
+            >{{ 'DEVICE' | translate }}</label
+          >
+          <ng-select
+            bindLabel="name"
+            [closeOnSelect]="true"
+            [clearable]="false"
+            [items]="rowsDevicesData"
+            placeholder="{{ 'DEVICE' | translate }}"
+            formControlName="device"
+          >
+          </ng-select>
+        </div>
+        <div>
+          <div class="form-group">
+            <label
+              class="required"
+              tooltip="{{ 'VELOCITY_LABEL.CURRENCY' | translate }}"
+              placement="right"
+              delay="500"
+              >{{ 'CURRENCY' | translate }}</label
+            >
+            <ng-select
+              bindLabel="name"
+              [clearable]="false"
+              [closeOnSelect]="true"
+              [items]="currencyDataRow"
+              placeholder="{{ 'CURRENCY' | translate }}"
+              formControlName="currency"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label
+            class="required"
+            tooltip="{{ 'VELOCITY_LABEL.TRANSACTION_TYPES' | translate }}"
+            placement="right"
+            delay="500"
+            >{{ 'TRANSACTION_TYPES' | translate }}</label
+          >
+          <ng-select
+            bindLabel="name"
+            [closeOnSelect]="true"
+            [clearable]="false"
+            [items]="transactionDataRow"
+            placeholder="{{ 'TRANSACTION_TYPES' | translate }}"
+            formControlName="transactionTypes"
+          >
+          </ng-select>
+        </div>
+
+        <div>
+          <div class="row">
+            <div class="col-md-3">
+              <label class="required">{{ 'LIMIT_TYPE' | translate }}</label>
+            </div>
+            <div class="col-md-3">
+              <label class="required">{{ 'AMOUNT' | translate }}</label>
+            </div>
+            <div class="col-md-3 count-margin">
+              <label
+                [ngClass]="{
+                  required:
+                    currentItem.limitCount.perTime ||
+                    currentItem.limitCount.perDay ||
+                    currentItem.limitCount.perMonth
+                }"
+              >
+                {{ 'COUNT' | translate }}</label
+              >
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <span [ngClass]="{ required: currentItem.limitAmount.singleTransaction }">{{
+                'SINGLE_TRANSACTION' | translate
+              }}</span>
+            </div>
+            <div formGroupName="limitAmount" class="form-group col-md-3">
+              <label class="check_box_container check_box_styling">
+                <input
+                  type="checkbox"
+                  (click)="singleTransactionAmountCheckBox($event)"
+                  formControlName="singleTransactionCheckBox"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <input
+                class="form-control text_box_styling"
+                formControlName="singleTransaction"
+                type="text"
+                appNumbersOnly
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <div class="col-md-1" style="margin-left: -13px">
+                <span>{{ 'PER' | translate }}</span>
+              </div>
+              <div class="form-group col-md-6" style="width: 91px; color: #3c8dbc">
+                <ng-select
+                  bindLabel="labelsDropDown"
+                  (change)="perTimeDropDown($event)"
+                  [clearable]="false"
+                  [closeOnSelect]="true"
+                  [items]="minutesCount"
+                  formControlName="minutesCount"
+                >
+                </ng-select>
+              </div>
+              <div class="form-group col-md-1" style="padding-left: 0px">
+                <span
+                  [ngClass]="{ required: currentItem.limitAmount.perTime || editModeperTime }"
+                  >{{ 'MINUTES' | translate }}</span
+                >
+              </div>
+            </div>
+            <div formGroupName="limitAmount" class="form-group col-md-3">
+              <label class="check_box_container check_box_styling">
+                <input
+                  type="checkbox"
+                  (click)="perTimeAmountCheckBox($event)"
+                  formControlName="perTimeCheckBox"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <input
+                class="form-control text_box_styling"
+                formControlName="perTime"
+                type="text"
+                appNumbersOnly
+                disabled
+              />
+            </div>
+            <div formGroupName="limitCount" class="form-group col-md-3 count-margin">
+              <label class="check_box_container check_box_styling">
+                <input
+                  type="checkbox"
+                  (click)="perTimeCountCheckBox($event)"
+                  formControlName="perTimeCheckBox"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <input
+                class="form-control text_box_styling"
+                formControlName="perTime"
+                type="text"
+                numbersOnly
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <span [ngClass]="{ required: currentItem.limitAmount.perDay || editModeperDay }">{{
+                'PER_DAY' | translate
+              }}</span>
+            </div>
+            <div formGroupName="limitAmount" class="form-group col-md-3">
+              <label class="check_box_container check_box_styling">
+                <input
+                  type="checkbox"
+                  (click)="perDayAmountCheckBox($event)"
+                  formControlName="perDayCheckBox"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <input
+                class="form-control text_box_styling"
+                formControlName="perDay"
+                type="text"
+                appNumbersOnly
+                disabled
+              />
+            </div>
+            <div formGroupName="limitCount" class="form-group col-md-3 count-margin">
+              <label class="check_box_container check_box_styling">
+                <input
+                  type="checkbox"
+                  (click)="perDayCountCheckBox($event)"
+                  formControlName="perDayCheckBox"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <input
+                class="form-control text_box_styling"
+                formControlName="perDay"
+                type="text"
+                numbersOnly
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <span
+                [ngClass]="{ required: currentItem.limitAmount.perMonth || editModeperMonth }"
+                >{{ 'PER_MONTH' | translate }}</span
+              >
+            </div>
+            <div formGroupName="limitAmount" class="form-group col-md-3">
+              <label class="check_box_container check_box_styling">
+                <input
+                  type="checkbox"
+                  (click)="perMonthAmountCheckBox($event)"
+                  formControlName="perMonthCheckBox"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <input
+                class="form-control text_box_styling"
+                formControlName="perMonth"
+                type="text"
+                appNumbersOnly
+                disabled
+              />
+            </div>
+            <div formGroupName="limitCount" class="form-group col-md-3 count-margin">
+              <label class="check_box_container check_box_styling">
+                <input
+                  type="checkbox"
+                  (click)="perMonthCountCheckBox($event)"
+                  formControlName="perMonthCheckBox"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <input
+                class="form-control text_box_styling"
+                formControlName="perMonth"
+                type="text"
+                numbersOnly
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{ 'STATUS' | translate }}</label>
+          <div>
+            <label class="check_box_container"
+              >{{ currentItem.locked === '0' ? ('ENABLED' | translate) : ('DISABLED' | translate) }}
+              <input type="checkbox" (click)="checkStatus()" formControlName="locked" />
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <button (click)="cancel()" class="btn btn-flat" type="button">
+            {{ 'CANCEL' | translate }}
+          </button>
+          <button
+            type="submit"
+            [disabled]="velocityFormGroup.invalid || submitted"
+            class="btn btn-flat btn-primary pull-right"
+          >
+            {{ 'SUBMIT' | translate }}
+          </button>
+        </div>
+      </form>
+    </nz-spin>
+  </div>
+</div>

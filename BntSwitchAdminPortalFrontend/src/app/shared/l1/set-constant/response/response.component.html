@@ -1,0 +1,83 @@
+
+  <ng-container>
+    <span>Set constant values to internal fields (Enrich message)</span>
+    <div class="configDiv" *ngIf="enrichfields">
+      <div class="row mt-4 mb-4" style="padding-top: 5px;">
+        <div class="col-sm-4">
+          <nz-radio-group [(ngModel)]="enrichfields" [disabled]="readOnlyFlag" class="nzRadio">
+            <label nz-radio nzValue="constValue">Enrich fields from constant value</label>
+          </nz-radio-group>
+        </div>
+        <div class="col-sm-8 text-right" *ngIf="!readOnlyFlag">
+          <span class="btn btn-default" (click)="addItemfn()"><i class="fa fa-plus"></i></span>
+        </div>
+      </div>
+      <div>
+        <div class="row mt-5 mb-5" *ngFor="let item of l1ResConstant; let i = index">
+          <div class="col-md-2" style="padding-top: 5px;">
+            <a *ngIf="item.condition == null && !readOnlyFlag" class="fonsize" (click)="addCondition(item)">
+              {{ 'ADD_CONDITION' | translate }}</a>
+            <a *ngIf="item.condition != null" class="fonsize" (click)="addCondition(item)">
+              Edit Condition</a>
+            <span *ngIf="item.condition != null"><a (click)="removeCondition(item)"><i
+                  style="color: red; margin-right: 2px;" class="fa fa-trash"></i></a></span>
+          </div>
+          <div class="col-md-3">
+            <ng-select bindLabel="name" [disabled]="readOnlyFlag" appendTo="body" bindValue="id"
+              placeholder="Select Source" [(ngModel)]="item.destination" [clearable]="false"
+              [items]="adapterData.transformData.listIdRule">
+            </ng-select>
+            <app-field-error-display [displayError]="item['destinationValidation'] && !item.destination"
+              errorMsg="Please select Source!">
+            </app-field-error-display>
+          </div>
+          <div class="col-md-3">
+            <app-tree-structure [readOnlyFlag]="readOnlyFlag" [jsonData]="jsonData" [resimf]="item?.resImfValue"
+              [useCase]="item.useCase" (ImfValue)="changeImfDestination(item, $event)">
+            </app-tree-structure>
+          </div>
+          <div class="col-md-1 auto-width nopadding-lg">
+            <span>=</span>
+          </div>
+          <div class="col-md-2">
+            <input class="form-control" [disabled]="readOnlyFlag" type="text" placeholder="Enter Value"
+              [(ngModel)]="item.source" />
+            <app-field-error-display [displayError]="item['sourceValidation'] && !item.source"
+              errorMsg="Please Enter value!">
+            </app-field-error-display>
+          </div>
+          <div class="col-sm-1 text-right" *ngIf="!readOnlyFlag">
+            <span class="btn btn-default" (click)="removeItemfn(i)"><i class="fa fa-minus"></i></span>
+          </div>
+
+          <nz-modal [(nzVisible)]="item.isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent"
+            [nzFooter]="modalFooter" [nzWidth]="1150" nzClosable="false">
+            <ng-template #modalTitle>Condition</ng-template>
+            <ng-template #modalContent>
+              <app-condition-builder [readOnlyFlag]="readOnlyFlag" [postActionIndex]="i" [jsonData]="jsonData"
+                [ruleCondition]="item.condition" (addSubRule)="getRule($event, item)">
+              </app-condition-builder>
+            </ng-template>
+            <ng-template #modalFooter>
+              <button nz-button nzType="primary" style="width: 80px" (click)="cancel(item)">
+                Cancel
+              </button>
+            </ng-template>
+          </nz-modal>
+        </div>
+      </div>
+      <div class="row mt-4" style="text-align: center;">
+        <span *ngIf="dataEnrichmentScreenError">Please fill all mandatory fields.</span>
+        <span *ngIf="valueValidError && !dataEnrichmentScreenError">Please enter valid data.</span>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-sm-12 text-right">
+        <button nz-button nzType="primary" (click)="closePopWindow()">Cancel</button>
+        <button nz-button nzType="primary" *ngIf="!valueValidError && !readOnlyFlag && l1ResConstant.length > 0"
+          (click)="saveEnrichPopupFn()">
+          Save
+        </button>
+      </div>
+    </div>
+  </ng-container>

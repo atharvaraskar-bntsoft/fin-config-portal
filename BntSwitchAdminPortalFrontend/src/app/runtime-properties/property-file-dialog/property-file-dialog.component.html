@@ -1,0 +1,27 @@
+<nz-card>
+  <mat-icon color="primary" class="file-or-folder-icon pointer">insert_drive_file</mat-icon>
+  <br />
+  <span style="font-size: 9px;">Folder/{{this.fileData.fileName}}</span>
+  <ng-container *ngIf="infoForm && rows.length">
+    <form [formGroup]="infoForm" (ngSubmit)="saveProperty()">
+      <nz-table #headerTable class="table table-striped" [nzShowPagination]="false"  [nzData]="rows" [nzScroll]="{ y: '400px', x: null }">
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of headerTable.data">
+            <td> {{ data.label }}</td>
+            <td *ngIf="!data.isEditable"><input class="form-control" type="text" [(ngModel)]="data.value"
+                formControlName="{{ data.key }}" disabled /></td>
+            <td *ngIf="data.isEditable"><input class="form-control" [disabled]="!data.isEditable" type="text"
+                [(ngModel)]="data.value" formControlName="{{ data.key }}" /></td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <button style="float: right;" class="btn btn-primary" type="submit" [disabled]="infoForm.invalid || !isSubmit">Save</button>
+    </form>
+  </ng-container>
+</nz-card>

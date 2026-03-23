@@ -1,0 +1,128 @@
+<div>
+  <a class="btn" routerLink="/deployment/deployment-schedule">
+    <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+    {{ 'BACK' | translate }}</a
+  >
+</div>
+
+<div class="schedule_container">
+  <nz-spin nzTip="Loading..." [nzSpinning]="isSpinning">
+    <form [formGroup]="deploymentForm" (ngSubmit)="onSubmit()" class="form_container">
+      <input
+        formControlName="name"
+        class="form-control input-response"
+        placeholder="Deployment Name"
+        type="text"
+      />
+      
+      <label>Deployment Date and Time</label>
+      <nz-form-control nzErrorTip="Please Select Date">
+        <nz-date-picker formControlName="scheduledOn" nzShowTime nzFormat="yyyy-MM-dd HH:mm" 
+        [nzDisabledDate]="disabledDate"></nz-date-picker>
+      </nz-form-control>
+      <label
+        class="required"
+        tooltip="{{ 'SELECT_CLUSTER' | translate }}"
+        placement="right"
+        delay="500"
+        >Select Cluster
+      </label>
+      <ng-select
+        [items]="clusterList"
+        bindLabel="name"
+        formControlName="switchCluster"
+        placeholder="Select Cluster"
+      >
+      </ng-select>
+      <div *ngIf="propertiesList?.length!==0">
+      <label
+        class="mt-4"
+        tooltip="{{ 'Select Properties' | translate }}"
+        placement="right"
+        delay="500"
+        >Select Properties
+      </label>
+      <ng-select
+        [items]="propertiesList"
+        bindLabel="corePropertiesName"
+        bindValue="id"
+        formControlName="corePropertyDetailId"
+        placeholder="Select Properties"
+      >
+      </ng-select>
+    </div>
+      <span *ngIf="selectedComponentWarning" class="selectedComponentWarning"
+        >Please select at least one component.</span
+      >
+      <div class="button_align">
+        <button class="btn btn-flat btn-primary" type="submit" [disabled]="!deploymentForm.valid">
+          Schedule
+        </button>
+        <button id = "reset" class="btn" (click)="resetForm()" type="button">Reset</button>
+        <button class="btn" routerLink="/deployment/deployment-schedule" type="button">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <div [ngClass]="{ loading: loading }" [style.margin-top.px]="10">
+      <div [style.margin-bottom.px]="5">Select components for deployment</div>
+      <mat-checkbox (change)="selectAllComponent($event.checked)">Select All</mat-checkbox>
+      <div>
+        <ngx-datatable
+          appNgxDatatableWatcher
+          style="height:32vh"
+          [loadingIndicator]="loading"
+          class="bootstrap fullscreen striped"
+          [rows]="newDeploymentData"
+          [columns]="newDeploymentColumns"
+          [columnMode]="'force '"
+          [headerHeight]="headerHeight"
+          [rowHeight]="rowHeight"
+          [scrollbarV]="true"
+        >
+        </ngx-datatable>
+      </div>
+    </div>
+  </nz-spin>
+</div>
+
+<ng-template #select let-row="row" ngx-datatable-cell-template>
+  <mat-checkbox [checked]="row.select" [(ngModel)]="row.select"></mat-checkbox>
+</ng-template>
+
+<ng-template #version let-row="row" ngx-datatable-cell-template>
+  <div class="filteroverlapTemplate">
+    <ng-select
+      class="filter-shadow"
+      (change)="changeRow($event, row)"
+      [ngModel]="row.currentVersion"
+      bindLabel="version"
+      bindValue="id"
+      appendTo="body"
+      [closeOnSelect]="true"
+      [items]="row.idVersionListToSchedule"
+      [clearable]="false"
+    >
+    </ng-select>
+  </div>
+</ng-template>
+
+<ng-template #scheduledDate let-row="row" ngx-datatable-cell-template>
+  <span [title]="row.lastModifiedOn | date: 'dd MMM yyyy hh:mm:ss a'">
+    {{ row.lastModifiedOn | newDate }}</span
+  >
+</ng-template>
+<ng-template #history let-row="row" ngx-datatable-cell-template>
+  <span class="row-tag">{{ row.lastDeploymentHistory.message | slice: 0:20 }}</span>
+  <br />
+  <span class="row-tag">{{ row.lastDeploymentHistory.message | slice: 20 }}</span>
+</ng-template>
+
+<ng-template #type let-row="row" ngx-datatable-cell-template>
+  <span>{{ deploymentService.renderType(row) }}</span>
+</ng-template>
+
+<ng-template #modifiedBy let-row="row" ngx-datatable-cell-template>
+  <span class="row-tag">{{ row.userName }}</span>
+</ng-template>

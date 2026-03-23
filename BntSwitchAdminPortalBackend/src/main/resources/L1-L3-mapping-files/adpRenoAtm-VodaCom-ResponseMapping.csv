@@ -1,0 +1,7 @@
+ATM VodaCom-JSON,11111,,,
+Generic FieldName,JSON Field (OUT),L1FieldName,JSON Field(IN),L3FieldName
+Transaction Date,transaction_date,message_collection[0].message_exchange.response.audit_info.created_on,transaction_date,message_collection[1].message_exchange.response.audit_info.created_on
+Approval Code,response_code,message_collection[0].message_exchange.response.response_code,response_code,message_collection[1].message_exchange.response.response_code
+Auth Code,authorization_code,message_collection[0].message_exchange.response.transaction_response.auth_code,authorization_code,message_collection[1].message_exchange.response.transaction_response.auth_code
+Authorized Amount,authorized_amount,message_collection[0].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.amount,authorized_amount,message_collection[1].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.amount
+Authorized Amount Currency,authorizedAmountCurrency,message_collection[0].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.currency_code,authorizedAmountCurrency,message_collection[1].message_exchange.response.transaction_response.additionalAmountMap.AUTHORISED_AMOUNT.currency_code

@@ -1,0 +1,76 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="row col-md-3 dropDownmargin">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="value"
+        [closeOnSelect]="true"
+        [items]="schemeList"
+        [(ngModel)]="filter.scheme"
+        placeholder="Select scheme"
+        (change)="getFilterScheme($event)"
+      ></ng-select>
+    </div>
+    <div class="pull-right row button-margin">
+      <button class="btn btn-primary btn-md btn-flat" (click)="cleardata()" routerLink="create">
+        <i class="fa fa-plus-circle"></i> Create Scheme IMF Mapping
+      </button>
+    </div>
+  </div>
+
+  <div class="row" [ngClass]="{ loading: loading }" *ngIf="rows">
+    <!-- <div style="height: 80vh;">
+      <ngx-datatable
+        appNgxDatatableWatcher style="height: 78vh;" [loadingIndicator]="loading" class="bootstrap fullscreen striped "
+        [rows]="rowNetwork" [columns]="columns" [columnMode]="'force'" [headerHeight]="headerHeight" [footerHeight]="40"
+        [rowHeight]="rowHeight" [scrollbarV]="true" (scroll)="onScroll($event)">
+      </ngx-datatable>
+    </div> -->
+    <nz-table
+      nzBordered
+      [nzData]="rows"
+      [nzPageSize]="rows.length"
+      [nzShowPagination]="false"
+      [nzScroll]="{ y: '400px' }"
+    >
+      <thead>
+        <tr>
+          <th col-md-2>Template</th>
+          <th col-md-2>Field Id</th>
+          <th col-md-3>Request IMF</th>
+          <th col-md-3>Response IMF</th>
+          <th col-md-2>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of rows">
+          <td col-md-2>{{ data.messageStandard.id }}</td>
+          <td col-md-2>{{ data.fieldId }}</td>
+          <td col-md-3 *ngIf="data.requestImfField">
+            <a (click)="openIMFPopup(data, 'req')">{{ data.requestImfField }}</a>
+          </td>
+          <td col-md-3 *ngIf="!data.requestImfField">N/A</td>
+          <td col-md-3 *ngIf="data.responseImfField">
+            <a (click)="openIMFPopup(data, 'res')">{{ data.responseImfField }}</a>
+          </td>
+          <td col-md-3 *ngIf="!data.responseImfField">N/A</td>
+          <td col-md-2 (click)="editImf(data)"><a>edit</a></td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <!-- <ng-template #imf let-row="row" ngx-datatable-cell-template>
+    <div> <a class="btn-link button-effect" role="button" (click)="viewClick(row)">Edit</a>
+    </div>
+  </ng-template> -->
+</div>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="{{ imfTitle }}"
+  nzClosable="false"
+  (nzOnCancel)="isVisible = false"
+  (nzOnOk)="isVisible = false"
+>
+  <p>{{ imfData }}</p>
+</nz-modal>

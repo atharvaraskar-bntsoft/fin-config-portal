@@ -1,0 +1,25 @@
+@import '../../../variable';
+.schedule_container {
+  margin: 5px;
+  .back_btn_align {
+    margin-bottom: 5px;
+    color: $main-color;
+    cursor: pointer;
+  }
+  .form_container {
+    width: 55%;
+    padding: 10px;
+    border: 0.5px solid #cccccc;
+    margin-bottom: 10px;
+    .mr-3{
+      margin-right: 10px;
+    }
+  }
+  ngx-datatable {
+    margin-top: 10px;
+  }
+
+  ng-select {
+    width: 140px;
+  }
+}

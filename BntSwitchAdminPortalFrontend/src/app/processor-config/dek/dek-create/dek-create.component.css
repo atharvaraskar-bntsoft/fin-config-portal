@@ -1,0 +1,11 @@
+.lowerCase-data {
+  text-transform: lowercase;
+}
+
+.upperCase-data {
+  text-transform: lowercase;
+}
+
+.button-position {
+  position: absolute;
+}

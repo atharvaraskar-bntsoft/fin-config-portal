@@ -1,0 +1,157 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="row col-md-2 maright">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [items]="statusList"
+        (change)="getFilterStatusData($event)"
+        [(ngModel)]="filter.statusList"
+        placeholder="{{ 'ALL_STATUS' | translate }}"
+      ></ng-select>
+    </div>
+    <div class="row col-md-2">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [items]="processorList"
+        [(ngModel)]="filter.processorList"
+        (change)="getProcessorData($event)"
+        placeholder="{{ 'ALL_PROCESSOR' | translate }}"
+      ></ng-select>
+    </div>
+    <a
+      role="button"
+      *ngIf="resetButtonFlag"
+      class="btn-link button-effect"
+      (click)="resetFilterSearch()"
+      style="margin-left: 10px"
+      >{{ 'RESET_FILTERS' | translate }}</a
+    >
+    <div class="pull-right row button-margin">
+      <button *ngIf="permission.write" class="btn btn-primary btn-md btn-flat" routerLink="create">
+        <i class="fa fa-plus-circle"></i> {{ 'MAPPING_CREATE' | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div>
+      <ngx-datatable
+        appNgxDatatableWatcher
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+  <ng-template #status let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <div *ngIf="permission?.update">
+        <nz-switch
+          [ngModel]="row.active == '0' ? false : true"
+          (ngModelChange)="changeStatus(row)"
+          [nzLoading]="statusLoading"
+          [nzDisabled]="false"
+        >
+        </nz-switch>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #action let-row="row" ngx-datatable-cell-template>
+    <img src="assets/img/loader.gif" *ngIf="row.isLoader" />
+    <div *ngIf="row.active == '0'">N/A</div>
+    <div *ngIf="row.active == '1'">
+      <div *ngIf="!row.isLoader">
+        <div>
+          <a
+            *ngIf="permission.update && row.active"
+            class="btn-link button-effect"
+            role="button"
+            (click)="getRowData(row)"
+            >{{ 'EDIT' | translate }}</a
+          >
+        </div>
+      </div>
+    </div>
+    <div>
+      <a
+        *ngIf="permission.delete && row.active"
+        nzType="primary"
+        nzDanger
+        nz-popconfirm
+        style="color: red"
+        nzPopconfirmTitle="Are you sure to delete this record?"
+        nzPopconfirmPlacement="bottom"
+        [nzIcon]="iconTpl"
+        (nzOnConfirm)="deleteRow(row)"
+        >{{ 'DELETE' | translate }}</a
+      >
+      <ng-template #iconTpl>
+        <span nz-icon nzType="question-circle-o" style="color: red"></span>
+      </ng-template>
+    </div>
+  </ng-template>
+  <ng-template #acquirer let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span class="row-tag"> {{ row?.acquirer ? row.acquirer : 'N/A' }}</span>
+    </ng-container>
+  </ng-template>
+  <ng-template #merchant let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span class="row-tag"> {{ row?.merchant ? row.merchant : 'N/A' }}</span>
+    </ng-container>
+  </ng-template>
+  <ng-template #location let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span class="row-tag"> {{ row?.location ? row.location : 'N/A' }}</span>
+    </ng-container>
+  </ng-template>
+  <ng-template #device let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span class="row-tag"> {{ row?.device ? row.device : 'N/A' }}</span>
+    </ng-container>
+  </ng-template>
+</div>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>

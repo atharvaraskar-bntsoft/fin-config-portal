@@ -1,0 +1,27 @@
+.margintop {
+  margin-top: 10px;
+}
+
+.marginright {
+  margin-right: 5px;
+}
+.button-margin-approval {
+  margin-top: 5px;
+}
+.header-color {
+  background-color: #348de2 !important;
+}
+.header-text-color {
+  font-weight: bold !important;
+  color: #fff !important;
+  border-left: 1px solid #d1d4d7;
+}
+:host .modal.fade .modal-dialog {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 15%;
+}

@@ -1,0 +1,1 @@
+<rv-donut-chart [data] = "data" [width] = "width" [height] = "height" [position] = "position" [title]= "title"></rv-donut-chart>

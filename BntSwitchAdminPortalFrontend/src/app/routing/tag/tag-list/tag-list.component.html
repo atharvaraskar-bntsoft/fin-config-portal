@@ -1,0 +1,88 @@
+<nz-spin [nzSpinning]="loading" nzTip="Loading...">
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="row pull-right buttonMargin">
+      <button *ngIf="permissionObject.write" class="btn btn-primary btn-md btn-flat" routerLink="create">
+        <i class="fa fa-plus-circle"></i>
+        {{ 'CREATE_TAGS' | translate }}
+      </button>
+    </div>
+  </div>
+  <div>
+    <ngx-datatable appNgxDatatableWatcher #myTable class="bootstrap fullscreen striped" [rows]="tagData"
+      [columns]="columns" [columnMode]="'force'" [headerHeight]="headerHeight" [footerHeight]="40"
+      [rowHeight]="rowHeight" [scrollbarV]="true" (scroll)="onScroll($event)">
+      <ngx-datatable-footer appNgxDatatableWatcher>
+        <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+          let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
+          <div>
+            <b>Showing {{ tagData.length }} out of {{ totalRecords }} records</b>
+          </div>
+          <datatable-pager appNgxDatatableWatcher [pagerLeftArrowIcon]="'datatable-icon-left'"
+            [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
+            [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
+            [hidden]="!(rowCount / pageSize > 1)" (change)="table.onFooterPage($event)">
+          </datatable-pager>
+        </ng-template>
+      </ngx-datatable-footer>
+    </ngx-datatable>
+  </div>
+  <ng-template #actionTmpl let-row="row" ngx-datatable-cell-template>
+    <span class="align-child" *ngIf="permissionObject.update">
+      <a role="button" class="btn-link button-effect" (click)="editRowData(row)" style="margin-left: 10px">
+        {{ 'EDIT' | translate }}</a>
+    </span>
+    <span class="align-child" *ngIf="permissionObject.read">
+      <span role="button" class="btn-link button-effect" (click)="viewClick(row)" style="margin-left: 10px">
+        View
+      </span>
+    </span>
+  </ng-template>
+
+  <ng-template #activeTmpl let-row="row" ngx-datatable-cell-template>
+    <!-- <span class="col-md-2 column-padding">
+      <a
+        class="versiontitle"
+        href="javascript:;"
+        class="badge badge-danger badges"
+        [ngClass]="[row.active === '1' ? 'success-badges' : 'failure-badges']"
+        (click)="updateRowData(row)"
+        >{{ row.active === '1' ? ('ENABLED' | translate) : ('DISABLED' | translate) }}</a
+      >
+    </span> -->
+    <nz-switch [disabled]="!permissionObject.write" [ngModel]="row.active === '0' ? false : true" 
+    (ngModelChange)="updateRowData(row)" [nzDisabled]="false">
+    </nz-switch>
+  </ng-template>
+
+  <ng-template #destinationTmpl let-row="row" ngx-datatable-cell-template>
+    <span class="label badgesDestination"> {{ row.tag }}</span>
+  </ng-template>
+
+  <ng-template #serviceTempl let-row="row" ngx-datatable-cell-template>
+    <span class="label badgesDestination"> {{ row.serviceType }}</span>
+  </ng-template>
+
+  <div class="modal fade" tabindex="-1" [ngClass]="{ in: visibleAnimate }" [ngStyle]="{
+      display: visible ? 'block' : 'none',
+      opacity: visibleAnimate ? 1 : 1
+    }" *ngIf="visible">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          {{ currentTag.name }}
+        </div>
+        <div class="modal-body" style="max-height: 450px; overflow: auto">
+          <rv-pretty-json [obj]="currentTag"></rv-pretty-json>
+        </div>
+        <div class="modal-footer">
+          <button class="btn col-md-3 btn-flat pull-right" (click)="close()">
+            {{ 'CLOSE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</nz-spin>
+<app-not-found [isVisible]="!tagData?.length"></app-not-found>

@@ -1,0 +1,128 @@
+<div>
+      <nz-spin style="height: 600px" nzTip="Loading..." [nzSpinning]="loading">
+        <nz-card>
+          <div class="col-md-12 fade-in template" *ngIf="details">
+            <h4>
+              <span class="fa fa-university fa-sm"> {{ details.name }}</span>
+            </h4>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="detail-sub-header">
+                  <i
+                    class="fa fa-info-circle fa-sm iconColor"
+                    style="margin-left: 15px; font-weight: bold"
+                  ></i>
+                  {{ 'GENERAL_INFO' | translate }}
+                </div>
+                <div class="col-md-6">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th>{{ 'ACTIVE_SINCE' | translate }}</th>
+                        <td class="text-color">
+                          {{ details.activateOn | newDate }}
+                        </td>
+                        <td>
+                          <a
+                            class="cursor"
+                            [ngClass]="{ isDisabled: details.totalMerchant === 0 }"
+                            routerLink="/institutions/institutions/filter"
+                            [queryParams]="{ merchantGroup: details.id }"
+                          >
+                            {{ details.totalMerchant }} {{ 'INSTITUTIONS' | translate }}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>{{ 'ACTIVE_TO' | translate }}</th>
+                        <td class="text-color">
+                          {{ details.expiryOn | newDate }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>{{ 'CODE' | translate }}</th>
+                        <td>{{ details.code }}</td>
+                      </tr>
+                      <tr *ngIf="details?.acquirer">
+                        <th>{{ 'ACQUIRER' | translate }}</th>
+                        <td>{{ details?.acquirer.name }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-4">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr *ngIf="details?.description">
+                        <th>{{ 'DESCRIPTION' | translate }}</th>
+                      </tr>
+                      <tr>
+                        <td>{{ details?.description }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="detail-sub-header">
+                  <i
+                    class="fa fa-phone-square fa-sm iconColor"
+                    style="margin-left: 15px; font-weight: bold"
+                  ></i>
+                  {{ 'CONTACT_INFO' | translate }}
+                </div>
+
+                <div class="col-md-6">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th>{{ 'EMAIL' | translate }}</th>
+                        <td>
+                          <a href="mailTo: {{ details?.merchantInstitutionDetail?.email }}">{{
+                            details?.merchantInstitutionDetail?.email
+                          }}</a>
+                        </td>
+                      </tr>
+                      <tr *ngIf="details?.merchantInstitutionDetail?.phone">
+                        <th>{{ 'PHONE_NUMBER' | translate }}</th>
+                        <td>{{ details?.merchantInstitutionDetail?.phone }}</td>
+                      </tr>
+                      <tr *ngIf="details?.merchantInstitutionDetail?.fax">
+                        <th>{{ 'FAX' | translate }}</th>
+                        <td>{{ details?.merchantInstitutionDetail?.fax }}</td>
+                      </tr>
+                      <tr *ngIf="details?.merchantInstitutionDetail?.address1">
+                        <th>{{ 'ADDRESS' | translate }}</th>
+                        <td>{{ details?.merchantInstitutionDetail?.address1 }}</td>
+                      </tr>
+                      <tr *ngIf="details?.merchantInstitutionDetail?.city">
+                        <th>{{ 'CITY' | translate }}</th>
+                        <td>{{ details?.merchantInstitutionDetail?.city }}</td>
+                      </tr>
+                      <tr *ngIf="details?.merchantInstitutionDetail?.countryState?.stateName">
+                        <th>{{ 'STATE' | translate }}</th>
+                        <td>{{ details?.merchantInstitutionDetail?.countryState?.stateName }}</td>
+                      </tr>
+                      <tr *ngIf="details?.merchantInstitutionDetail?.zip">
+                        <th>{{ 'ZIP_CODE' | translate }}</th>
+                        <td>{{ details?.merchantInstitutionDetail?.zip }}</td>
+                      </tr>
+                      <tr *ngIf="details?.merchantInstitutionDetail?.country">
+                        <th>{{ 'COUNTRY' | translate }}</th>
+                        <td>{{ details?.merchantInstitutionDetail?.country?.countryName }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #deletebtn>
+            <button (click)="close()"><i nz-icon nzType="close" nzTheme="outline"></i></button>
+        </ng-template>
+        </nz-card>
+      </nz-spin>
+</div>

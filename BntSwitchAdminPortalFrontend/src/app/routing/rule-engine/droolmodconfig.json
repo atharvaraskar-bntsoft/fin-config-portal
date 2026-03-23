@@ -1,0 +1,394 @@
+{
+  "version": "1.0.0",
+  "data": [
+    {
+      "ruletype": "route",
+      "fields": [
+        {
+          "name": "messageType",
+          "label": "Message Type",
+          "datatype": "string",
+          "opraters": [
+            {
+              "text": "== equals",
+              "value": "=="
+            }
+          ]
+        },
+        {
+          "name": "adapterId",
+          "label": "adapterId",
+          "datatype": "string",
+          "opraters": []
+        },
+	{
+          "name": "transactionType",
+          "label": "Transaction Type",
+          "datatype": "enum",
+          "data": [
+		"CREDIT_SALE",
+		"CREDIT_AUTHORIZATION",
+		"DEBIT_PURCHASE",
+		"EMV_CREDIT_AUTHORIZATION",
+		"EMV_CREDIT_SALE",
+		"ATM_BALANCE_ENQUIRY",
+		"ATM_DEBIT",
+		"ATM_DEBIT_CONFIRM",
+		"ATM_REVERSAL",
+		"ATM_PIN_CHANGE",
+		"ATM_ACCOUNT_TRANSFER",
+		"ATM_ACCOUNTS_REQUEST",
+		"PREAUTHORIZATION_TRANSACTION",
+		"CREDIT_AUTH_REVERSAL",
+		"CREDIT_CAPTURE",
+		"CREDIT_CAPTURE_REVERSAL",
+		"DEBIT_AUTHORIZATION",
+		"CREDIT_SALE_REVERSAL",
+		"CREDIT_REFUND",
+		"CREDIT_REFUND_REVERSAL",
+		"ACCOUNT_VERIFICATION",
+		"CAPTURE_NOTIFICATION",
+		"AUTHORIZATION_NOTIFICATION",
+		"FINANCIAL_TRANSACTION_DEBIT",
+		"FINANCIAL_ADVICE_DEBIT",
+		"AUTHORIZATION_ADVICE_DEBIT",
+		"PREAUTHORIZATION_AFD_TRANSACTION_DEBIT",
+		"ATM_CUSTOMER_REQUEST",
+		"CARD_LESS"
+          ],
+          "opraters": []
+        },
+        {
+          "name": "transactionAmount",
+          "label": "Transaction Amount",
+          "datatype": "number",
+          "opraters": []
+        },
+        {
+          "name": "cardType",
+          "label": "Card Type",
+          "datatype": "enum",
+          "data": [
+            "Master",
+            "Visa",
+            "Amex"
+          ],
+          "opraters": []
+        },
+        {
+          "name": "currency",
+          "label": "Currency",
+          "datatype": "enum",
+          "data": [
+            "INR",
+            "GB",
+            "USD"
+          ],
+          "opraters": []
+        },
+        {
+          "name": "cardPrefix",
+          "label": "Card Prefix",
+          "datatype": "string",
+          "opraters": [
+	    {
+              "text": "Starts with",
+              "value": "str[startsWith]"
+            }
+	  ]
+        },
+        {
+          "name": "merchantId",
+          "label": "Merchant Id",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "tokenType",
+          "label": "Token Type",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "accountType",
+          "label": "Account Type",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "binRange",
+          "label": "Bin Range",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "cctiId",
+          "label": "Ccti Id",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "merchantCategoryCode",
+          "label": "Merchant Category Code",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "posEntryMode",
+          "label": "Pos Entry Mode",
+          "datatype": "string",
+          "opraters": []
+        }
+      ],
+      "output": {
+        "label": "destination",
+        "multiple": "true",
+        "editable": "false",
+        "inputfields": [
+          {
+            "label": "Rule Name",
+            "dtoField": "ruleName",
+            "inputtype": "text",
+            "validation": "true"
+          },
+          {
+            "label": "Rule Description",
+            "dtoField": "ruleDesc",
+            "inputtype": "textarea",
+            "validation": "true"
+          }
+        ]
+      },
+      "values": [
+        {
+          "name": "1",
+          "label": "PostBridge"
+        },
+		
+		 {
+          "name": "2",
+          "label": "User Container"
+        },
+		
+		{
+          "name": "3",
+          "label": "Fraud"
+        },
+		
+		{
+          "name": "4",
+          "label": "Base24eps"
+        },
+		{
+          "name": "5",
+          "label": "VisaVTS"
+        },
+        {
+          "name": "10",
+          "label": "MagicNumber"
+        }
+        
+      ],
+      "opraters": {
+        "string": [
+          {
+            "text": "== equals",
+            "value": "=="
+          },
+          {
+            "text": "!= not equals",
+            "value": "!="
+          }
+        ],
+        "number": [
+          {
+            "text": "== equals",
+            "value": "=="
+          },
+          {
+            "text": "!= not equals",
+            "value": "!="
+          },
+          {
+            "text": "> greater than",
+            "value": ">"
+          },
+          {
+            "text": "< less than",
+            "value": "<"
+          }
+        ],
+        "enum": [
+          {
+            "text": "== equals",
+            "value": "=="
+          },
+          {
+            "text": "!= not equals",
+            "value": "!="
+          }
+        ]
+      }
+    },
+    {
+      "ruletype": "workflow",
+      "fields": [
+        {
+          "name": "tokenType",
+          "label": "Token Type",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "transactionType",
+          "label": "Transaction Type",
+          "datatype": "enum",
+          "data": [
+		"CREDIT_SALE",
+		"CREDIT_AUTHORIZATION",
+		"DEBIT_PURCHASE",
+		"EMV_CREDIT_AUTHORIZATION",
+		"EMV_CREDIT_SALE",
+		"ATM_BALANCE_ENQUIRY",
+		"ATM_DEBIT",
+		"ATM_DEBIT_CONFIRM",
+		"ATM_REVERSAL",
+		"ATM_PIN_CHANGE",
+		"ATM_ACCOUNT_TRANSFER",
+		"ATM_ACCOUNTS_REQUEST",
+		"PREAUTHORIZATION_TRANSACTION",
+		"CREDIT_AUTH_REVERSAL",
+		"CREDIT_CAPTURE",
+		"CREDIT_CAPTURE_REVERSAL",
+		"DEBIT_AUTHORIZATION",
+		"CREDIT_SALE_REVERSAL",
+		"CREDIT_REFUND",
+		"CREDIT_REFUND_REVERSAL",
+		"ACCOUNT_VERIFICATION",
+		"CAPTURE_NOTIFICATION",
+		"AUTHORIZATION_NOTIFICATION",
+		"FINANCIAL_TRANSACTION_DEBIT",
+		"FINANCIAL_ADVICE_DEBIT",
+		"AUTHORIZATION_ADVICE_DEBIT",
+		"PREAUTHORIZATION_AFD_TRANSACTION_DEBIT",
+		"ATM_CUSTOMER_REQUEST",
+		"CARD_LESS"
+          ],
+          "opraters": []
+        },
+        {
+          "name": "token",
+          "label": "Token",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "workflowId",
+          "label": "workflowId",
+          "datatype": "string",
+          "opraters": []
+        },
+        {
+          "name": "adapterId",
+          "label": "adapterId",
+          "datatype": "string",
+          "opraters": []
+        }
+      ],
+      "output": {
+        "label": "Workflow",
+        "multiple": "false",
+        "editable": "true",
+        "inputfields": [
+          {
+            "label": "Rule Name",
+            "dtoField": "ruleName",
+            "inputtype": "text",
+            "validation": true
+          },
+          {
+            "label": "Rule Description",
+            "dtoField": "ruleDesc",
+            "inputtype": "textarea",
+            "validation": false
+          }
+        ]
+      },
+      "values": [
+        {
+          "name": "1",
+          "label": "WorkflowID 1"
+        },
+        {
+          "name": "2",
+          "label": "WorkflowID 2"
+        },
+        {
+          "name": "3",
+          "label": "WorkflowID 3"
+        },
+	{
+          "name": "4",
+          "label": "WorkflowID 4"
+        },
+        {
+          "name": "5",
+          "label": "WorkflowID 5"
+        },
+        {
+          "name": "6",
+          "label": "WorkflowID 6"
+        },
+        {
+          "name": "7",
+          "label": "WorkflowID 7"
+        },
+        {
+          "name": "8",
+          "label": "WorkflowID 8"
+        }
+
+      ],
+      "opraters": {
+        "string": [
+          {
+            "text": "== equals",
+            "value": "=="
+          },
+          {
+            "text": "!= not equals",
+            "value": "!="
+          }
+        ],
+        "number": [
+          {
+            "text": "== equals",
+            "value": "=="
+          },
+          {
+            "text": "!= not equals",
+            "value": "!="
+          },
+          {
+            "text": "> greater than",
+            "value": ">"
+          },
+          {
+            "text": "< less than",
+            "value": "<"
+          }
+        ],
+        "enum": [
+          {
+            "text": "== equals",
+            "value": "=="
+          },
+          {
+            "text": "!= not equals",
+            "value": "!="
+          }
+        ]
+      }
+    }
+  ]
+}

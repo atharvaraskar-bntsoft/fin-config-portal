@@ -1,0 +1,146 @@
+<ng-container *ngIf="jsonData && conditionObj && conditionObj.conditions && contextImf.length">
+  <div class="col-md-12" style="margin-top:-86px;">
+  </div>
+  <div *ngFor="let nodes of conditionObj.conditions; let i = index" style="position: relative">
+    <div [ngClass]="[conditionObj.conditions.length === 1 ? 'withNotClass' : 'withoutNotClass']" *ngIf="i === 0">
+      <div style="text-align: enableProdModenter; font-size: 14px">
+        <a tooltip="{{ 'WORKFLOWS_COLLAPSE' | translate }}" [ngClass]="{ 'toggle-rotate': collapsed1 }"
+          class="fa fa-sort-desc toggle-collapse" (click)="collapsed1 = !collapsed1"></a>
+        <nz-radio-group [(ngModel)]="conditionObj.type" [disabled]="readOnlyFlag">
+          <label nz-radio-button nzValue="and"><span>And</span></label>
+          <label nz-radio-button nzValue="or"><span>Or</span></label>
+          <label nz-radio-button nzValue="not" *ngIf="conditionObj.conditions.length === 1"><span>Not</span></label>
+        </nz-radio-group>
+      </div>
+    </div>
+    <div class="fileds" *ngIf="!collapsed1">
+      <div class="group">
+        <div class="groupChild_rule" *ngIf="!nodes.conditions">
+          <div id="{{ nodes.id }}" style="display: none">
+            {{ 'ENTER_REQUIRED' | translate }}
+          </div>
+          <!-- style="width: 300px" -->
+          <div class="field" *ngIf="contextImf.length">
+            <nz-tree-select style="flex-basis: 300px" *ngIf="contextImf.length" [nzDropdownMatchSelectWidth]="true"
+              [nzDropdownStyle]="{ 'max-height': '200px' }" nz-tooltip [disabled]="readOnlyFlag"
+              [nzTooltipTitle]="imfToolTip[nodes.id]" nzTooltipPlacement="right" [nzShowExpand]="true"
+              [nzNodes]="contextImf" [nzShowSearch]="true" [nzHideUnMatched]="true"
+              nzPlaceHolder="{{ 'SELECT_FIELDS' | translate }}*" [(ngModel)]="ContextfieldName[nodes.id]"
+              (ngModelChange)="changeFieldData($event, nodes, 'imf')">
+            </nz-tree-select>
+            <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].field">Please select field.</span>
+          </div>
+          <div class="field" *ngIf="fieldName[nodes.id] && fieldName[nodes.id].useCase !== '1' && !serviceType">
+            <ng-select class="custom" style="flex-basis: 50px" appendTo="body" [clearable]="false"
+              [disabled]="readOnlyFlag" [items]="serviceList" [(ngModel)]="selectedService[nodes.id]" bindLabel="text"
+              bindValue="value" placeholder="Select Service*" (change)="changeFieldData($event, nodes, 'service')">
+            </ng-select>
+            <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].service">Please select service.</span>
+          </div>
+          <div class="field" *ngIf="
+              fieldName[nodes.id] &&
+              (!fieldName[nodes.id].useCase || fieldName[nodes.id].useCase === '3') &&
+              !exchangeType
+            ">
+            <ng-select class="custom" style="flex-basis: 50px" appendTo="body" [clearable]="false" [items]="typeList"
+              [disabled]="readOnlyFlag" [(ngModel)]="selectedType[nodes.id]" bindLabel="name" bindValue="name"
+              placeholder="Select Type*" (change)="changeFieldData($event, nodes, 'type')">
+            </ng-select>
+            <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].type">Please select type.</span>
+          </div>
+          <!-- style="width: 300px" -->
+          <div class="field">
+            <ng-select class="custom" style="flex-basis: 200px" appendTo="body" [disabled]="readOnlyFlag"
+              [clearable]="false" [items]="fieldName[nodes.id] ? fieldName[nodes.id].operator : []"
+              [(ngModel)]="selectedOperator[nodes.id]" (change)="changeFieldData($event, nodes, 'operator')"
+              bindLabel="text" placeholder="{{ 'SELECT_OPERATOR' | translate }}*">
+            </ng-select>
+            <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].operator">Please select operator.</span>
+          </div>
+          <div class="field" *ngIf="
+              fieldName[nodes.id] &&
+              fieldName[nodes.id].data &&
+              fieldName[nodes.id].data.length > 0 &&
+              selectedOperator[nodes.id] &&
+              !this.disabledValue[nodes.id]
+            ">
+            <!-- style="width: 373px; margin-bottom: 5px;" -->
+            <ng-select style="flex-basis: 240px" [clearable]="false" appendTo="body" [disabled]="readOnlyFlag"
+              [items]="fieldName[nodes.id].data" [(ngModel)]="selectedValue[nodes.id]" bindLabel="text"
+              bindValue="value" [multiple]="multiple[nodes.id]" placeholder="{{ 'SELECT_FIELDS' | translate }}*"
+              (change)="changeFieldData(selectedValue[nodes.id], nodes, 'value')">
+            </ng-select>
+            <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].value">Please select value.</span>
+          </div>
+          <div class="imputText field" *ngIf="
+              ((fieldName[nodes.id] &&
+                (!fieldName[nodes.id].data ||
+                  (fieldName[nodes.id].data && fieldName[nodes.id].data.length === 0))) ||
+                !fieldName[nodes.id] ||
+                !selectedOperator[nodes.id] ||
+                this.disabledValue[nodes.id]) &&
+              fieldName[nodes.id]
+            ">
+            <input *ngIf="!fieldName[nodes.id].boolean" [ngClass]="[
+                Error[nodes.id] && Error[nodes.id].value
+                  ? 'conditionError form-control'
+                  : 'form-control'
+              ]" [(ngModel)]="selectedValue[nodes.id]"
+              (change)="changeFieldData(selectedValue[nodes.id], nodes, 'textvalue')" style="width: 100%" type="text"
+              placeholder="Enter Value*"
+              [disabled]="!selectedOperator[nodes.id] || disabledValue[nodes.id] || readOnlyFlag" />
+            <label nz-checkbox *ngIf="fieldName[nodes.id].boolean"
+              (change)="changeFieldData(selectedValue[nodes.id], nodes, 'checked')"
+              [(ngModel)]="selectedValue[nodes.id]">Yes</label>
+            <span class="error" *ngIf="Error[nodes.id] && Error[nodes.id].value">Please enter valid data.</span>
+          </div>
+        </div>
+        <div class="groupAction" *ngIf="!readOnlyFlag">
+          <div class="dropdown">
+            <a class="dropbtn" *ngIf="!nodes.group">{{ 'ACTIONS' | translate }}</a>
+            <div class="dropdown-content">
+              <a (click)="createGroup(nodes, i)" class="creategroup"><i class="fa fa-plus" aria-hidden="true"></i>
+                Group</a>
+              <a (click)="delete(nodes.id)" *ngIf="!conditionObj.group || conditionObj.conditions.length > 1">
+                <i class="fa fa-trash fa-sm" aria-hidden="true" style="color: #f46771"></i>
+                <span class="delete-color" style="margin-left: 10px">{{
+                  'DELETE' | translate
+                  }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div style="clear: both"></div>
+        <div *ngIf="nodes['conditions'] && nodes['conditions'].length > 0 && !readOnlyFlag"
+          [ngClass]="{ groupheader: 'true' }" (click)="deleteGroup(nodes.id, nodes['conditions'])">
+          <span class="deleteicon"><i class="fa fa-trash" aria-hidden="true"></i> </span>
+        </div>
+
+        <div *ngIf="nodes['conditions'] && nodes['conditions'].length > 0" [ngClass]="{ grouporder: 'true' }">
+          <span style="width: 100%" *ngIf="!collapsed1">
+            <app-condition-builder [conditionObj]="nodes" [ShowSave]="false" [Error]="Error"
+              [readOnlyFlag]="readOnlyFlag" [jsonData]="jsonData" [serviceType]="serviceType"
+              [exchangeType]="exchangeType">
+            </app-condition-builder>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<a class="fonsize required" *ngIf="jsonData && !readOnlyFlag" (click)="addSingleConditon()" style="margin-left: 5px">
+  <i class="fa fa-plus-square" aria-hidden="true"></i>
+  {{ 'ADD_CONDITION' | translate }}</a>
+
+<div *ngIf="jsonData &&  conditionObj && conditionObj.conditions.length > 0">
+  <button nz-button nzType="primary" class="saveConditionCss"
+    *ngIf="ShowSave && conditionObj.conditions && !readOnlyFlag" (click)="saveConditon()">
+    {{ btnText }}
+  </button>
+</div>
+<div *ngIf="jsonData && conditionObj && conditionObj.conditions.length == 0">
+  <button disabled nz-button nzType="primary" class="saveConditionCss" *ngIf="ShowSave && conditionObj.conditions"
+    (click)="saveConditon()">
+    {{ btnText }}
+  </button>
+</div>

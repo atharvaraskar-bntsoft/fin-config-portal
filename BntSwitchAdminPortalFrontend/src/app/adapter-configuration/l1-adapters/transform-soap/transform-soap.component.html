@@ -1,0 +1,217 @@
+<div class="col-sm-12" style="margin-top: 10px">
+  <div class="col-md-4" style="padding-left: 0px">
+    <div class="example-input" style="width: 100%">
+      <input placeholder="Message type" nz-input maxlength="50" [(ngModel)]="selectedTransaction"
+        [nzAutocomplete]="auto" [disabled]="selectedTabIndex === 1 || readOnlyFlag" />
+      <nz-autocomplete #auto>
+        <nz-auto-option class="global-search-item" *ngFor="let option of transactionList" [nzValue]="option.name">
+          {{ option.name }}
+          <em class="fa fa-trash fa-lg" style="float: right; color: red" nz-popconfirm nzPopconfirmTitle="Are you sure to delete this Message Type?"
+          nzPopconfirmPlacement="bottom" [nzIcon]="iconTpl" (nzOnConfirm)="deleteTransaction(option.name)"></em>
+          <ng-template #iconTpl>
+            <span nz-icon nzType="question-circle-o" style="color: red;"></span>
+          </ng-template>
+        </nz-auto-option>
+      </nz-autocomplete>
+    </div>
+  </div>
+  <span class="col-md-2" (click)="addTransaction()" *ngIf="!readOnlyFlag">
+    <label style="color: rgba(0, 0, 0, 0.65)">Add Mapping</label>
+    &nbsp;
+    <em class="fa fa-plus" style="color: black"></em>
+  </span>
+</div>
+
+<div class="col-md-12 fade-in template"
+  style="margin-top: 20px; padding-left: 0px; padding-right: 0px; color: black !important">
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [(nzSelectedIndex)]="selectedTabIndex">
+    <nz-tab *ngFor="let tab of transformTab" [nzTitle]="selectedTransaction + ' ' + tab" (nzClick)="tabChange(tab)">
+    </nz-tab>
+  </nz-tabset>
+  <div class="tranformSoapCodeCss" *ngIf="selectedTabIndex === 0">
+    <ng-container>
+      <div class="col-md-12 payment">
+        <div class="col-md-2">
+          <label>Payment Method:</label>
+        </div>
+        <div class="col-md-4" style="margin-left: 6px">
+          <ng-select appendTo="body" [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+            [closeOnSelect]="true" [items]="paymentList" bindLabel="value" bindValue="value"
+            placeholder="Select payment method" [(ngModel)]="selectedPaymentMethod[selectedTransaction]">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-12 payment">
+        <div class="col-md-2">
+          <label>Request Mapping:</label>
+        </div>
+        <div class="col-md-4">
+          <input type="text" [disabled]="readOnlyFlag" class="toto input-align input-search mappingInput"
+            [(ngModel)]="reqMap[selectedTransaction]" placeholder="Request mapping" />
+        </div>
+      </div>
+      <div class="col-md-12 payment">
+        <div class="col-md-2">
+          <label>Response Mapping:</label>
+        </div>
+        <div class="col-md-4">
+          <input type="text" [disabled]="readOnlyFlag" class="toto input-align input-search mappingInput"
+            [(ngModel)]="resMap[selectedTransaction]" placeholder="Response mapping" />
+        </div>
+      </div>
+      <div class="col-md-12 payment">
+        <div class="col-md-2">
+          <label>Upload Jar:</label>
+        </div>
+        <div class="col-md-2">
+          <label for="uploadfile" style="cursor: pointer">
+            <em nz-icon nzType="paper-clip" style="font-size: 20px" theme="outline"></em>
+            <input type="file" [disabled]="readOnlyFlag" (change)="uploadFile($event)" id="uploadfile"
+              style="display: none" />
+          </label>
+        </div>
+        <div class="col-md-8">
+          <table>
+            <tr *ngFor="let file of fileInfos; let i = index">
+              <td class="col-md-6">{{ file.name }}</td>
+              <td class="col-md-3">
+                <em nz-icon nzType="close" style="font-size: 10px; cursor: pointer; margin-left: 20px; color: red"
+                  nzTheme="outline" (click)="removeFile(i)" *ngIf="!readOnlyFlag"></em>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <!-- Post Action start -->
+  <ng-container *ngIf="selectedTabIndex === 1">
+    <div class="tranformSoapCodeCss">
+      <div class="card ">
+        <div class="card-heading post-heading">
+          <label for="Post Validation">Post Action</label>
+          <span class="btn btn-default pull-right" style="margin-left:10px;" *ngIf="!readOnlyFlag" (click)="addPostAction()">
+            <em class="fa fa-plus"></em></span>
+          <span class="btn btn-primary pull-right"
+            *ngIf="!readOnlyFlag && postActionArray[selectedTransaction].length" (click)="savePostAction()">
+            Save Post Action</span>
+        </div>
+        <div class="card-body post-card">
+          <div class="card" *ngFor="let item of postActionArray[selectedTransaction]; let a = index">
+            <div class="card-heading post-heading" *ngIf="!readOnlyFlag">
+              <label for="Post Validation">Post Action {{ a + 1 }}</label>
+              <span class="btn btn-default pull-right" (click)="removePostAction(a)">
+                <em class="fa fa-minus"></em></span>
+            </div>
+            <ng-container>
+              <div class="col-md-12 row-margin row-align row-template" style="margin-top: 10px">
+                <div class="col-md-4" style="width: 30%">
+                  <mat-radio-group class="mat-radio" [(ngModel)]="item.postAction">
+                    <mat-radio-button value="Optional" [disabled]="readOnlyFlag" color="primary"
+                      style="margin-left: 10px">Non Conditional
+                    </mat-radio-button>
+                    <mat-radio-button value="Conditional" [disabled]="readOnlyFlag" color="primary"
+                      style="margin-left: 10px">
+                      Conditional
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+              <div class="row row-margin row-align row-template" *ngIf="item.postAction === 'Conditional'"
+                style="margin-left: 4%">
+                <a *ngIf="item.conditionObj" (click)="radioChange(item)">Edit Condition</a>
+                <a *ngIf="!item.conditionObj" (click)="radioChange(item)">Create Condition</a>
+              </div>
+              <nz-modal [(nzVisible)]="item.isVisiblecon" [nzTitle]="modalTitle" [nzContent]="modalContent"
+                [nzFooter]="modalFooter" [nzWidth]="1150" nzClosable="false">
+                <ng-template #modalTitle>Condition</ng-template>
+
+                <ng-template #modalContent>
+                  <app-condition-builder [readOnlyFlag]="readOnlyFlag" *ngIf="item.postAction === 'Conditional'"
+                    [postActionIndex]="a" [jsonData]="jsonData" [ruleCondition]="item.conditionObj"
+                    (addSubRule)="getRule($event)">
+                  </app-condition-builder>
+                </ng-template>
+
+                <ng-template #modalFooter>
+                  <button nz-button nzType="primary" style="width: 80px" (click)="conCancel(item)">
+                    Cancel
+                  </button>
+                </ng-template>
+              </nz-modal>
+              <div class="executeDiv">
+                <div class="row row-margin row-align row-template">
+                  <div class="row col-md-2">
+                    <label>Execute:<span class="required"></span> </label>
+                  </div>
+                  <div class="row col-md-6">
+                    <ng-select appendTo="body" [disabled]="readOnlyFlag" style="width: 75%; margin-left: 10px"
+                      [clearable]="false" [closeOnSelect]="true" bindLabel="actionName" [items]="executeData"
+                      [(ngModel)]="item.executeModel" placeholder="Select value"
+                      (change)="stepFunction($event, a, 0, true)"></ng-select>
+                  </div>
+                  <div class="row col-md-2" *ngIf="item?.executeModel?.parameters.length > 0">
+                    <a (click)="stepFunction(item.executeModel, a, 0)">{{ item.executeModel.parameters.length }}
+                      Parameter</a>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <div class="executeDiv">
+              <div class="row row-margin row-align row-template">
+                <div class="row col-md-2">
+                  <label class="required">Set IPC</label>
+                </div>
+                <div class="row col-md-6">
+                  <ng-select appendTo="body" [disabled]="readOnlyFlag" [clearable]="false" class="filter-shadow"
+                    style="width: 75%; margin-left: 10px" [closeOnSelect]="true" bindValue="value" bindLabel="value"
+                    [items]="ipcList" [(ngModel)]="item.IPCvalue" placeholder="Select IPC"></ng-select>
+                </div>
+              </div>
+            </div>
+            <span *ngIf="item.showError" style="color: red; margin-left: 10px">
+              Please provide all mandatory field
+            </span>
+          </div>
+          <nz-modal [(nzVisible)]="showPostActionParam" [nzTitle]="modalTitleNew" [nzContent]="modalContentNew"
+            [nzFooter]="parameterFooter" [nzWidth]="1150" nzClosable="false">
+            <ng-template #modalTitleNew>Parameter(s)</ng-template>
+            <ng-template #modalContentNew>
+              <app-common-parameter [readOnlyFlag]="readOnlyFlag" *ngIf="showPostActionParam"
+                [serviceList]="serviceList" [sourceList]="authData" [ipcList]="ipcList" (parameter)="addParam($event)"
+                [imfList]="jsonData" [showCancelBtn]="showCancelBtn"
+                [selectedStepParameter]="selectedPostActionParameter">
+              </app-common-parameter>
+            </ng-template>
+
+            <ng-template #parameterFooter>
+              <button nz-button nzType="default" style="width: 85px; margin-right: 15px; margin-top: 49px"
+                (click)="closeParamPopup(selectedPostActionParameter.index)">
+                Cancel
+              </button>
+            </ng-template>
+          </nz-modal>
+          <app-not-found [isVisible]="!postActionArray[selectedTransaction]?.length"></app-not-found>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <!-- Post Action End -->
+  <div class="footerDiv">
+    <div class="row col-md-4 margin previous-button">
+      <button class="btn btn-primary" type="button" (click)="prevTabValue()">
+        {{ 'PREVIOUS' | translate }}
+      </button>
+    </div>
+    <div class="row col-md-8">
+      <div class="margin pull-right" style="margin-right: 0px">
+        <button class="btn btn-primary" *ngIf="!readOnlyFlag" type="button" (click)="draftTransform()">
+          {{ 'SAVE_DRAFT' | translate }}
+        </button>
+        <button class="btn btn-primary" type="button" (click)="tabChangeValue()">
+          {{ 'NEXT' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

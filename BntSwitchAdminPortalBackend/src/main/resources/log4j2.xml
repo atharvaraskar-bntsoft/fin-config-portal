@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="60">
+	<Properties>
+		<Property name="LOG_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}]%5p [%t] -
+			%c{1}:%m%n</Property>
+
+	
+<Property name="basePath">${env:switch_log_location:-/usr/local/tomcat/logs}
+		</Property>
+
+	 
+</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+		<RollingFile name="File"
+			fileName="${basePath}/app-ui-log.log" immediateFlush="false"
+			ignoreExceptions="true"
+
+			
+filePattern="${basePath}/$${date:yyyy-MM}/app-ui-%d{yyyy-MM-dd-HH}-%i.log.gz"
+>
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="20 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="5">
+				<Delete basePath="${basePath}" maxDepth="2">
+					<IfFileName glob="*/app-ui-*.log.gz" />
+		<IfLastModified age="7d" />
+				</Delete>
+		
+</DefaultRolloverStrategy>
+		
+</RollingFile>
+
+
+		<RollingFile name="USER_ACTIVITY_LOG_FILE"
+			fileName="${basePath}/user-ui-activity-log.log"
+
+			
+filePattern="${basePath}/$${date:yyyy-MM}/user-ui-activity-%d{yyyy-MM-dd-HH}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="20 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="5">
+				<Delete basePath="${basePath}" maxDepth="2">
+					<IfFileName glob="*/user-ui-activity-*.log.gz" />
+		<IfLastModified age="7d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+
+		
+<RollingFile name="MONITORING_LOG_FILE"
+		fileName="${basePath}/monitoring-log.log"
+
+			
+filePattern="${basePath}/$${date:yyyy-MM}/monitoring-log-%d{yyyy-MM-dd-HH}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="20 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="5">
+				<Delete basePath="${basePath}" maxDepth="2">
+					<IfFileName glob="*/monitoring-log-*.log.gz" />
+		<IfLastModified age="7d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<logger name="org.springframework" level="off" />
+		<logger name="org.apache" level="info" />
+		<logger name="com.bnt" 
+level="info" 
+/>
+		<logger name="org.hibernate.type" additivity="false"
+			level="info" />
+		<logger name="org.hibernate" additivity="false" level="info" />
+
+
+		<logger name="com.bnt.monitoring"
+			additivity="false" level="info">
+			<appender-ref ref="MONITORING_LOG_FILE" />
+		</logger>
+		<logger name="userActivityLogger" additivity="false"
+			level="info">
+
+    		<appender-ref ref="USER_ACTIVITY_LOG_FILE" />
+		</logger>
+
+
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+	</Loggers>
+</Configuration>

@@ -1,0 +1,308 @@
+// @import "../../../common/scss/main-app";
+// @import "../../../common/scss/main";
+// @import "../../../common/scss/conditions";
+// @import "../../../common/scss/equals";
+// @import "../../../common/scss/and-or";
+// @import "../../../common/scss/main-field";
+// @import "../../../common/scss/tabs";
+
+::ng-deep .ng-select.custom .ng-select-container {
+  border: none !important;
+  background: none !important;
+  color: #000 !important;
+  font-weight: bold !important;
+}
+::ng-deep .ng-select.custom .ng-placeholder {
+  color: #000 !important;
+}
+
+.groupChild_rule {
+  border: solid 1px #cccccc;
+  display: flex;
+  /* position: relative; */
+  /* display: inline-block; */
+  margin: 2px;
+  border-radius: 4px;
+  background-color: #f4f6f9;
+  padding: 0 1px 5px;
+  transition: border 0.15s linear;
+  width: 100%;
+  float: left;
+}
+
+.field {
+  position: relative;
+  margin-right: 10px;
+  width: 31%;
+  float: left;
+  margin-top: 7px;
+}
+.groupAction {
+  // padding-left: 17px;
+  // __<<ngThemingMigrationEscapedComment2>>__
+  // float: left;
+  // width: 400px;
+  // position: absolute;
+  // left: 100%;
+  // padding-top: 10px;
+  // padding-left: 17px;
+  width: 400px;
+  position: absolute;
+  padding-top: 10px;
+  left: 94%;
+}
+.group {
+  // margin-top: 10px;
+  padding: 0px 5px 0px 5px;
+  // position: relative;
+  // overflow: hidden;
+  width: 95%;
+}
+.grouporder {
+  // margin-left: 10px;
+  // border: solid 1px #ececec;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.1);
+  // display: flex;
+  // background: #f7f7f7;
+}
+.addfiled {
+  cursor: pointer;
+  float: right;
+  margin-right: 65px;
+  color: #007bff;
+}
+.addfiled:hover {
+  color: #035fc1;
+  font-weight: bold;
+}
+.creategroup {
+  color: #007bff;
+  // margin-left: 7px;
+  // position: absolute;
+  //   top: 22px;
+  //   right: 100;
+  cursor: pointer;
+  padding-right: 10px;
+}
+
+.creategroup:hover {
+  color: #035fc1;
+  font-weight: bold;
+}
+.creategroup:hover {
+  color: #035fc1;
+  font-weight: bold;
+}
+.deletetext {
+  cursor: pointer;
+  //   margin-left: 7px;
+  //   position: absolute;
+  // top: 22px;
+  // right: 40px;
+  color: #ff0000;
+}
+.deletetext:hover {
+  font-weight: bold;
+}
+
+.grouporder {
+  // margin-left: 10px;
+  border: solid 1px #ececec;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.1);
+  display: flex;
+  padding: 10px 5px;
+  margin: 4px;
+  // background: #f7f7f7;
+}
+
+.groupheader {
+  // background: #ececec;
+  // padding: 3px;
+  // position: relative;
+}
+.icons {
+  font-size: 20px;
+  .error {
+    border: solid #ff0000 1px;
+  }
+  font-size: 20px;
+  .error {
+    border: solid #ff0000 1px;
+  } /* float: right; */
+  .error {
+    border: solid #ff0000 1px;
+  }
+  position: absolute;
+  .error {
+    border: solid #ff0000 1px;
+  }
+  top: 0;
+  .error {
+    border: solid #ff0000 1px;
+  }
+  right: 5px;
+}
+.error {
+  border: solid #ff0000 1px;
+}
+.ad.error {
+  border: solid #ff0000 1px;
+}
+.addicon {
+  cursor: pointer;
+  &:before {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+    //  background-image: url(../../../../../../assets/img/add.svg);
+    background-size: contain;
+    content: '';
+  }
+}
+.minusicon {
+  cursor: pointer;
+  &:before {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    top: -1px;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+    //  background-image: url(../../../../../../assets/img/minus.svg);
+    background-size: contain;
+    content: '';
+  }
+}
+
+.deleteicon {
+  cursor: pointer;
+  top: -14px;
+  left: 106%;
+  &:before {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    top: -7px;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+    color: #ff0000;
+    //  background-image: url(../../../../../../assets/img/trash.svg);
+    background-size: contain;
+    position: absolute;
+    right: -10px;
+    content: '';
+  }
+}
+.addfiled {
+  cursor: pointer;
+  float: right;
+  margin-right: 65px;
+  color: #007bff;
+}
+.valueField {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  color: #007bff !important;
+  cursor: pointer;
+}
+.valueField:hover {
+  display: block;
+  color: #007bff !important;
+}
+.dropDownFileds {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  color: #007bff !important;
+  cursor: pointer;
+}
+.dropDownFileds:hover {
+  display: block;
+  color: #007bff !important;
+}
+.error {
+  border: solid #ff0000 1px;
+  color: #ff0000;
+}
+.error-message {
+  color: #ff0000;
+}
+
+.addCondtion {
+  color: #007bff !important;
+}
+
+.and-or {
+  height: 32px;
+  width: 50px;
+  position: relative;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 0.71;
+  color: #9ba1b9;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  &:before {
+    top: 0;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    width: 2px;
+    height: 8px;
+    background: #dde1ee;
+    content: '';
+  }
+  &:after {
+    margin-top: 19px;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    width: 2px;
+    height: 9px;
+    background: #dde1ee;
+    content: '';
+  }
+}
+.text {
+  cursor: pointer;
+  position: absolute;
+  left: 14px;
+  top: 13px;
+}
+.text:hover {
+  color: #4e9ff8;
+}
+.group {
+  padding: 8px 5px 10px 5px;
+  // position: relative;
+  width: 95%;
+}
+span.deleteicon {
+  float: right;
+  margin-top: -6px;
+  margin-left: -5px;
+  color: #ff0000;
+}
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}

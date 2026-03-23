@@ -1,0 +1,32 @@
+input.ng-touched.ng-invalid {
+  border: 1px solid #ff0000;
+}
+::ng-deep .ng-select.ng-invalid.ng-touched > .ng-select-container {
+  border: 1px solid #ff0000;
+}
+
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+.textbox-border {
+  border-radius: 5px !important;
+  height: 36px;
+}
+.border-red {
+  border: 1px solid #ff0000;
+}
+.separation {
+  padding-top: 15px;
+  width: 5px;
+  font-size: 30px;
+}
+.marginLeft {
+  margin-left: -15px !important;
+}

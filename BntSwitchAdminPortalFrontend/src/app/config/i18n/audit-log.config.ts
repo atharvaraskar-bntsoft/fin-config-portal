@@ -1,0 +1,32 @@
+export const AuditLogConfig = {
+  texts: {
+    en_EN: {
+      AUDIT_LOG_ACTION: 'Action',
+      AUDIT_LOG_ALL_ACTION_TYPE: 'All Action Type',
+      AUDIT_LOG_ALL_ENTITY_TYPE: 'All Entity Type',
+      AUDIT_LOG_ALL_TIME: 'All Time',
+      AUDIT_LOG_ALL_USER: 'All User',
+      AUDIT_LOG_DATE: 'Date',
+      AUDIT_LOG_DESCRIPTION: 'Description',
+      AUDIT_LOG_OBJECT: 'Object',
+      AUDIT_LOG_SEARCH: 'Search',
+      AUDIT_LOG_USER_NAME: 'User Name',
+      AUDIT_LOG_USER_ROLE: 'Role',
+      AUDIT_LOG_USER_ROLE_ID: 'User / Role Details',
+    },
+    fr_FR: {
+      AUDIT_LOG_ACTION: 'Action',
+      AUDIT_LOG_ALL_ACTION_TYPE: "Tout type d'action",
+      AUDIT_LOG_ALL_ENTITY_TYPE: "Tout type d'entité",
+      AUDIT_LOG_ALL_TIME: 'Tout le temps',
+      AUDIT_LOG_ALL_USER: 'Tous les utilisateurs',
+      AUDIT_LOG_DATE: 'Rendez-vous amoureux',
+      AUDIT_LOG_DESCRIPTION: 'La description',
+      AUDIT_LOG_OBJECT: 'Objet',
+      AUDIT_LOG_SEARCH: 'Chercher',
+      AUDIT_LOG_USER_NAME: "Nom d'utilisateur",
+      AUDIT_LOG_USER_ROLE: 'Rôle',
+      AUDIT_LOG_USER_ROLE_ID: "Détails sur l'utilisateur / le rôle",
+    },
+  },
+};

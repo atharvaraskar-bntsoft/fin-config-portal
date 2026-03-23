@@ -1,0 +1,18 @@
+<nz-tree-select
+  style="width: 100%;margin-bottom: 10px;"
+  [nzDropdownMatchSelectWidth]="true"
+  nz-tooltip
+  [nzTooltipTitle]="imfToolTip"
+  nzTooltipPlacement="right"
+  [nzDropdownStyle]="{ 'max-height': '200px' }"
+  [nzShowExpand]="true"
+  [nzNodes]="nodes"
+  [nzShowSearch]="true"
+  [nzHideUnMatched]="true"
+  nzPlaceHolder="Please select"
+  [(ngModel)]="value"
+  [nzAllowClear] = "!readOnlyFlag"
+  [disabled]="disabled || readOnlyFlag"
+  (ngModelChange)="onChange($event)"
+>
+</nz-tree-select>

@@ -1,0 +1,47 @@
+<div class="row">
+  <nz-tabset [(nzSelectedIndex)]="activeTab">
+    <nz-tab [nzTitle]="'View'" (nzClick)="firstTab()" *ngIf="!readOnlyFlag">
+      <ng-container>
+        <div class="col-12">
+          <textarea style="width:100%;height:60vh;" [(ngModel)]="rawIncomingPackager"
+            placeholder="Enter/paste request here"></textarea>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary pull-right" [disabled]="!rawIncomingPackager" type="button"
+            (click)="requestTransform(rawIncomingPackager)">
+            Transform
+          </button>
+        </div>
+      </ng-container>
+    </nz-tab>
+    <nz-tab [nzTitle]="'Modify'" (nzClick)="secondTab()">
+      <div class="col-md-12" style="min-height: 62vh;">
+        <div [ngClass]="{'col-md-12': !currentItem, 'col-md-8' : currentItem}">
+          <div [style.padding-top.px]="10" class="box-scroll" *ngIf="currentItem;else no_found">
+            <app-imf-hierarchy-tree [initialJson]="initialJson" [saveMethods]="saveMethods"
+              [versionMethods]="versionMethods" [dataSource]="currentItem" [source]="'request'"
+              [revertChanges]="revertChanges" [readOnlyFlag]="readOnlyFlag">
+            </app-imf-hierarchy-tree>
+          </div>
+          <ng-template #no_found>
+            <nz-empty></nz-empty>
+          </ng-template>
+        </div>
+        <div class="col-md-4" *ngIf="currentItem">
+          <app-imf-creation-table [types]="typeList" [readOnlyFlag]="readOnlyFlag"></app-imf-creation-table>
+        </div>
+      </div>
+      <div class="col-md-12 text-right">
+        <button nz-button nzType="primary" [disabled]="!currentItem" (click)="saveRequestPayload()">Save</button>
+        <button nz-button nzType="primary" (click)="closeRequestPayload()">
+          Close
+        </button>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>
+<nz-modal [(nzVisible)]="isVisibleInvalidField" nzTitle="Invalid Fields" nzCancelDisabled="false" (nzOnOk)="handleOk()">
+  <ng-container>
+    <p style="color:red">{{ inValidFields }}</p>
+  </ng-container>
+</nz-modal>

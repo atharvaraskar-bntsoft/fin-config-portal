@@ -1,0 +1,24 @@
+<ng-container *ngIf="services">
+  <ul
+    [ngClass]="{
+      'tree-workflow': serviceId !== services[0].id,
+      'tree-workflow': serviceId === services[0].id
+    }"
+    *ngFor="let service of services"
+  >
+    <li>
+      {{ service.serviceName }}
+      <i
+        class="fa fa-square-o fa-lg"
+        style="border: none; color: #509ef8; transform: rotate(45deg)"
+        *ngIf="service.precedingDecisionUi"
+        aria-hidden="true"
+      ></i>
+      <!-- <div class="square" *ngIf="service.precedingDecisionUi"></div> -->
+      <app-child-workflow
+        [services]="service.services"
+        *ngIf="service.services.length"
+      ></app-child-workflow>
+    </li>
+  </ul>
+</ng-container>

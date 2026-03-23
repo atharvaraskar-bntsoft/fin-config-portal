@@ -1,0 +1,237 @@
+<div class="fade-in template">
+  <div>
+    <a class="btn" routerLink="/routing/ruletags">
+      <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+      {{ 'BACK' | translate }}</a
+    >
+  </div>
+  <div class="col-md-12">
+    <nz-spin nzTip="Loading..." [nzSpinning]="isSpinning">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-md-4 text-right">
+                <label
+                  class="required label-align"
+                  tooltip="{{ 'TAG.RULE_NAME' | translate }}"
+                  placement="right"
+                  delay="500"
+                  >{{ 'TAG.RULE_NAME' | translate }}</label
+                >
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  [maxLength]="50"
+                  id="name"
+                  #name="ngModel"
+                  class="form-control"
+                  [(ngModel)]="payload.name"
+                  name="name"
+                  required
+                  placeholder="{{ 'TAG.RULE_NAME' | translate }}"
+                  style="width: 100%"
+                  [disabled]="edit"
+                />
+                <div *ngIf="!name?.valid && (name?.dirty || name?.touched)" class="error">
+                  <div *ngIf="name.errors.required">Please Enter Rule Name</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="row">
+            <div class="col-md-4 text-right">
+              <label
+                class="required label-align"
+                tooltip="{{ 'TAG.SCHEDULE_ROUTER_SERVICE_TYPE' | translate }}"
+                placement="right"
+                delay="500"
+                >{{ 'TAG.SCHEDULE_ROUTER_SERVICE_TYPE' | translate }}</label
+              >
+            </div>
+            <div class="col-md-8">
+              <ng-select
+                [clearable]="false"
+                bindLabel="value"
+                id="serviceType"
+                name="serviceType"
+                #serviceType="ngModel"
+                bindvalue="value"
+                [items]="serviceList"
+                required
+                [(ngModel)]="payload.serviceType"
+                class="filter-shadow"
+                placeholder="Select Service Type"
+              >
+              </ng-select>
+              <div *ngIf="!serviceType?.valid && (serviceType?.dirty || serviceType?.touched)" class="error">
+                <div *ngIf="serviceType.errors.required">Please Select Service Type</div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-md-4  text-right">
+                <label
+                  class="required label-align"
+                  tooltip="{{ 'TAG.Request_Response' | translate }}"
+                  placement="right"
+                  delay="500"
+                  >{{ 'TAG.Request_Response' | translate }}</label
+                >
+              </div>
+              <div class="col-md-8">
+                <ng-select
+                  [clearable]="false"
+                  bindLabel="name"
+                  bindValue="value"
+                  id="exchangeType"
+                  name="exchangeType"
+                  #exchangeType="ngModel"
+                  [items]="ExchangeTypeList"
+                  required
+                  [(ngModel)]="payload.exchangeType"
+                  class="filter-shadow"
+                  placeholder="Select Exchange Type"
+                >
+                </ng-select>
+                <div *ngIf="!exchangeType?.valid && (exchangeType?.dirty || exchangeType?.touched)" class="error">
+                  <div *ngIf="exchangeType.errors.required">Please Select Exchange Type</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-md-4  text-right">
+                <label class="required" style="margin-right: 4%">
+                  Condition</label>                
+              </div>
+              <div class="col-sm-8">
+                <a *ngIf="conditionObj" (click)="isVisiblecon = true">Edit Condition</a>
+                <a style="margin-left: 4px" *ngIf="!conditionObj" (click)="isVisiblecon = true"
+                  >Create Condition</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-md-4  text-right">
+                <label class="required"
+                  tooltip="{{ 'TAG.THEN_APPLY_BELOW' | translate }}"
+                  placement="right"
+                  delay="500"
+                  >{{ 'TAG.THEN_APPLY_BELOW' | translate }}</label>
+              </div>
+              <div class="col-sm-8">
+                  <ng-select
+                    [clearable]="false"
+                    bindLabel="name"
+                    id="tags"
+                    name="tags"
+                    #tags="ngModel"
+                    bindValue="name"
+                    [items]="tagList"
+                    required
+                    [(ngModel)]="payload.tag"
+                    class="filter-shadow"
+                    placeholder="Select rule tag">
+                  </ng-select>
+                  <div *ngIf="!tags?.valid && (tags?.dirty || tags?.touched)" class="error">
+                    <div *ngIf="tags.errors.required">Please Select Rule Tag</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-12">
+            <span *ngIf="tagError" style="color: red">Please fill all mandatory fields.</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-12">
+                <button
+                  class="btn pull-right"
+                  style="margin-left: 15px"
+                  routerLink="/routing/ruletags"
+                  type="button"
+                  [disabled]="tag"
+                >
+                  {{ 'CANCEL' | translate }}
+                </button>
+                <button
+                  *ngIf="
+                    !edit &&
+                    payload.tag &&
+                    payload.serviceType &&
+                    payload.name &&
+                    payload.condition &&
+                    payload.exchangeType
+                  "
+                  class="btn btn-flat btn-primary pull-right"
+                  type="submit"
+                  [disabled]="tag"
+                  (click)="saveRuleTag()"
+                >
+                  {{ 'SAVE' | translate }}
+                </button>
+                <button
+                  *ngIf="edit"
+                  class="btn btn-flat btn-primary pull-right"
+                  type="submit"
+                  [disabled]="tag"
+                  (click)="UpdateTag()"
+                >
+                  Update
+                </button>
+          </div>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+
+  <nz-modal
+  [(nzVisible)]="isVisiblecon"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  [nzWidth]="1150"
+  nzClosable="false"
+>
+  <ng-template #modalTitle>Condition</ng-template>
+
+  <ng-template #modalContent>
+    <app-condition-builder
+      *ngIf="isVisiblecon"
+      [serviceType]="payload.serviceType"
+      [exchangeType]="payload.exchangeType"
+      [jsonData]="jsonData"
+      [ruleCondition]="conditionObj"
+      (addSubRule)="getRule($event)"
+    >
+    </app-condition-builder>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" style="width: 80px" (click)="isVisiblecon = false">
+      Cancel
+    </button>
+  </ng-template>
+</nz-modal>
+</div>

@@ -1,0 +1,111 @@
+<div class="navbar-custom-menu">
+  <ul class="nav navbar-nav">
+    <li ngbDropdown class="notifications-menu" *ngIf="isPermissionNotification">
+      <a href="#" ngbDropdownToggle>
+        <i class="fa fa-bell-o"></i>
+        <span class="label label-danger">{{ notificationCount }}</span>
+      </a>
+      <ul ngbDropdownMenu>
+        <li class="header header_font" ngbDropdownItem>
+          {{ 'YOU_HAVE' | translate }}
+          <span class="color-red"> {{ notificationCount }} </span>
+          {{ 'NOTIFICATIONS' | translate }}
+        </li>
+        <li ngbDropdownItem>
+          <!-- inner menu: contains the actual data -->
+          <ul class="menu">
+            <li class="header_listing" *ngFor="let record of lastRecords">
+              <div class="pull-right header_record">
+                {{ record.createdOn | timeAgo }}
+              </div>
+              <div>
+                {{ record.entityType }} {{ 'UPDATED_BY' | translate }}
+                {{ record.createdBy }}
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li ngbDropdownItem class="footer">
+          <a class="header-link-color" [routerLink]="'approvals/notifications'">{{
+            'VIEW_ALL' | translate
+          }}</a>
+        </li>
+      </ul>
+    </li>
+    <li ngbDropdown class="notifications-menu">
+      <a ngbDropdownToggle>
+        <i
+          class="fa fa-cog fa-lg"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Settings"
+        ></i>
+      </a>
+      <ul ngbDropdownMenu class="dropdown-menu setting-menu-body">
+        <li *ngFor="let item of menuArray" ngbDropdownItem>
+          <a class="header-link-color setting-menu" [routerLink]="item.link">{{ item.label }}</a>
+        </li>
+      </ul>
+    </li>
+    <li rv-dropdown type="list" [isWrapper]="false" class="messages-menu">
+      <rv-dropdown-toggle #toggleElement>
+        <a
+          class="hidden-xs"
+          style="
+            font-weight: bold;
+            color: #888888;
+            font-size: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            float: left;
+          "
+          >{{ now | local }}</a
+        >
+        <br />
+
+        <a
+          class="hidden-xs"
+          style="
+            font-weight: bold;
+            color: #888888;
+            font-size: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            float: left;
+          "
+        >
+          {{ now | utc }}</a
+        >
+      </rv-dropdown-toggle>
+    </li>
+    <li rv-dropdown type="list" [isWrapper]="false" class="user user-menu">
+      <rv-dropdown-toggle>
+        <a #toggleElement>
+          <img
+            src="assets/img/user2-160x160.jpg"
+            class="user-image"
+            alt="User
+            Image"
+          />
+        </a>
+      </rv-dropdown-toggle>
+      <rv-dropdown-menu>
+        <li class="user-header">
+          <img
+            src="assets/img/user2-160x160.jpg"
+            class="img-circle"
+            alt="User
+            Image"
+          />
+          <p>{{ data.firstName }} {{ data.lastName }}</p>
+          <p>{{ data.email }}</p>
+        </li>
+        <li class="user-footer">
+          <div class="pull-right">
+            <a (click)="logout()" class="btn btn-default btn-flat">{{ 'SIGNOUT' | translate }}</a>
+          </div>
+        </li>
+      </rv-dropdown-menu>
+    </li>
+  </ul>
+</div>

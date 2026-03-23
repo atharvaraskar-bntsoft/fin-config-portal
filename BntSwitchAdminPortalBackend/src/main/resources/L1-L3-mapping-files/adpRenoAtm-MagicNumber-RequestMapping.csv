@@ -1,0 +1,10 @@
+TOKEN Magic Number-ISO,11111,,,
+GenericFieldName,ATM Field (IN),L1FieldName,ISO 8583 Field (OUT),L3FieldName
+Transaction Date,transaction_date,message_collection[0].message_exchange.request.audit_info.created_on,Local Transaction Date,message_collection[1].message_exchange.request.audit_info.created_on
+Transaction Amount,amount,message_collection[0].message_exchange.request.transaction.transaction_amount.amount,Transaction Amount,message_collection[1].message_exchange.request.transaction.transaction_amount.amount
+Currency Code,currency,message_collection[0].message_exchange.request.transaction.transaction_amount.currency_code,Transaction Currency Code,message_collection[1].message_exchange.request.transaction.transaction_amount.currency_code
+RRN number,merchant_transaction_reference_id,message_collection[0].message_exchange.request.transaction.retrieval_reference_number,Retrieval Reference Number,message_collection[1].message_exchange.request.transaction.retrieval_reference_number
+POS Entry Mode,entry_mode,message_collection[0].message_exchange.request.point_of_sale.capabilities.entry_mode,POS Entry Mode,message_collection[1].message_exchange.request.point_of_sale.capabilities.entry_mode
+Merchant Category Code,merchant_category_code,message_collection[0].message_exchange.request.merchant_details.merchant_category_code,Merchant Type,message_collection[0].message_exchange.request.merchant_details.merchant_category_code
+Merchant Code,merchant_id,message_collection[0].message_exchange.request.merchant_details.merchant_code,Card Acceptor Identification Code,message_collection[1].message_exchange.request.merchant_details.merchant_code
+Device Code,terminal_id,message_collection[0].message_exchange.request.merchant_details.device_code,Card Acceptor Terminal Identification,message_collection[1].message_exchange.request.merchant_details.device_code

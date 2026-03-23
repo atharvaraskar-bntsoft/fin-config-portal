@@ -1,0 +1,36 @@
+<div [ngClass]="styleClass" [rvColor]="backgroundColor" rvColorProperty="background-color">
+  <div class="inner">
+    <h3
+      *ngIf="header || boxSmallHeaderDirective"
+      [ngClass]="headerStyleClass"
+      [rvFontColor]="headerColor"
+    >
+      {{ header }}
+      <ng-content select="rv-box-small-header"></ng-content>
+    </h3>
+    <p [ngClass]="contentStyleClass" [rvFontColor]="contentColor">
+      <ng-container
+        *ngIf="
+          boxSmallHeaderDirective || boxSmallContentDirective || boxSmallFooterDirective;
+          else noDirective
+        "
+      >
+        <ng-content select="rv-box-small-content"></ng-content>
+      </ng-container>
+      <ng-template #noDirective>
+        <ng-content></ng-content>
+      </ng-template>
+    </p>
+  </div>
+  <div *ngIf="iconStyleClass" class="icon">
+    <i [ngClass]="iconStyleClass" [rvFontColor]="iconColor"></i>
+  </div>
+  <span
+    *ngIf="footer || boxSmallFooterDirective"
+    [ngClass]="footerStyleClass"
+    [rvFontColor]="footerColor"
+  >
+    {{ footer }}
+    <ng-content select="rv-box-small-footer"></ng-content>
+  </span>
+</div>

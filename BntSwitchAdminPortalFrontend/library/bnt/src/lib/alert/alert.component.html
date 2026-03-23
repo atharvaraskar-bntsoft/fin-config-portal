@@ -1,0 +1,17 @@
+<div
+  *ngIf="!removed"
+  [rvCollapseAnimation]="remove"
+  (rvCollapseAnimation.start)="collapseStart($event)"
+  (rvCollapseAnimation.done)="collapseDone($event)"
+>
+  <div
+    [rvColor]="backgroundColor"
+    rvColorProperty="background-color"
+    [rvColorPrefix]="type"
+    [rvFontColor]="color"
+    [ngClass]="[styleClass, dismissibleClass, type]"
+  >
+    <button *ngIf="isDismissible" type="button" class="close" #removeButtonElement>&times;</button>
+    <ng-content></ng-content>
+  </div>
+</div>

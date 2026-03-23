@@ -1,0 +1,11 @@
+.action_class {
+  display: flex;
+  flex-direction: column;
+  span {
+    color: blue;
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}

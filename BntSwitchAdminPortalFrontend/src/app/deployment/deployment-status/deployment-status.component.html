@@ -1,0 +1,99 @@
+<div class="col-md-12 fade-in template">
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div style="height: 80vh">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+  <ng-template #deploymentHistory let-row="row" ngx-datatable-cell-template>
+    <ng-container *ngIf="row.lastDeploymentHistory.message != 'Never deployed'">
+      <span
+        *ngIf="row.lastDeploymentHistory.status === 'Scheduled'"
+        [title]="row?.lastDeploymentHistory?.message"
+      >
+        <span class="row-tag">Version Scheduled:{{ row.lastDeploymentHistory.version }}</span>
+        <br />
+        <span class="row-tag"
+          >Scheduled On: {{ row.lastDeploymentHistory.lastModified | newDate }}</span
+        >
+      </span>
+    </ng-container>
+    <ng-container *ngIf="row.lastDeploymentHistory.message == 'Never deployed'">
+      <span class="row-tag">{{ row.lastDeploymentHistory.message }}</span>
+    </ng-container>
+  </ng-template>
+  <ng-template #action let-row="row" ngx-datatable-cell-template>
+    <div>
+      <div [ngSwitch]="row.status?.toLowerCase()">
+        <div *ngSwitchCase="'scheduled'">
+          <a
+            nzType="primary"
+            nzDanger
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure to cancel this record?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="updateStatus('cancel', row)"
+            >Unschedule</a
+          >
+        </div>
+        <div *ngSwitchCase="'nonscheduled'">
+          <a class="btn-link button-effect" role="button"></a>
+        </div>
+        <div *ngSwitchCase="'deployed'">
+          <a
+            nzType="primary"
+            nzDanger
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure to cancel this record?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="updateStatus('Undeploy', row)"
+            >Undeploy</a
+          >
+        </div>
+        <div *ngSwitchDefault></div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>

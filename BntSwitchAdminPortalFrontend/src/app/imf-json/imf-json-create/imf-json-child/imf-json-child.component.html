@@ -1,0 +1,79 @@
+<i
+  class="fa fa-plus"
+  style="cursor: pointer"
+  *ngIf="node.isCollapsed && node.type() === 'array'"
+  (click)="clickNode(node)"
+  aria-hidden="true"
+></i>
+<span class="icon-minus"
+  ><i
+    class="fa fa-minus"
+    *ngIf="!node.isCollapsed && node.type() === 'array'"
+    (click)="clickNode(node)"
+    aria-hidden="true"
+  ></i
+  >&nbsp;&nbsp;&nbsp;
+</span>
+<div class="box-style box-scroll">
+  <ul style="list-style-type: none" *ngIf="!node.isCollapsed">
+    <li *ngFor="let key of keys(json); let i = index">
+      <span *ngIf="getType(json[key]) !== 'boolean'">
+        <div class="fieldLabelValue" *ngIf="key === 'name'">
+          <span
+            (contextmenu)="onContextMenu($event, json[key], i)"
+            *ngIf="
+              getType(json[key]) !== 'boolean' &&
+              getType(json[key]) !== 'object' &&
+              getType(json[key]) !== 'array'
+            "
+          >
+            <p class="line_color">{{ json[key] }}</p>
+          </span>
+        </div>
+        <div
+          class="fieldLabelValue"
+          *ngIf="key === 'fieldName'"
+          (contextmenu)="onContextMenu($event, json[key], key)"
+        >
+          <span class="key" (click)="selectedIMF(json[key])">
+            {{ json[key] }}
+          </span>
+        </div>
+      </span>
+      <json-tree-child
+        class="col-md-4"
+        [types]="types"
+        [json]="json[key]"
+        [editLevel]="editLevel"
+        [collapsedLevel]="+collapsedLevel - 1"
+        *ngIf="getType(json[key]) === 'object' || getType(json[key]) == 'array'"
+      >
+      </json-tree-child>
+    </li>
+  </ul>
+</div>
+<app-imf-creation-table
+  *ngIf="(addTpl && node.isHighEditLevel) || false"
+  [types]="types"
+  [templateArray]="templateArray"
+  [fieldValue]="imfTableConfigFields"
+  (fieldTypeChange)="fieldTypeChange($event)"
+  (isIMFSubmitted)="isIMFSubmitted($event)"
+  [node]="node"
+>
+</app-imf-creation-table>
+<div
+  style="visibility: hidden; position: fixed"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent let-item="item">
+    <button mat-menu-item (click)="addField(item)">{{ 'ADD_FIELD' | translate }}</button>
+    <button mat-menu-item (click)="addNestedField(item)">
+      {{ 'ADD_NESTED_FIELD' | translate }}
+    </button>
+    <button mat-menu-item (click)="removeNode(item)">{{ 'REMOVE_THIS_FIELD' | translate }}</button>
+  </ng-template>
+</mat-menu>

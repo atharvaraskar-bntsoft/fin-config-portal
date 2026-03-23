@@ -1,0 +1,63 @@
+.server-sucess {
+  height: 16px;
+  width: 16px;
+  background-color: #28a745;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.15);
+  float: left;
+}
+
+.server-error {
+  height: 16px;
+  width: 16px;
+  background-color: #dc3545;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.15);
+  float: left;
+  cursor: pointer;
+}
+
+.server-pause {
+  height: 16px;
+  width: 16px;
+  background-color: #ffc107;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.15);
+  float: left;
+  cursor: pointer;
+}
+
+.server-status {
+  right: 3px;
+  top: 10px;
+  width: 22%;
+}
+
+.start_stop_button {
+  padding: 0px;
+  font-size: 12px;
+  height: 30px;
+  min-width: 36px !important;
+  cursor: pointer;
+  color: #007bff;
+  margin-left: 10px;
+}
+
+h6 {
+  font-weight: bold;
+}
+
+.service-table {
+  margin-bottom: 0px;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.bold-text2 {
+  font-weight: normal;
+}

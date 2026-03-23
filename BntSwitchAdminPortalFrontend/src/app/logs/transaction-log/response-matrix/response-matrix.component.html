@@ -1,0 +1,46 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="isvisibleviewRes" nzPlacement="right" [nzWidth]="1200">
+  <ng-container *nzDrawerContent>
+    <nz-spin style="height: 600px" nzTip="Loading..." [nzSpinning]="isloading">
+      <nz-card [nzTitle]="title" [nzExtra]="deletebtn">
+        <div *ngIf="headers">
+          <h1 class="head_title">
+            <span class="requestHeader"
+              >{{ 'LOG_ID' | translate }}: {{ headers.transactionId }}</span
+            >
+            {{ headers.posTransactionType }}
+            ( {{ headers.headerLabel }} )
+          </h1>
+        </div>
+        <div>
+          <table class="table table-striped">
+            <thead>
+              <tr class="word-align">
+                <th scope="col" *ngIf="dataHeader">
+                  {{ dataHeader.genericFieldName }}
+                </th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.request.key }}</th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.request.value }}</th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.response.key }}</th>
+                <th scope="col" *ngIf="dataHeader">{{ dataHeader.response.value }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="word-align" *ngFor="let item of dataValue">
+                <td *ngIf="item.genericFieldName != null">
+                  {{ item.genericFieldName }}
+                </td>
+                <td>{{ item.request?.key }}</td>
+                <td>{{ item.request?.value }}</td>
+                <td>{{ item.response?.key }}</td>
+                <td>{{ item.response?.value }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #deletebtn>
+          <button (click)="close()"><i nz-icon nzType="close" nzTheme="outline"></i></button>
+        </ng-template>
+      </nz-card>
+    </nz-spin>
+  </ng-container>
+</nz-drawer>

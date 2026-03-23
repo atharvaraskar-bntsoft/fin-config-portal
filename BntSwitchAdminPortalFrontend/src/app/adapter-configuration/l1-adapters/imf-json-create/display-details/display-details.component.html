@@ -1,0 +1,184 @@
+<table *ngIf="editData && fieldData.type === 'field'">
+  <tbody>
+    <tr>
+      <th>{{ 'PROPERTY_NAME' | translate }}</th>
+      <th>{{ 'PROPERTY_VALUE' | translate }}</th>
+    </tr>
+    <tr>
+      <td>{{ 'FIELDS_NAMES' | translate }}</td>
+      <td>
+        <input type="text" [(ngModel)]="fieldData.fieldName" [disabled]="!fieldData.isEditable" />
+      </td>
+    </tr>
+    <tr>
+      <td>{{ 'FIELD_TYPE' | translate }}</td>
+      <td>
+        <input type="text" [(ngModel)]="fieldData.fieldType" [disabled]="!fieldData.isEditable" />
+      </td>
+    </tr>
+    <tr>
+      <td>{{ 'SENSITIVE' | translate }}</td>
+      <td>
+        <mat-checkbox [(ngModel)]="fieldData.isSensitive"></mat-checkbox>
+      </td>
+    </tr>
+    <tr>
+      <td>{{ 'HIDE' | translate }}</td>
+      <td>
+        <mat-checkbox [(ngModel)]="fieldData.isHide"></mat-checkbox>
+      </td>
+    </tr>
+    <tr>
+      <td>{{ 'PERSIST' | translate }}</td>
+      <td>
+        <mat-checkbox [(ngModel)]="fieldData.isPersist"></mat-checkbox>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table *ngIf="editData && fieldData.type === 'fields'">
+  <tbody>
+    <tr>
+      <th>{{ 'PROPERTY_NAME' | translate }}</th>
+      <th>{{ 'PROPERTY_VALUE' | translate }}</th>
+    </tr>
+    <tr>
+      <td>{{ 'FIELDS_NAMES' | translate }}</td>
+      <td>
+        <input type="text" [(ngModel)]="fieldData.name" [disabled]="!fieldData.isEditable" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table *ngIf="addData">
+  <tbody>
+    <tr>
+      <th>{{ 'PROPERTY_NAME' | translate }}</th>
+      <th>{{ 'PROPERTY_VALUE' | translate }}</th>
+    </tr>
+    <tr>
+      <td>{{ 'FIELD_TYPE' | translate }}</td>
+      <td>
+        <ng-select
+          [clearable]="false"
+          class="filter-shadow"
+          style="width: 100%"
+          [closeOnSelect]="true"
+          [items]="fieldTypeList"
+          [(ngModel)]="fieldtype"
+          bindLabel="value"
+          placeholder="Select field type"
+          (change)="onChangefieldtype()"
+        >
+        </ng-select>
+      </td>
+    </tr>
+    <tr *ngIf="fieldData && fieldtype !== 'template'">
+      <td>{{ 'FIELDS_NAMES' | translate }}</td>
+      <td *ngIf="fieldData.type === 'field'">
+        <input type="text" [(ngModel)]="fieldData.fieldName" />
+      </td>
+      <td *ngIf="fieldData.type === 'fields'">
+        <input type="text" [(ngModel)]="fieldData.name" />
+      </td>
+    </tr>
+    <tr *ngIf="fieldData && fieldtype === 'field'">
+      <td>{{ 'TYPE' | translate }}</td>
+      <td>
+        <ng-select
+          [clearable]="false"
+          class="filter-shadow"
+          style="width: 100%"
+          [closeOnSelect]="true"
+          [items]="dataTypeList"
+          [(ngModel)]="fieldData.fieldType"
+          bindLabel="value"
+          bindValue="value"
+          placeholder="Select field type"
+        >
+        </ng-select>
+      </td>
+    </tr>
+    <tr *ngIf="fieldtype === 'template'">
+      <td>{{ 'TEMPLATE_LIST' | translate }}</td>
+      <td>
+        <ng-select
+          [clearable]="false"
+          class="filter-shadow"
+          style="width: 100%"
+          [closeOnSelect]="true"
+          [items]="templateArray"
+          [(ngModel)]="templatetype"
+          bindLabel="name"
+          bindValue="id"
+          placeholder="Select field type"
+          (change)="changeKey()"
+        >
+        </ng-select>
+      </td>
+    </tr>
+    <tr *ngIf="fieldtype === 'template'">
+      <td>{{ 'FIELDS_NAMES' | translate }}</td>
+      <td><input type="text" [(ngModel)]="inputKey" disabled /></td>
+    </tr>
+    <tr *ngIf="fieldData && fieldtype === 'field'">
+      <td>{{ 'SENSITIVE' | translate }}</td>
+      <td>
+        <mat-checkbox [(ngModel)]="fieldData.isSensitive"></mat-checkbox>
+      </td>
+    </tr>
+    <tr *ngIf="fieldData && fieldtype === 'field'">
+      <td>{{ 'HIDE' | translate }}</td>
+      <td>
+        <mat-checkbox [(ngModel)]="fieldData.isHide"></mat-checkbox>
+      </td>
+    </tr>
+    <tr *ngIf="fieldData && fieldtype === 'field'">
+      <td>{{ 'PERSIST' | translate }}</td>
+      <td>
+        <mat-checkbox [(ngModel)]="fieldData.isPersist"></mat-checkbox>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="bottom">
+  <div class="col-md-4" *ngIf="fieldtype && addData">
+    <button
+      class="btn btn-primary"
+      (click)="addNode()"
+      *ngIf="fieldtype === 'field' && fieldData.fieldName && fieldData.fieldType"
+    >
+      {{ 'ADD' | translate }}
+    </button>
+    <button
+      class="btn btn-primary"
+      (click)="addNode()"
+      *ngIf="fieldtype === 'fields' && fieldData.name"
+    >
+      {{ 'ADD' | translate }}
+    </button>
+    <button
+      class="btn btn-primary"
+      (click)="addNode()"
+      *ngIf="fieldtype === 'template' && templatetype && inputKey"
+    >
+      {{ 'ADD' | translate }}
+    </button>
+  </div>
+  <div class="col-md-4" *ngIf="fieldData && editData && fieldData.type === 'field'">
+    <button class="btn btn-primary" (click)="saveNode()">Save</button>
+  </div>
+  <div
+    class="col-md-4"
+    *ngIf="fieldData && editData && fieldData.type === 'fields' && fieldData.isEditable"
+  >
+    <button class="btn btn-primary" (click)="saveNode()">Save</button>
+  </div>
+  <!-- <div class="col-md-4">
+    <button (click)="cancel()">Cancel</button>
+  </div> -->
+  <div class="col-md-4" *ngIf="fieldData && fieldData.isEditable && editData">
+    <button class="btn btn-primary" (click)="deleteNode()">Delete</button>
+  </div>
+</div>

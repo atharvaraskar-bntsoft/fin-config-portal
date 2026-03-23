@@ -1,0 +1,5 @@
+filetype,Institution ,Merchant Institution,Merchant,Location , Name , Description , DCC , Currency , Pos Country AFD Amount , Max Time Limitconfig , Markupfee , Address1, Address2, City, State, Postal Code, Country, Phone, Fax, Website, Official Mail,MCC,Services ,Partial Auth ,Velocity ,Bank Name ,Branch Address ,IFSC Code ,Account Number,MerchantCode,Hostcapture,Device Type,Branchorgcode,Branchorgname,Devicecode
+institution,Gibraltar International Bank,,,,Test1666,Test,N,,,,,Noida,null,Noida,Alabama,12345,USA,12345,USA,ddd,my@bnt.com,,,,,,,,,,TRUE,,,,
+merchant,,GICC Institution,,,Test1,Test,N,AUD,,,1.33,Noida,null,Noida,Alabama,null,USA,12345,USA,ddd,my@bnt.com,5965,PREPAID_SERVICE,Y,null,Citi Bank,A - 10/11 Street 9 CP Delhi,CITI0000002,5540172598,,TRUE,,,,
+location,,BNT Merchant Institution,BNT-10 Merchant,,Test1,Test,,,,,,Noida,null,Noida,Alabama,null,USA,12345,USA,ddd,my@bnt.com,,,,,,,,,,TRUE,,,,
+device,,DCC Institution,BNT-1 Merchant,BNT-10 Second Merchant Location10,,,,,,,,,,,,,,,,,,,,,,,,,,,TRUE,POS-TERMINAL,,,

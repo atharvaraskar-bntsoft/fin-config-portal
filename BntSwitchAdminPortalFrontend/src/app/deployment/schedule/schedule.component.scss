@@ -1,0 +1,36 @@
+@import '../../../variable.scss';
+.current_schedule_title {
+  color: $main-color;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+hr {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border: 0.5px solid #022a6b;
+}
+
+.add_new_deployment_btn {
+  display: flex;
+  justify-content: space-between;
+  button {
+    font-size: 12px;
+    height: 35px;
+    background-color: #008cba;
+    color: #fff;
+  }
+}
+
+.edit_link {
+  color: blue;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.datatable-header-cell {
+  display: flex !important;
+  align-items: center !important;
+}

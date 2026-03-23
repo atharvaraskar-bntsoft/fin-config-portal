@@ -1,0 +1,512 @@
+<div class="join-pannel">
+  <ng-container *ngIf="!showAddParamPopup">
+    <div class="card-main">
+      <ng-container>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label [ngClass]="{ required: customJoin.resBlockList.length }">Steps</label>
+            </div>
+            <div class="col-md-2">
+              <span *ngIf="!readOnlyFlag" class="toto input-align rulsCss icon-border-radius btn btn-default"
+                (click)="addResBlockStep(customJoin.resBlockList)">
+                <i class="fa fa-plus"></i></span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngFor="let item of customJoin.resBlockList; let i = index">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label class="required">Step {{ i + 1 }}</label>
+            </div>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ng-select [clearable]="false" class="filter-shadow" style="width: 280px" [closeOnSelect]="true"
+                    bindLabel="actionName" [items]="stepList" [(ngModel)]="item.value" placeholder="Select Value"
+                    (change)="stepFunction(customJoin, item.value, -1, i)" [disabled]="readOnlyFlag">
+                  </ng-select>
+                  <span class="invalid-block" *ngIf="isSubmit && !item.value">Please provide a valid value</span>
+                </div>
+                <div class="col-md-2 auto-width nopadding-lg" *ngIf="item.value && item.function && item.function.parameters" style="font-size: 11px;">
+                  <a (click)="stepFunction(customJoin, item.value, -1, i, true, false)">{{readOnlyFlag ? 'View Parameter'
+                    : 'Edit Parameter'}}</a>
+                </div>
+                <div class="col-sm-1 auto-width">
+                  <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                    *ngIf="customJoin.resBlockList && customJoin.resBlockList.length > 0 && !readOnlyFlag"
+                    (click)="removeResBlockStep(customJoin.resBlockList, i)"><i class="fa fa-minus"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label>Destinations:</label>
+            </div>
+            <div class="col-md-3">
+              <app-tree-structure [jsonData]="jsonData" style="width: 100%;" [readOnlyFlag]="readOnlyFlag" [resimf]="joinResImfValue"
+                [useCase]="joinUseCase" (ImfValue)="selectImfFn($event)"></app-tree-structure>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="joinUseCase == 2 || joinUseCase == 3">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label class="required">Service:</label>
+            </div>
+            <div class="col-md-3">
+              <ng-select appendTo="body" [clearable]="false" class="filter-shadow" [closeOnSelect]="true"
+                [disabled]="(!joinResImfValue || joinUseCase === '1') || readOnlyFlag" [items]="serviceList"
+                bindLabel="value" placeholder="Select Service" [(ngModel)]="joinSelectedService">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="joinUseCase == 3">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label class="required">Type:</label>
+            </div>
+            <div class="col-md-3">
+              <ng-select [clearable]="false" class="filter-shadow" [closeOnSelect]="true"
+                [disabled]="(!joinResImfValue || joinUseCase === '1' || joinUseCase === '2') || readOnlyFlag"
+                [items]="typeList" bindLabel="name" bindValue="value" placeholder="Select type"
+                [(ngModel)]="joinSelectedType">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label class="required">Set IPC</label>
+            </div>
+            <div class="col-md-3">
+              <ng-select [clearable]="false" class="filter-shadow" style="width: 280px" [closeOnSelect]="true"
+                bindLabel="value" bindValue="value" [items]="ipcList" [(ngModel)]="customJoin.ipcValue"
+                [disabled]="readOnlyFlag" placeholder="Select IPC">
+              </ng-select>
+              <span class="invalid-block" *ngIf="isSubmit && !customJoin.ipcValue">Please provide a valid value</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label for="Post Validation" [ngClass]="{ required: customJoin.extractResValidation.length }">Post
+                Validation</label>
+            </div>
+            <div class="col-md-6">
+              <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                (click)="addValidation(customJoin.extractResValidation)" *ngIf="!readOnlyFlag">
+                <i class="fa fa-plus"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="customJoin.extractResValidation">
+          <div *ngFor="let valid of customJoin.extractResValidation; let j = index">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-10 col-sm-offset-2">
+                  <div class="row form-group">
+                    <div class="col-sm-4">
+                      <ng-select [clearable]="false" class="filter-shadow" style="width: 280px" [closeOnSelect]="true"
+                        [items]="validationList" [(ngModel)]="valid['validation']" bindLabel="name"
+                        placeholder="Select validation" (change)="validationParam(valid)" [disabled]="readOnlyFlag">
+                        <ng-template ng-option-tmp let-item="item">
+                          <div [title]="item.parameters.tooltip" *ngIf="item.parameters">
+                            {{ item.name }}
+                          </div>
+                          <div *ngIf="!item.parameters">{{ item.name }}</div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                    <div class="col-md-3" *ngFor="let param of valid.params">
+                      <ng-select [clearable]="false" class="filter-shadow" style="width: 100%" [closeOnSelect]="true"
+                        bindValue="id" bindLabel="name" [items]="param.list" [(ngModel)]="param.value"
+                        placeholder="{{ param.name }}" *ngIf="param.label === 'source'" [disabled]="readOnlyFlag">
+                        <ng-template ng-option-tmp let-item="item">
+                          <div [title]="item.tooltip">{{ item.name }}</div>
+                        </ng-template>
+                      </ng-select>
+                      <ng-select [clearable]="false" class="filter-shadow" style="width: 100%" [closeOnSelect]="true"
+                        bindLabel="alias" bindValue="name" [items]="param.list" [(ngModel)]="param.value"
+                        placeholder="{{ param.name }}" *ngIf="param.label === 'imf'" [disabled]="readOnlyFlag">
+                        <ng-template ng-option-tmp let-item="item">
+                          <div [title]="item.name">{{ item.alias }}</div>
+                        </ng-template>
+                      </ng-select>
+                      <input class="toto input-align input-search form-control" type="text" [(ngModel)]="param.value"
+                        placeholder="{{ param.name }}" [disabled]="readOnlyFlag"
+                        *ngIf="!param.list && param.type !== 'Integer'" />
+                      <input class="toto input-align input-search form-control" type="number" [(ngModel)]="param.value"
+                        placeholder="{{ param.name }}" [disabled]="readOnlyFlag"
+                        *ngIf="!param.list && param.type === 'Integer'" />
+                    </div>
+                    <div class="col-sm-1 auto-width nopadding-lg">
+                      <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                        *ngIf="customJoin.extractResValidation.length > 0 && !readOnlyFlag"
+                        (click)="removeValidation(customJoin.extractResValidation, j)">
+                        <i class="fa fa-minus"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2" *ngIf="valid.operatorList && valid.operatorList.length > 0">
+                  <ng-select [clearable]="false" class="filter-shadow" style="width: 100%" [closeOnSelect]="true"
+                    [items]="valid.operatorList" [disabled]="readOnlyFlag" [(ngModel)]="valid['operator']"
+                    bindLabel="label" placeholder="Select Operator">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-10 col-sm-offset-2">
+                  <span class="invalid-block" *ngIf="isSubmit">Please provide a valid value</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-container>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label [ngClass]="{ required: customJoin.resCustomMapper.mapper.length }">Evaluate</label>
+            </div>
+            <div class="col-md-6" *ngIf="!readOnlyFlag">
+              <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                (click)="addResJoinMap(customJoin.resCustomMapper)"><i class="fa fa-plus"></i></span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="customJoin.resCustomMapper">
+        <div class="form-group">
+          <div class="row" *ngFor="let block of customJoin.resCustomMapper.mapper; let i = index">
+            <div class="col-sm-2"></div>
+            <div class="col-md-10">
+              <div class="row">
+                <div class="col-sm-4 nopadding-lg">
+                  <nz-tree-select class="resevaluate-lookup" [nzDropdownMatchSelectWidth]="true"
+                    [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true" [nzNodes]="lookupList"
+                    [nzShowSearch]="true" [nzHideUnMatched]="true" nzPlaceHolder="Please select"
+                    [(ngModel)]="block.value2" [disabled]="readOnlyFlag">
+                  </nz-tree-select>
+                  <span class="invalid-block" *ngIf="isSubmit && !block.value2">Please provide a valid value</span>
+                </div>
+                <div class="col-sm-3">
+                  <input class="toto input-align input-search form-control" [disabled]="readOnlyFlag" type="text"
+                    [(ngModel)]="block.value2" />
+                  <span class="invalid-block" *ngIf="isSubmit && !block.value2">Please provide a valid value</span>
+                </div>
+                <div class="col-md-1 auto-width nopadding-lg">
+                  <label>=</label>
+                </div>
+                <div class="col-md-3">
+                  <input class="toto input-align input-search form-control" [disabled]="readOnlyFlag" type="text"
+                    [(ngModel)]="block.value1" />
+                  <span class="invalid-block" *ngIf="isSubmit && !block.value1">Please provide a valid value</span>
+                </div>
+                <div class="col-sm-1 auto-width nopadding-lg">
+                  <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                    *ngIf="customJoin.resCustomMapper.mapper.length > 0 && !readOnlyFlag"
+                    (click)="removemResJoinMap(customJoin.resCustomMapper.mapper, i)"><i class="fa fa-minus"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="customJoin?.resCustomMapper?.mapper?.length">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label style="margin-right: 7px">Default Value </label>
+            </div>
+            <div class="col-sm-4">
+              <input class="toto input-align input-search form-control" type="text" [disabled]="readOnlyFlag"
+                [(ngModel)]="customJoin.resCustomMapper.defaultValue" placeholder="Default Value" />
+            </div>
+            <div class="col-md-4">
+              <label style="margin-right: 31px">Use same on match fail</label>
+              <input type="checkbox" [disabled]="readOnlyFlag"
+                [(ngModel)]="customJoin.resCustomMapper.useSameOnMatchFail" />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-2 text-label-right">
+            <label class="required">Source</label>
+          </div>
+          <div class="col-md-6" *ngIf="!readOnlyFlag">
+            <span (click)="addSource(customJoin.sources)" class="btn btn-default">Add Source</span>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+    <ng-container>
+      <div *ngFor="let item of customJoin.sources; let i = index">
+        <div class="card-main">
+          <div class="card-heading" [ngClass]="{ collapses: item.collapse }" (click)="collapseClick(item)">
+            {{ i + 1 }} - Source
+            <div class="card-icon" >
+              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              <i (click)="removeSource(i)" *ngIf="!readOnlyFlag" class="fa fa-trash"></i>
+            </div>
+          </div>
+          <div *ngIf="!item.collapse" class="card-body">
+            <ng-container>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-2 text-label-right">
+                    <label class="required">Source Type:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <mat-radio-group [(ngModel)]="item.sourceType" [disabled]="readOnlyFlag" aria-label="Select an option" class="mat-radio">
+                      <div class="col-sm-2">
+                        <mat-radio-button [disabled]="readOnlyFlag" color="primary" value="imf">IMF </mat-radio-button>
+                      </div>
+                      <div class="col-sm-2">
+                        <mat-radio-button [disabled]="readOnlyFlag" color="primary" value="text">Text </mat-radio-button>
+                      </div>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+              <ng-container *ngIf="item.sourceType == 'imf'">
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-2 text-label-right">
+                      <label class="required">IMF:</label>
+                    </div>
+                    <div class="col-md-4">
+                      <app-tree-structure [jsonData]="jsonData" [resimf]="item.resImfValue" [useCase]="item.useCase"
+                        [readOnlyFlag]="readOnlyFlag" (ImfValue)="selectImfFnJoin(item, $event)">
+                      </app-tree-structure>
+                      <br />
+                      <span class="invalid-block" *ngIf="isValidvalue">Please provide a valid value</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="item.useCase == 3 || item.useCase == 2">
+                  <div class="row">
+                    <div class="col-md-2 text-label-right">
+                      <label class="required">Service:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <ng-select [clearable]="false" class="filter-shadow" style="width: 280px" [closeOnSelect]="true"
+                        [disabled]="(!item.resImfValue || item.useCase === '1') || readOnlyFlag" [items]="serviceList"
+                        bindLabel="value" placeholder="Select Service" [(ngModel)]="item.selectedService">
+                      </ng-select>
+                      <span class="invalid-block" *ngIf="isSubmit && !item.selectedService">Please provide a valid
+                        value</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="item.useCase == 3">
+                  <div class="row">
+                    <div class="col-md-2 text-label-right">
+                      <label class="required">Type:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <ng-select [clearable]="false" class="filter-shadow" style="width: 280px" [closeOnSelect]="true"
+                        [disabled]="
+                          (!item.resImfValue || item.useCase === '1' || item.useCase === '2'
+                        ) || readOnlyFlag" [items]="typeList" bindLabel="name" bindValue="value"
+                        placeholder="Select type" [(ngModel)]="item.selectedType">
+                      </ng-select>
+                      <span class="invalid-block" *ngIf="isSubmit && !item.selectedType">Please provide a valid
+                        value</span>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="item.sourceType == 'text'">
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-2 text-label-right">
+                      <label class="required">Source:</label>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" class="toto input-align input-search form-control" [(ngModel)]="item.source"
+                        [disabled]="readOnlyFlag" style="width: 280px" />
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-2 text-label-right">
+                    <label class="required">Set IPC</label>
+                  </div>
+                  <div class="col-md-3">
+                    <ng-select [clearable]="false" class="filter-shadow" style="width: 280px" [closeOnSelect]="true"
+                      [disabled]="readOnlyFlag" bindLabel="value" bindValue="value" [items]="ipcList"
+                      [(ngModel)]="item.ipcValue" placeholder="Select IPC">
+                    </ng-select>
+                    <span class="invalid-block" *ngIf="isSubmit && !item.ipcValue">Please provide a valid value</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="item.resCustomMapper">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-2 text-label-right">
+                    <label [ngClass]="{ required: item.resCustomMapper.mapper.length }">Evaluate</label>
+                  </div>
+                  <div class="col-md-6">
+                    <span (click)="addResJoinMap(item.resCustomMapper)" *ngIf="!readOnlyFlag"
+                      class="toto input-align rulsCss icon-border-radius btn btn-default"><i
+                        class="fa fa-plus"></i></span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="item.resCustomMapper">
+              <div class="form-group">
+                <div class="row" *ngFor="let block of item.resCustomMapper.mapper; let i = index">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-10">
+                    <div class="row form-group">
+                      <div class="col-sm-4 nopadding-lg">
+                        <nz-tree-select class="resevaluate-lookup" [nzDropdownMatchSelectWidth]="true"
+                          [disabled]="readOnlyFlag" [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true"
+                          [nzNodes]="lookupList" [nzShowSearch]="true" [nzHideUnMatched]="true"
+                          nzPlaceHolder="Please select" [(ngModel)]="block.value2">
+                        </nz-tree-select>
+                        <span class="invalid-block" *ngIf="isSubmit && !block.value2">Please provide a valid
+                          value</span>
+                      </div>
+                      <div class="col-sm-3">
+                        <input class="toto input-align input-search form-control" type="text" [disabled]="readOnlyFlag"
+                          [(ngModel)]="block.value2" />
+                        <span class="invalid-block" *ngIf="isSubmit && !block.value2">Please provide a valid
+                          value</span>
+                      </div>
+                      <div class="col-md-1 auto-width nopadding-lg">
+                        <label>=</label>
+                      </div>
+                      <div class="col-md-3">
+                        <input class="toto input-align input-search form-control" type="text" [disabled]="readOnlyFlag"
+                          [(ngModel)]="block.value1" />
+                        <span class="invalid-block" *ngIf="isSubmit && !block.value1">Please provide a valid
+                          value</span>
+                      </div>
+                      <div class="col-sm-1 auto-width nopadding-lg">
+                        <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                          *ngIf="item.resCustomMapper && item.resCustomMapper.mapper.length > 0 && !readOnlyFlag"
+                          (click)="removemResJoinMap(item.resCustomMapper.mapper, i)"><i class="fa fa-minus"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row" *ngIf="item?.resCustomMapper?.mapper?.length">
+                  <div class="col-sm-6">
+                    <div class="row">
+                      <div class="col-md-2 text-label-right">
+                        <label>Default Value </label>
+                      </div>
+                      <div class="col-sm-8">
+                        <input class="toto input-align input-search form-control" type="text" style="width: 280px"
+                          [disabled]="readOnlyFlag" [(ngModel)]="item.resCustomMapper.defaultValue"
+                          placeholder="Default Value" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <label>Use same on match fail</label>
+                      </div>
+                      <div class="col-sm-2 no_padding">
+                        <input type="checkbox" [disabled]="readOnlyFlag"
+                          [(ngModel)]="item.resCustomMapper.useSameOnMatchFail" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="item.resBlockList">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-2 text-label-right">
+                    <label [ngClass]="{ required: item.resBlockList.length }">Steps</label>
+                  </div>
+                  <div class="col-md-6">
+                    <span *ngIf="!readOnlyFlag" class="toto input-align rulsCss icon-border-radius btn btn-default"
+                      (click)="addResBlockStep(item.resBlockList)">
+                      <i class="fa fa-plus"></i></span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngFor="let el of item.resBlockList; let q = index">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-2 text-label-right">
+                    <label class="required">Step {{ q + 1 }}</label>
+                  </div>
+                  <div class="col-md-10">
+                    <div class="row form-group">
+                      <div class="col-sm-4">
+                        <ng-select [clearable]="false" class="filter-shadow" style="width:280px;" [closeOnSelect]="true"
+                          bindLabel="actionName" [items]="stepList" [disabled]="readOnlyFlag" [(ngModel)]="el.value"
+                          placeholder="Select Value" (change)="stepFunction(item, el.value, -1, q)">
+                        </ng-select>
+                        <span class="invalid-block" *ngIf="isSubmit && !el.value">Please provide a valid value</span>
+                      </div>
+                      <div class="col-md-2" *ngIf="el.value && el.function && el.function.parameters">
+                        <a (click)="stepFunction(item, el.value, -1, q, true, false)" style="font-size: 11px;">{{readOnlyFlag ? 'View Parameter'
+                          : 'Edit Parameter'}}</a>
+                      </div>
+                      <div class="col-sm-1 auto-width nopadding-lg">
+                        <span class="toto input-align rulsCss icon-border-radius btn btn-default"
+                          *ngIf="item.resBlockList && item.resBlockList.length > 0 && !readOnlyFlag"
+                          (click)="removeResBlockStep(item.resBlockList, q)"><i class="fa fa-minus"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <!-- endlogic-->
+    <span *ngIf="customJoinError" style="color: red">Please enter all mandatory fields</span>
+    <div class="text-right" style="margin-top: 15px">
+      <div class="col-sm-12">
+        <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+        <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px"
+          (click)="save()">Save</button>
+      </div>
+    </div>
+  </ng-container>
+  <div class="RuleDiv" *ngIf="showAddParamPopup" style="height: 300px">
+    <app-common-parameter *ngIf="showAddParamPopup" [readOnlyFlag]="readOnlyFlag" [sourceList]="sourceList"
+      [ipcList]="ipcList" (isVisible)="closeParamPopup($event)" (parameter)="addParam($event)" [imfList]="jsonData"
+      [selectedStepParameter]="selectedStepParameter">
+    </app-common-parameter>
+  </div>
+</div>

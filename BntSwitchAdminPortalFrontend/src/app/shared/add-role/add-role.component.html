@@ -1,0 +1,17 @@
+<div>
+  <nz-select style="width: 400px;" (ngModelChange)="selValue($event)" [(ngModel)]="defaultRole" nzMode="multiple"
+    nzPlaceHolder="Please select Role">
+    <nz-option *ngFor="let role of listOfRoles" [nzLabel]="role.name" [nzValue]="role.name"></nz-option>
+  </nz-select>
+</div>
+<div class="row row-margin row-align row-template pull-right">
+  <div class="col-sm-12">
+    <button nz-button nzType="default" (click)="close()" style="margin-top: 50px">
+      Cancel
+    </button>
+    <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px; margin-top: 50px"
+      (click)="save()">
+      Save
+    </button>
+  </div>
+</div>

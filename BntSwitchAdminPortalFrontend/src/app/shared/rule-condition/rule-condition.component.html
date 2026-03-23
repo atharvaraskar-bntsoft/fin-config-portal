@@ -1,0 +1,191 @@
+<div *ngFor="let nodes of conditionObj.conditions; let i = index" style="position: relative">
+  <div class="fileds">
+    <div class="group" *ngIf="showhideflag || page === 'postAction'">
+      <div class="groupChild_rule" *ngIf="!nodes['conditions']">
+        <div id="{{ nodes.id }}" style="display: none">
+          {{ 'ENTER_REQUIRED' | translate }}
+        </div>
+        <div class="field">
+          <ng-select
+            [clearable]="false"
+            appendTo="body"
+            class="custom"
+            [items]="ruleData"
+            bindLabel="label"
+            placeholder="{{ 'SELECT_FIELDS' | translate }}"
+            (change)="filedsData($event, nodes)"
+            [(ngModel)]="fieldName[nodes.id]"
+          >
+            <ng-template ng-option-tmp let-item="item">
+              <div title="{{ item?.toolTip }}">{{ item.label }}</div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="field" *ngIf="showService[nodes.id] && !hide">
+          <ng-select
+            class="custom"
+            appendTo="body"
+            [clearable]="false"
+            [items]="serviceList"
+            [(ngModel)]="selectedService[nodes.id]"
+            bindLabel="text"
+            bindValue="value"
+            placeholder="Select Service"
+            (change)="serviceChange($event, nodes)"
+          >
+          </ng-select>
+        </div>
+        <div class="field" *ngIf="showType[nodes.id] && !hide">
+          <ng-select
+            class="custom"
+            appendTo="body"
+            [clearable]="false"
+            [items]="typeList"
+            [(ngModel)]="selectedType[nodes.id]"
+            bindLabel="name"
+            bindValue="name"
+            placeholder="Select Type"
+            (change)="typeChange($event, nodes)"
+          >
+          </ng-select>
+        </div>
+        <div class="field">
+          <ng-select
+            class="custom"
+            appendTo="body"
+            [clearable]="false"
+            [items]="operatorList"
+            [(ngModel)]="nodes.type"
+            (change)="opratersData($event, nodes)"
+            bindLabel="text"
+            bindValue="value"
+            placeholder="{{ 'SELECT_OPERATOR' | translate }}"
+          >
+          </ng-select>
+        </div>
+        <ng-container *ngIf="!showPattern[nodes.id]">
+          <div class="field" *ngIf="enum[nodes.id]">
+            <ng-select
+              [clearable]="false"
+              appendTo="body"
+              [items]="enumRuleData[nodes.id]"
+              [(ngModel)]="nodes.value"
+              bindLabel="text"
+              bindValue="value"
+              placeholder="{{ 'SELECT_FIELDS' | translate }}"
+              (change)="emitJson()"
+            >
+            </ng-select>
+          </div>
+          <div class="imputText field" *ngIf="!enum[nodes.id]">
+            <input
+              class="form-control"
+              [(ngModel)]="nodes.value"
+              style="width: 100%"
+              type="text"
+              (focusout)="validation($event, nodes)"
+            />
+            <span
+              *ngIf="
+                error[nodes.id] && (validation_Type === 'number' || validation_Type === 'integer')
+              "
+              class="error-message com-error"
+            >
+              {{ 'ONLY' | translate }} {{ validation_Type }} {{ 'ALLOWED' | translate }}</span
+            >
+            <span
+              *ngIf="
+                error[nodes.id] && validation_Type !== 'number' && validation_Type !== 'integer'
+              "
+              class="error-message com-error"
+            >
+              Enter valid input</span
+            >
+          </div></ng-container
+        >
+        <ng-container *ngIf="showPattern[nodes.id]">
+          <div class="field" *ngIf="enum[nodes.id]">
+            <ng-select
+              [clearable]="false"
+              appendTo="body"
+              [items]="enumRuleData[nodes.id]"
+              [(ngModel)]="nodes.pattern"
+              bindLabel="text"
+              bindValue="value"
+              placeholder="{{ 'SELECT_FIELDS' | translate }}"
+              (change)="emitJson()"
+            >
+            </ng-select>
+          </div>
+          <div class="imputText field" *ngIf="!enum[nodes.id]">
+            <input
+              class="form-control"
+              [(ngModel)]="nodes.pattern"
+              style="width: 100%"
+              type="text"
+              (focusout)="validation($event)"
+            />
+            <span *ngIf="error[nodes.id]" class="error-message com-error">
+              {{ 'ONLY' | translate }} {{ validation_Type }} {{ 'ALLOWED' | translate }}</span
+            >
+          </div></ng-container
+        >
+      </div>
+      <div
+        class="groupAction field"
+        *ngIf="!nodes.group && !nodes['conditions'] && page !== 'postAction'"
+      >
+        <ul class="context">
+          <li>
+            <span class="creategroup" (click)="createGroup(nodes, i)">
+              {{ 'CREATE_GROUP' | translate }}</span
+            >
+          </li>
+          <li>
+            <span class="deletetext" (click)="delete(nodes.id)">
+              {{ 'DELETE' | translate }}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div style="clear: both"></div>
+      <div
+        *ngIf="nodes['conditions'] && nodes['conditions'].length > 0"
+        [ngClass]="{ grouporder: 'true' }"
+      >
+        <div [ngClass]="{ groupheader: 'true' }" (click)="delete(nodes)">
+          <span class="deleteicon"><i class="fa fa-trash" aria-hidden="true"></i> </span>
+        </div>
+        <span style="width: 100%">
+          <app-rule-condition
+            [conditionObj]="nodes"
+            (hideSave)="hideSavefn($event)"
+            (addSubRule)="getRule($event)"
+            [hide]="hide"
+            [serviceType]="serviceType"
+            [exchangeType]="exchangeType"
+            (conditionError)="emitError($event)"
+          >
+          </app-rule-condition>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    style="width: 10%; text-align: center; margin: 0px; padding: 0px"
+    *ngIf="conditionObj.conditions.length - 1 !== i && conditionObj.conditions.length > 1"
+  >
+    <div class="and-or" style="text-align: enableProdModenter; font-size: 14px">
+      <span class="text" (click)="changeRelation('or')" *ngIf="conditionObj.type === 'and'"
+        >AND</span
+      >
+      <span class="text" (click)="changeRelation('and')" *ngIf="conditionObj.type === 'or'"
+        >OR</span
+      >
+    </div>
+  </div>
+</div>
+<a class="fonsize required" (click)="addrule()" style="margin-left: 5px">
+  <i class="fa fa-plus-square" aria-hidden="true"></i>
+  {{ 'ADD_CONDITION' | translate }}</a
+>

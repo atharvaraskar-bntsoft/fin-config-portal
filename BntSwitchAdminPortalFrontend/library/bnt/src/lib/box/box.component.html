@@ -1,0 +1,71 @@
+<div
+  *ngIf="!removed"
+  [rvColor]="boxColor"
+  rvColorProperty="border-color"
+  rvColorPrefix="box"
+  [ngClass]="styleClass"
+  [class.collapsed-box]="isCollapsed && !isCollaping"
+  [class.box-solid]="isSolid"
+  [rvCollapseAnimation]="remove"
+  (rvCollapseAnimation.done)="removedDone($event)"
+>
+  <div
+    *ngIf="header || boxHeaderDirective"
+    [ngClass]="headerStyleClass"
+    [rvColor]="boxColor"
+    [rvColorCondition]="isSolid"
+    rvColorProperty="background-color"
+    [class.with-border]="headerBorder"
+  >
+    <h3 class="box-title" [rvFontColor]="headerColor">
+      {{ header }}
+      <ng-content select="rv-box-header"></ng-content>
+    </h3>
+    <div class="box-tools pull-right">
+      <ng-content select="rv-box-tools"></ng-content>
+      <button
+        *ngIf="isCollapsable"
+        type="button"
+        [ngClass]="buttonsStyleClass"
+        #toggleButtonElement
+      >
+        <i class="fa" [ngClass]="{ 'fa-plus': isCollapsed, 'fa-minus': !isCollapsed }"></i>
+      </button>
+      <button *ngIf="isRemovable" type="button" [ngClass]="buttonsStyleClass" #removeButtonElement>
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div
+    [ngClass]="contentStyleClass"
+    [rvFontColor]="contentColor"
+    [rvCollapseAnimation]="isCollapsed"
+    (rvCollapseAnimation.start)="collapseStart($event)"
+    (rvCollapseAnimation.done)="collapseDone($event)"
+  >
+    <div class="box-body">
+      <ng-container
+        *ngIf="
+          boxHeaderDirective || boxContentDirective || boxFooterDirective || boxToolsDirective;
+          else noDirective
+        "
+      >
+        <ng-content select="rv-box-content"></ng-content>
+      </ng-container>
+      <ng-template #noDirective>
+        <ng-content></ng-content>
+      </ng-template>
+    </div>
+    <div
+      *ngIf="footer || boxFooterDirective"
+      [ngClass]="footerStyleClass"
+      [rvFontColor]="footerColor"
+    >
+      {{ footer }}
+      <ng-content select="rv-box-footer"></ng-content>
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="overlay">
+    <i [ngClass]="loadingStyleClass" [rvFontColor]="loadingColor"></i>
+  </div>
+</div>

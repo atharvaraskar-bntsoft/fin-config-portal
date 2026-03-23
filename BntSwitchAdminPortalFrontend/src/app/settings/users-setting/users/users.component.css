@@ -1,0 +1,13 @@
+.dataTable-height {
+  height: 78vh;
+}
+input{
+  background-image: url('../../../../assets/img/search.png');
+  background-position:  6px 7px;
+  padding: 12px 20px 12px 36px;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+.input-search{
+  width: 320px;
+}

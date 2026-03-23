@@ -1,0 +1,89 @@
+<div class="fade-in template">
+  <div class="responseCodeCss">
+    <div class="card">
+      <div class="card-body">
+        <nz-collapse>
+          <nz-collapse-panel [nzHeader]="'SPECIFICATION_RESPONSE_CODE_MAPPING' | translate" [nzActive]="true">
+            <div class="internal-body">
+              <div class="row mt-3">
+                <div class="col-md-3" style="color: rgba(0, 0, 0, 0.65)">
+                  <label class="required" tooltip="{{ 'ADAPTER_LABEL.RESPONSE_CODE' | translate }}" placement="right"
+                    delay="500">{{ 'ADAPTER_LABEL.RESPONSE_CODE' | translate }}</label>
+                </div>
+                <div class="col-md-3" style="color: rgba(0, 0, 0, 0.65)">
+                  <label class="required" tooltip="{{ 'ADAPTER_LABEL.INTERNAL_CODE' | translate }}" placement="right"
+                    delay="500">{{ 'ADAPTER_LABEL.INTERNAL_CODE' | translate }}</label>
+                </div>
+
+                <div class="col-md-3" style="color: rgba(0, 0, 0, 0.65)">
+                  <label tooltip="{{ 'ADAPTER_LABEL.RESPONSE_CODE_DESCRIPTION' | translate }}" placement="right"
+                    delay="500">{{ 'ADAPTER_LABEL.RESPONSE_CODE_DESCRIPTION' | translate }}</label>
+                </div>
+                <div class="col-md-3" style="color: rgba(0, 0, 0, 0.65)" *ngIf="!readOnlyFlag" >
+                  <span class="btn btn-default" (click)="pushresponseCodeItem()"><i class="fa fa-plus"></i></span>
+                </div>
+              </div>
+              <div class="row mt-3" *ngFor="let item of responseCodeList; let i = index">
+                <!-- maxlength="4" -->
+                <div class="col-md-3">
+                  <input class="form-control" [(ngModel)]="item.responseCode" type="text"
+                    (keydown)="validateResCode($event)"  [disabled]="readOnlyFlag" placeholder="Enter Value" />
+                </div>
+                <div class="col-md-3">
+                  <ng-select bindLabel="value" [clearable]="false" bindValue="value" appendTo="body"
+                    [items]="internalCodeList" [disabled]="readOnlyFlag" [(ngModel)]="item.ipc" placeholder="Select Internal code">
+                  </ng-select>
+                </div>
+                <div class="col-md-3">
+                  <input class="form-control" [disabled]="readOnlyFlag" [(ngModel)]="item.description" type="text"
+                    (keydown)="validateResCode($event)" placeholder="Enter Value" />
+                </div>
+                <div class="col-md-3">
+                  <span *ngIf="this.responseCodeList.length > 1 && !readOnlyFlag" class="btn btn-default"
+                    (click)="pullresponseCodeItem(i)"><i class="fa fa-minus"></i></span>
+                </div>
+              </div>
+            </div>
+          </nz-collapse-panel>
+          <nz-collapse-panel [nzHeader]="'Default'" [nzActive]="true">
+            <div class="row mt-3">
+              <div class="col-md-3" *ngIf="imfList.length">
+                <label class="heading required" tooltip="{{ 'ADAPTER_LABEL.COMPONENT_RESPONSE_CODE_FIELD' | translate }}"
+                  placement="right" delay="500">{{ 'ADAPTER_LABEL.COMPONENT_RESPONSE_CODE_FIELD' | translate }}</label>
+                <nz-tree-select style="width: 100%" [nzAllowClear] = "!readOnlyFlag" [nzDropdownMatchSelectWidth]="true" nz-tooltip
+                  [nzTooltipTitle]="imfValue" [nzDisabled]="readOnlyFlag" nzTooltipPlacement="right" [nzDropdownStyle]="{ 'max-height': '200px' }"
+                  [nzShowExpand]="true" [nzNodes]="imfList" [nzShowSearch]="true" [nzHideUnMatched]="true"
+                  nzPlaceHolder="Select IMF" [(ngModel)]="componentResponseCodeFieldName">
+                </nz-tree-select>
+              </div>
+              <div class="col-md-3">
+                <label class="heading required" tooltip="{{ 'ADAPTER_LABEL.DEFAULT_RESPONSE_CODE' | translate }}"
+                  placement="right" delay="500">{{ 'ADAPTER_LABEL.DEFAULT_RESPONSE_CODE' | translate }}</label>
+                <ng-select bindLabel="value" [disabled]="readOnlyFlag" [clearable]="false" bindValue="value" appendTo="body"
+                  [items]="internalCodeList" [(ngModel)]="responseCode" placeholder="Select Default Response Code">
+                </ng-select>
+              </div>
+            </div>
+          </nz-collapse-panel>
+        </nz-collapse>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <button class="btn btn-primary" type="button" (click)="prevTabValue()">
+              {{ 'PREVIOUS' | translate }}
+            </button>
+          </div>
+          <div class="col-md-8">
+            <div class="margin pull-right">
+              <button class="btn btn-primary" type="button"  *ngIf="!readOnlyFlag" (click)="draftResponse()">
+                {{ 'SAVE_DRAFT' | translate }}
+              </button>
+              <button class="btn btn-primary" type="button" (click)="tabChangeValue()" [disabled]="!isBtnDisabled()">
+                {{ 'NEXT' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+td {
+  line-height: 0px;
+}
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+.form-control {
+  width: 30%;
+}
+.delete_align {
+  position: absolute;
+  left: 297px;
+  bottom: 13px;
+  color: #f46771;
+  // width: 50% !important;
+  margin: 0 auto !important;
+  display: block !important;
+  float: none !important;
+}
+.popup {
+  width: 100% !important;
+}
+.p-viewer {
+  z-index: 9999;
+  position: absolute;
+  left: 560px;
+  margin-top: -60px;
+}
+.td-color {
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 0;
+  position: relative;
+  vertical-align: inherit;
+}
+.fa-eye {
+  color: #000;
+}
+i {
+  cursor: pointer;
+}
+.input-response {
+  border-radius: 5px;
+}
+.previous-button {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+:host .modal.fade .modal-dialog {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 15%;
+}
+.add-color {
+  color: #3c8dbc;
+}
+.table-height {
+  overflow-y: auto;
+  height: 65vh;
+  overflow-x: hidden;
+}
+label {
+  color: #000;
+}
+.label-width {
+  width: 100% !important;
+}
+:host ::ng-deep .ant-table-body {
+  overflow-x: hidden;
+}

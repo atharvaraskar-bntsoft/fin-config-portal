@@ -1,0 +1,18 @@
+<ng-container *ngIf="services">
+  <ul
+    [ngClass]="{
+      tree: serviceId !== services[0].id,
+      'tree-workflow': serviceId === services[0].id
+    }"
+    *ngFor="let service of services"
+  >
+    <li>
+      <i class="arrow right" *ngIf="serviceId !== services[0].id"></i>
+      {{ service.serviceName }}
+      <app-child-workflow
+        [services]="service.services"
+        *ngIf="service.services.length"
+      ></app-child-workflow>
+    </li>
+  </ul>
+</ng-container>

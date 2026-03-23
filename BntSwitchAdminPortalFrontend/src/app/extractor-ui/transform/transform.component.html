@@ -1,0 +1,91 @@
+<div class="table-height" style="min-height: 200px;">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th class="col-sm-4 th-color">Source(Packager)</th>
+        <th class="col-sm-8 th-color">Destination(IMF)</th>
+        <th class="col-sm-0 th-color">Mapper</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of authData; let i= index">
+        <td class="col-md-5 td-color joined-word-break">
+          <nz-switch nzSize="small" [nzDisabled]="readOnlyFlag"
+            (ngModelChange)="removePackerFieldMapping($event, data,i)" [(ngModel)]="data.destinationFlag">
+          </nz-switch>
+          {{ data.name }}
+        </td>
+        <td class="col-md-7 td-color joined-word-break">
+          {{data.destination}}
+        </td>
+        <td class="col-md-0 td-color joined-word-break textAlign">
+          <span (click)="transactionReqPopFun(data,i)">
+            <i class="fa fa-edit fa-lg"
+              style="color: #3c8dbc; margin-top: 4px; cursor: pointer; text-align: center"></i>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="mt-4">
+  <button class="btn btn-primary btn-md" (click)="openSetConstantDrawer()">{{constantArray.length > 0 ? 'Edit Constant'
+    : 'Add Constant'}}</button>
+  <button class="btn btn-primary btn-md" style="float:right;" (click)="saveData()">Next</button>
+</div>
+
+<nz-modal [(nzVisible)]="visible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="null" nzClosable="false"
+  [nzWidth]="1000" [nzStyle]="{ top: '70px' }">
+  <ng-template #modalTitle let-row="row">
+    FLD {{ FldID }}</ng-template>
+  <ng-template #modalContent>
+    <div class="row text-center" style="margin:5px;">
+      <nz-radio-group nzName="radiogroup" (ngModelChange)="changeMapper($event)" [(ngModel)]="changeMapperValue">
+        <label class="lm" nz-radio nzValue="copyasis"> Copy as is</label>
+        <label class="lm" nz-radio nzValue="extractdata">Extract Data</label>
+        <label class="lm" *ngIf="!parentFieldflag" nz-radio nzValue="mapper">Mapper</label>
+        <label *ngIf="!parentFieldflag" class="lm" nz-radio nzValue="script">Script</label>
+        <label *ngIf="!parentFieldflag" class="lm" nz-radio nzValue="join">Join</label>
+      </nz-radio-group>
+    </div>
+    <nz-card [nzBordered]="true">
+      <div *ngIf="changeMapperValue === 'copyasis'">
+        <app-copyas [sources]="sources" [typeList]="typeList" [serviceList]="serviceList" [editMode]="editMode"
+          (saveCopyAsIs)="saveCopyAsIs($event)" (closeDrawer)="close($event)" [conditionDropDown]="jsonData">
+        </app-copyas>
+      </div>
+      <div *ngIf="changeMapperValue === 'extractdata'">
+        <app-extract [sources]="sources" [typeList]="typeList" [serviceList]="serviceList"
+          [fieldDataList]="fieldDataList" [field]="field" [authData]="field" (oncancel)="closeExtract($event)"
+          (saveExtract)="saveExtract($event)" [conditionDropDown]="authData" [imfVersionData]="jsonData"></app-extract>
+      </div>
+      <div *ngIf="changeMapperValue === 'script'">
+        <app-script [sources]="sources" [conditionDropDown]="jsonData" (saveScriptData)="saveScriptData($event)"
+          (closeScript)="closeScript()">
+        </app-script>
+      </div>
+      <div *ngIf="changeMapperValue === 'mapper'">
+        <app-mapper-option-req [sources]="sources" [fieldDataList]="fieldDataList" [authData]="authData"
+          (closeMapperReq)="closeMapperReq()" (saveMapperData)="saveMapperData($event)" [conditionDropDown]="jsonData">
+        </app-mapper-option-req>
+      </div>
+      <div *ngIf="changeMapperValue === 'join'">
+        <app-join-response [typeList]="typeList" [serviceList]="serviceList" [sources]="sources" [field]="field"
+          (oncancelJoin)="closeJoin($event)" (saveJoin)="saveJoin($event)" [conditionDropDown]="authData"
+          [jsonDataValue]="jsonData">
+        </app-join-response>
+      </div>
+    </nz-card>
+  </ng-template>
+</nz-modal>
+
+<div *ngIf="constantDrawerVisible">
+  <nz-drawer [nzMaskClosable]="false" [nzVisible]="constantDrawerVisible" nzTitle="Set Constant" [nzWidth]="1100"
+    [nzClosable]="false" (nzOnClose)="closeConstant()">
+    <ng-container *nzDrawerContent>
+      <app-constant-extractor [authData]="authData" [jsonData]="jsonData" [constantArray]="constantArray"
+        (constantValue)="constantForm($event)" (closeConstant)="closeConstant()">
+      </app-constant-extractor>
+    </ng-container>
+  </nz-drawer>
+</div>

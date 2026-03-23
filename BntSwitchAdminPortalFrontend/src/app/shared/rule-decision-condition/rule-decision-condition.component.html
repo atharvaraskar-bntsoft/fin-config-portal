@@ -1,0 +1,181 @@
+<div *ngFor="let node of nodes; let i = index">
+  <div class="delete-action" (click)="deleteElement(node)"></div>
+  <div
+    *ngIf="node.group && !node?.delete"
+    [ngClass]="{ groupheader: node.group && node.nodes.length > 0 }"
+  >
+    <span class="deleteicon" (click)="delete(node, id)"
+      ><i class="fa fa-trash" aria-hidden="true"></i>
+    </span>
+  </div>
+  <div
+    class="fileds"
+    [ngClass]="{ grouporder: node.group && node.nodes.length > 0 }"
+    *ngIf="!node?.delete"
+  >
+    <div class="group" *ngIf="showhideflag">
+      <div class="groupChild_rule">
+        <div id="{{ node.id }}" style="display: none">
+          {{ 'ENTER_REQUIRED' | translate }}
+        </div>
+        <div class="field">
+          <ng-select
+            [clearable]="false"
+            appendTo="body"
+            class="custom"
+            [items]="ruleData"
+            bindLabel="text"
+            [(ngModel)]="fieldName[node.id]"
+            placeholder="{{ 'SELECT_FIELDS' | translate }} *"
+            (change)="filedsData(node, $event)"
+          >
+            <ng-template ng-option-tmp let-item="item" *ngIf="showTooltip">
+              <div title="{{ item?.toolTip }}">{{ item?.text }}</div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="field" *ngIf="showService[node.id]">
+          <ng-select
+            class="custom"
+            appendTo="body"
+            [clearable]="false"
+            [items]="serviceList"
+            bindLabel="text"
+            [(ngModel)]="selectedService[node.id]"
+            bindValue="value"
+            placeholder="Select Service *"
+            (change)="serviceChange($event, node)"
+          >
+          </ng-select>
+        </div>
+        <div class="field" *ngIf="showType[node.id]">
+          <ng-select
+            class="custom"
+            appendTo="body"
+            [clearable]="false"
+            [items]="typeList"
+            bindLabel="name"
+            [(ngModel)]="selectedType[node.id]"
+            (change)="typeChange($event, node)"
+            bindValue="name"
+            placeholder="Select Type *"
+          >
+          </ng-select>
+        </div>
+        <div class="field">
+          <ng-select
+            class="custom"
+            appendTo="body"
+            [clearable]="false"
+            [items]="operator[node.id]"
+            [(ngModel)]="node.operator"
+            (change)="opratersData(node, $event)"
+            bindLabel="text"
+            bindValue="value"
+            placeholder="{{ 'SELECT_OPERATOR' | translate }} *"
+          >
+          </ng-select>
+        </div>
+        <div class="field" *ngIf="enum[node.id]">
+          <ng-select
+            [clearable]="false"
+            appendTo="body"
+            [items]="enumRuleData[node.id]"
+            [(ngModel)]="node.value"
+            (change)="toData($event, node)"
+            bindLabel="text"
+            bindValue="value"
+            placeholder="{{ 'SELECT_FIELDS' | translate }} *"
+          >
+          </ng-select>
+        </div>
+        <div class="imputText field" *ngIf="!enum[node.id]">
+          <input
+            class="form-control"
+            [(ngModel)]="node.value"
+            style="width: 100%"
+            [ngClass]="{ error: node.error }"
+            type="text"
+            (focusout)="validation($event, node)"
+            (keyup)="toDataInput(node, $event)"
+          />
+          <span *ngIf="node.error && valueFileds" class="error-message com-error">
+            {{ 'ONLY' | translate }}
+            {{ node.validation_Type }}
+            {{ 'ALLOWED' | translate }}</span
+          >
+        </div>
+      </div>
+      <div class="groupAction field" *ngIf="!node.group">
+        <a class="btn-link button-effect" role="button" [matMenuTriggerFor]="belowMenu">Actions</a>
+        <mat-menu #belowMenu="matMenu">
+          <ng-container *ngIf="!node.group">
+            <button mat-menu-item (click)="createGroup(node, id)">
+              <i class="fa fa-plus-square-o fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+              <span style="color: #3c8dbc; margin-left: 10px">Create Group</span>
+            </button></ng-container
+          >
+          <mat-divider></mat-divider>
+          <ng-container *ngIf="!node.group">
+            <button mat-menu-item (click)="delete(node, id)">
+              <i class="fa fa-trash fa-sm" aria-hidden="true" style="color: #f46771"></i>
+              <span class="delete-color" style="margin-left: 10px">Delete</span>
+            </button></ng-container
+          >
+        </mat-menu>
+      </div>
+      <div style="clear: both"></div>
+      <div *ngIf="!isLeaf(node) && !node?.delete">
+        <span *ngFor="let innerNode of node.nodes; let i = index">
+          <div *ngIf="!innerNode?.delete">
+            <div
+              style="width: 10%; text-align: center; margin: 0px; padding: 0px"
+              *ngIf="node.length - 1 !== i"
+            >
+              <div
+                class="and-or"
+                style="text-align: enableProdModenter; font-size: 14px"
+                *ngIf="!node?.delete"
+              >
+                <span
+                  class="text"
+                  (click)="innerNode.relation = innerNode.relation === 'AND' ? 'OR' : 'AND'"
+                  >{{ innerNode.relation }}</span
+                >
+              </div>
+            </div>
+            <rule-condition-node
+              [serviceList]="serviceList"
+              [nodes]="innerNode.nodes"
+              [id]="i"
+              style="width: 60%"
+              [inputruleData]="inputruleData"
+            >
+            </rule-condition-node>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    style="width: 10%; text-align: center; margin: 0px; padding: 0px"
+    *ngIf="nodes.length - 1 !== i"
+  >
+    <div
+      class="and-or"
+      style="text-align: enableProdModenter; font-size: 14px"
+      *ngIf="!node?.delete"
+    >
+      <span class="text" (click)="node.relation = node.relation === 'AND' ? 'OR' : 'AND'">{{
+        node.relation
+      }}</span>
+    </div>
+  </div>
+</div>
+<a
+  class="fonsize required"
+  (click)="addrule()"
+  style="margin-left: 10px"
+  [ngClass]="{ addbutton: nodes?.length > 5 }"
+  ><i class="fa fa-plus-square" aria-hidden="true"></i> {{ 'ADD_CONDITION' | translate }}</a
+>

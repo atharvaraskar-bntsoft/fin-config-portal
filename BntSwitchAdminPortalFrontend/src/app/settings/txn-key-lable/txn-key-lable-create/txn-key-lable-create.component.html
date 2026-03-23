@@ -1,0 +1,98 @@
+<div class="fade-in template">
+  <div>
+    <a class="btn" routerLink="/logs/txnKeyLable"
+      ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+    >
+  </div>
+  <div class="col-md-5">
+    <nz-spin nzTip="Loading..." [nzSpinning]="isSpinning">
+      <form [formGroup]="fg" (ngSubmit)="onSubmit(fg)">
+        <div class="form-group" [ngClass]="displayFieldCss('txnKey')" *ngIf="editMode">
+          <label class="required">{{ 'TXNKEY' | translate }}</label>
+          <input
+            class="form-control"
+            formControlName="txnKey"
+            placeholder="{{ 'TXNKEY' | translate }}"
+            disabled
+            required
+          />
+          <app-field-error-display
+            [displayError]="isFieldValid('txnKey')"
+            errorMsg="{{ 'LABEL' | translate }}"
+          >
+          </app-field-error-display>
+        </div>
+        <div class="form-group" [ngClass]="displayFieldCss('txnKey')" *ngIf="!editMode">
+          <label class="required">{{ 'TXNKEY' | translate }}</label>
+          <input
+            class="form-control"
+            formControlName="txnKey"
+            placeholder="{{ 'TXNKEY' | translate }}"
+            required
+          />
+          <app-field-error-display
+            [displayError]="isFieldValid('txnKey')"
+            errorMsg="{{ 'TXNKEY_ERROR' | translate }}"
+          >
+          </app-field-error-display>
+        </div>
+
+        <div class="form-group" [ngClass]="displayFieldCss('label')">
+          <label class="required">{{ 'TXNLABEL' | translate }}</label>
+          <input
+            class="form-control"
+            formControlName="label"
+            placeholder="{{ 'TXNLABEL' | translate }}"
+            required
+          />
+          <app-field-error-display
+            [displayError]="isFieldValid('label')"
+            errorMsg="{{ 'TXNLABEL_ERROR' | translate }}"
+          >
+          </app-field-error-display>
+        </div>
+
+        <div class="form-check-input">
+          <label>{{ 'STATUS' | translate }}</label
+          ><br />
+          <div *ngIf="editMode">
+            <label style="cursor: no-drop;" class="check_box_container">
+              {{ currentItem.active ? ('ENABLED' | translate) : ('DISABLED' | translate) }}
+              <input
+                [ngModel]="currentItem.active"
+                (change)="checkStatus()"
+                formControlName="active"
+                type="checkbox"
+                disabled
+                checked
+              />
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="!editMode">
+            <label class="check_box_container">
+              {{ currentItem.active ? ('ENABLED' | translate) : ('DISABLED' | translate) }}
+              <input
+                [ngModel]="currentItem.active"
+                (change)="checkStatus()"
+                formControlName="active"
+                type="checkbox"
+                checked
+              />
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <button class="btn" routerLink="/logs/txnKeyLable" type="button">
+            {{ 'CANCEL' | translate }}
+          </button>
+
+          <button class="btn btn-flat btn-primary pull-right" type="submit" [disabled]="submitted">
+            {{ 'SUBMIT' | translate }}
+          </button>
+        </div>
+      </form>
+    </nz-spin>
+  </div>
+</div>

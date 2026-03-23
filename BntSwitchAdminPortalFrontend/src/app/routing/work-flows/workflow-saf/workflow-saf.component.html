@@ -1,0 +1,42 @@
+<div class="scroll">
+  <div [ngSwitch]="item?.screen">
+    <h2 mat-dialog-title *ngSwitchCase="screen.ExceptionDecison">Add SAF Exception Decision</h2>
+    <h2 mat-dialog-title *ngSwitchCase="screen.SafDecision">Add SAF Decision</h2>
+    <h2 mat-dialog-title *ngSwitchCase="screen.AutoReversalEligibilityCondition">Add Auto Reversal Eligibility Condition</h2>
+    <h2 mat-dialog-title *ngSwitchCase="screen.AutoReversalFinalCondition">Add Auto Reversal Final Condition</h2>
+  </div>
+  <a  nz-button *ngIf="postDecisionRuleJson" nzType="text" nzDanger class="saveConditionCss" (click)="removeAllCondition()">
+    <i nz-icon nzType="delete" nzTheme="outline"></i> Remove Condition
+  </a>
+  <!-- <mat-dialog-content class="mat-typography mat-body">
+    <div class="col-md-12 ruleBox" *ngIf="ruleData && serviceList">
+      <rule-condition-node
+        [inputruleData]="ruleData"
+        [nodes]="postDecisionRuleJson"
+        [serviceList]="serviceList"
+        style="width: 70%"
+        (addSubRule)="deleteElement($event)"
+      ></rule-condition-node>
+    </div>
+  </mat-dialog-content> -->
+  <div class="conditionScroll">
+    <app-condition-builder
+      *ngIf="jsonData"
+      [jsonData]="jsonData"
+      [ruleCondition]="postDecisionRuleJson"
+      (addSubRule)="getRule($event)"
+    >
+    </app-condition-builder>
+    <mat-dialog-actions align="end">
+      <button class="btn" style="margin-top: 27px" (click)="close()">Cancel</button>
+      <!-- <button
+          class="btn btn-flat btn-primary"
+          style="margin-left: 10px"
+          (click)="Submit()"
+          [disabled]="!postDecisionRuleJson"
+        >
+          Submit
+        </button> -->
+    </mat-dialog-actions>
+  </div>
+</div>

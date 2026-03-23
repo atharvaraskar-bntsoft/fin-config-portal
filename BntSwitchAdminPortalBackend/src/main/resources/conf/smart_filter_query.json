@@ -1,0 +1,13 @@
+{
+	"txnLog":{
+		"merchantIdFilter":"select distinct code from merchant where deleted = '0' and locked = '0'order by code"
+	},
+	"binTable":{
+		"BinFilter":"select id `key`, bin `value` from bin_table where bin_master_id = :binMasterId"
+	},
+	"lookupValue":{
+		"lookupValueFilter":"select id `key`, `value` `value` from lookup_value where lookup_type = (select id from lookup_type where name = :lookupTypeName)"
+	}
+	
+		
+}

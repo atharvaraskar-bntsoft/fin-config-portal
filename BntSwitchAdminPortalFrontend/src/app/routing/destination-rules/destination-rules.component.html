@@ -1,0 +1,108 @@
+<div class="portal-search">
+  <div class="form-inline">
+    <input
+      class="toto form-control input-search"
+      type="text"
+      placeholder="{{ 'SEARCH' | translate }}"
+      (keyup.enter)="getFilterNameData($event)"
+      [(ngModel)]="place"
+    />
+    <button
+      type="submit"
+      [disabled]="searchResetButton"
+      class="btn btn-primary btn-md btn-flat top-icon"
+      (click)="resetSearch()"
+    >
+      {{ 'RESET' | translate }}
+    </button>
+  </div>
+</div>
+<div class="row button-margin">
+  <button
+    *ngIf="permissionObject.write"
+    class="btn btn-primary pull-right btn-md btn-flat button-margin"
+    routerLink="{{ routPath }}"
+  >
+    <i class="fa fa-plus-circle"></i
+    >{{
+      ' ' +
+        ('CREATE' | translate) +
+        ' ' +
+        (ruletype == 'workflow' ? ('WORKFLOW' | translate) : ('ROUTING' | translate)) +
+        ' ' +
+        ('RULE' | translate)
+    }}
+  </button>
+</div>
+<!-- <div *ngIf="flag">
+  <h4>{{ 'NO_DATA' | translate }}</h4>
+</div> -->
+<nz-spin [nzSpinning]="loading">
+<div class="col-md-12 fade-in template">
+  <div class="row" [ngClass]="{ loading: loading }" *ngIf="rows.length > 0">
+    <ngx-datatable appNgxDatatableWatcher  #myTable [loadingIndicator]="loading"
+      class="bootstrap fullscreen striped datatable-body" [rows]="rows" [columns]="columns"
+      columnMode="force" [footerHeight]="45" [rowHeight]="rowHeight" [scrollbarV]="true"
+      (scroll)="onScroll()">
+      <ngx-datatable-footer appNgxDatatableWatcher>
+        <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+          let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
+          <div>
+            <strong>Showing {{ rows.length }} out of {{ totalRecords }} records</strong>
+          </div>
+          <datatable-pager appNgxDatatableWatcher [pagerLeftArrowIcon]="'datatable-icon-left'"
+            [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
+            [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
+            [hidden]="!(rowCount / pageSize > 1)" (change)="table.onFooterPage($event)">
+          </datatable-pager>
+        </ng-template>
+      </ngx-datatable-footer>
+    </ngx-datatable>
+  </div>
+
+  <ng-template #destination let-row="row" ngx-datatable-cell-template>
+    <div> {{ row.destination }} </div>
+  </ng-template>
+  <ng-template #workflow_name let-row="row" ngx-datatable-cell-template>
+    <div> {{ row.destination }} </div>
+  </ng-template>
+
+  <ng-template #version let-row="row" ngx-datatable-cell-template>
+    <div class="filteroverlapTemplate" *ngIf="row.ruleConfiguration">
+      <ng-select class="filter-shadow" (change)="changeRow($event, row)" [ngModel]="row.version"  appendTo="body"
+        bindLabel="version" [closeOnSelect]="true" [items]="row.ruleConfiguration" [clearable]="false">
+      </ng-select>
+    </div>
+  </ng-template>
+
+  <ng-template #version let-row="row" ngx-datatable-cell-template>
+    {{ 'NOT_VERSIONED' | translate }}
+</ng-template>
+
+<ng-template #active let-row="row" ngx-datatable-cell-template>
+  <ng-container *ngIf="permissionObject.update">
+    <nz-switch
+      [ngModel]="row.active === '0' ? false : true"
+      (ngModelChange)="editStatus(row)"
+      [nzDisabled]="false"
+      [disabled]="row.ruleConfiguration[0]?.version > 0"
+    ></nz-switch>
+  </ng-container>
+  <ng-container *ngIf="!permissionObject.update">
+    <nz-switch
+      [ngModel]="row.active === '0' ? false : true"
+      (ngModelChange)="editStatus(row)"
+      [nzDisabled]="true"
+    ></nz-switch>
+  </ng-container>
+</ng-template>
+
+<ng-template #action let-row="row" ngx-datatable-cell-template>
+  <div *ngIf="permissionObject.update">
+    <a style="color: #3c8dbc; margin-left: 10px" (click)="getRowData(row)">
+      {{'EDIT' | translate}}</a>    
+  </div>
+</ng-template>
+</div>
+</nz-spin>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>

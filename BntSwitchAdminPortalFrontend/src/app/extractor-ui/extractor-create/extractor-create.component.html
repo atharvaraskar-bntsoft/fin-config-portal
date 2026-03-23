@@ -1,0 +1,38 @@
+<nz-spin nzTip="Loading..." [nzSpinning]="isSpinning">
+  <div>
+    <a class="btn" routerLink="/extractor-ui"><i class="fa fa-arrow-circle-o-left fa-sm"></i>
+      {{ 'Back' }}
+    </a>
+  </div>
+  <nz-card>
+    <nz-collapse nzAccordion>
+      <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="panel.name" [nzActive]="panel.active"
+        [nzDisabled]="panel.disabled">
+        <div>
+          <app-extractor-job-config *ngIf="panel.type == 'job'" [panels]="panels" (jobForm)="jobForm($event)"
+            [initialJson]="initialJson"></app-extractor-job-config>
+        </div>
+        <div>
+          <app-extractor-schema-condition [panels]="panels" *ngIf="panel.type == 'schema-condition'"
+            (schemaForm)="schemaForm($event)" [initialJson]="initialJson"></app-extractor-schema-condition>
+        </div>
+        <div>
+          <app-transform *ngIf="panel.type == 'transform'" [initialJson]="initialJson" [jsonData]="jsonData"
+            [packgerList]="transformJsonList" (transformData)="saveTransform($event)"></app-transform>
+        </div>
+        <div *ngIf="panel.type == 'sender'">
+          <app-sender [panels]="panels" [initialJson]="initialJson" (senderForExtractor)="getSenderData($event)">
+          </app-sender>
+          <div style="margin: 10px; float: right;">
+            <button [disabled]="initialJson.details.etlJson.senders.length == 0" class="btn btn-primary" type="button"
+              style="margin-right: 5px;" (click)="onSubmit(0)">Save
+              Draft</button>
+            <nz-divider nzType="vertical"></nz-divider>
+            <button class="btn btn-primary" type="button" [disabled]="initialJson.details.etlJson.senders.length == 0"
+              (click)="onSubmit(1)">Publish</button>
+          </div>
+        </div>
+      </nz-collapse-panel>
+    </nz-collapse>
+  </nz-card>
+</nz-spin>

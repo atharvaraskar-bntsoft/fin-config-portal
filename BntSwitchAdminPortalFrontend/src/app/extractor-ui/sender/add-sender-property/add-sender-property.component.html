@@ -1,0 +1,102 @@
+<div>
+  <div class="row row-margin row-align row-template">
+    <div class="col-md-8">
+      <h2 mat-dialog-title>Define Sender Details</h2>
+    </div>
+    <!-- <div class="col-md-4 pull-right">
+      <button class="btn btn-md btn-property" (click)="addProperty()">
+        <i class="fa fa-plus-circle"></i> Add Property
+      </button>
+    </div> -->
+  </div>
+  <hr style="margin: 2px 0 6px 0;" />
+  <form [formGroup]="senderPropertyForm" (ngSubmit)="saveSenderProperty()">
+    <mat-dialog-content>
+      <div class="row row-margin row-align row-template">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="required">Sender Type</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <select class="form-control" placeholder="Select Sender Type" name="senderType"
+              formControlName="senderType">
+              <option value="KAFKA">KAFKA</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Value</th>
+              <!-- <th>Action</th> -->
+            </tr>
+          </thead>
+          <tbody *ngIf="senderPropertyForm.get('senderConfig').value.length > 0">
+            <ng-container formArrayName="senderConfig"
+              *ngFor="let item of senderPropertyForm.get('senderConfig').controls; let i = index;">
+              <tr [formGroupName]="i">
+                <td class="p-20">
+                  <div class="form-group">
+                    <input type="text" class="form-control" formControlName="property" placeholder="Property" disabled>
+                    <span class="text-danger text-sm"
+                      *ngIf="senderConfig.controls[i].get('property')?.errors?.required && submitted != null && submitted">
+                      Property is required
+                    </span>
+                    <span class="text-danger text-sm"
+                      *ngIf="senderConfig.controls[i].get('property')?.hasError('whitespace') && submitted != null && submitted">
+                      Please enter valid data
+                    </span>
+                  </div>
+                </td>
+                <td class="p-20">
+                  <div class="form-group">
+                    <input type="text" class="form-control" formControlName="value" placeholder="Value">
+                    <span class="text-danger text-sm"
+                      *ngIf="senderConfig.controls[i].get('value')?.errors?.required && submitted != null && submitted">
+                      Value is required
+                    </span>
+                    <span class="text-danger text-sm"
+                      *ngIf="senderConfig.controls[i].get('value')?.hasError('whitespace') && submitted != null && submitted">
+                      Please enter valid data
+                    </span>
+                  </div>
+                </td>
+                <!-- <td class="p-20">
+                  <span class="delete_align" (click)="removeProperty(i)">
+                    <i class="fa fa-trash fa-lg"></i>
+                  </span>
+                </td> -->
+              </tr>
+            </ng-container>
+          </tbody>
+          <tbody *ngIf="senderPropertyForm.get('senderConfig').value.length == 0">
+            <tr>
+              <td colspan="2">
+                No record found...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </mat-dialog-content>
+    <mat-dialog-actions style="float: right;">
+      <div class="text-right">
+        <button nz-button mat-dialog-close nzType="default">
+          {{ 'Close' }}
+        </button>
+        <span *ngIf="senderPropertyForm.get('senderConfig').value.length > 0">
+          <button nz-button nzType="primary" [disabled]="senderPropertyForm.invalid">
+            {{ 'Save' }}
+          </button>
+        </span>
+      </div>
+    </mat-dialog-actions>
+  </form>
+</div>

@@ -1,0 +1,221 @@
+/*
+JSON-TREE styles
+*/
+json-tree-child {
+  input[type="text"] {
+    width: 12em;
+    height: 22px;
+    margin-right: 15px;
+    padding: 12px 5px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+}
+  input[type="number"] {
+    width: 14em;
+    height: 12px;
+    vertical-align: middle;
+  }
+  textarea {
+    width: 14em;
+    height: 12px;
+    padding-top: 0;
+    margin-bottom: -4px;
+    border-color: gray;
+    resize: none;
+    overflow: hidden;
+  }
+  textarea:focus {
+    width: auto;
+    min-height: 100px;
+    height: auto;
+    position: absolute;
+    z-index: 10;
+    resize: inherit;
+    overflow: auto;
+  }
+  textarea:focus.valid {
+    background-color: #d6e9c9;
+  }
+  textarea:focus.invalid {
+    background-color: rgb(237, 200, 188);
+  }
+  ul {
+    list-style: none;
+    margin: -12px 0 0 -24px;
+    width: 600px;
+    // float: left;
+    // margin: -12px 24px 0 -34px;
+  }
+  li{
+    margin: 0px 0 0 0px;
+    display: inline-block
+  }
+  .key {
+    color: green;
+  }
+  .add {
+    color: green;
+    cursor: pointer;
+  }
+  .reset {
+    color: steelblue;
+    cursor: pointer;
+  }
+  .remove {
+    color: red;
+    cursor: pointer;
+    // position: relative;
+    // left: 60rem;
+    // bottom: 24px;
+  }
+  .comma {
+    color: #c0c0c0;
+  }
+  .drag {
+    position: absolute;
+    background-color: #e2efff;
+    opacity: 0.5;
+    cursor: pointer;
+  }
+  .empty {
+    border: 1px dashed darkred;
+    background-color: #e2efff;
+  }
+  .add-item-block button {
+    margin-left: 3px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+}
+.margin {
+  margin-left: 3px;
+}
+.checkbox-margin {
+  margin-left: 10px;
+}
+.add-item-input-key {
+    width: 14em;
+    height: 22px;
+    margin-left: 15px;
+  }
+.dropdown-margin{
+    margin-left: 5px;
+    padding-top: 0px;
+}
+.select-selected:after {
+    border: 6px solid transparent;
+    border-color: #fff transparent transparent transparent;
+  }
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #fff transparent;
+    top: 7px;
+  }
+  .select-items div,.select-selected {
+    color: #ffffff;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  input[type="checkbox"] {
+    background-color: #eee;
+  }
+
+  input[type="checkbox"] :hover{
+    background-color: #ccc;
+  }
+
+
+  input[type="checkbox"] :checked{
+    background-color: #2196F3;
+  }
+
+ 
+  .select-css {
+	padding: 3px 2px 3px 2px;
+	box-sizing: border-box;
+	border: 1px solid #aaa;
+	box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+	border-radius: .5em;
+}
+.select-css::-ms-expand {
+	display: none;
+}
+.select-css:hover {
+	border-color: #888;
+}
+.select-css:focus {
+	border-color: #aaa;
+	box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+	box-shadow: 0 0 0 3px -moz-mac-focusring;
+	color: #222;
+	outline: none;
+}
+.select-css option {
+	font-weight:normal;
+}
+input:invalid {
+  color: red;
+}
+.line_color{
+  color: red; 
+  margin-bottom: 0px;
+}
+.remove_node{
+  color:red;
+}
+.add_node{
+  color:#509ef8;
+}
+.cancel_button{
+  margin-left:5px;
+}
+.icon-minus{
+  position: relative;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
+}
+.icon-plus{
+  position: relative;
+  right: 80px;
+  // bottom: 20px;
+  cursor: pointer;
+}
+// .clt, .clt ul, .clt li {
+//   position: relative;
+// }
+
+// .clt ul {
+//  list-style: none;
+//  padding-left: 32px;
+// }
+// .clt li::before, .clt li::after {
+//   content: "";
+//   position: absolute;
+//   left: -12px;
+// }
+// .clt li ::before {
+//   border-top: 1px solid #000;
+//   top: 9px;
+//   width: 8px;
+//   height: 0;
+// }
+// .clt li ::after {
+//   border-left: 1px solid #000;
+//   height: 100%;
+//   width: 0px;
+//   top: 2px;
+// }
+// .clt ul > li:last-child::after {
+//   height: 8px;
+// }
+// .clt ul > li:first-child::before {
+//   border-top: none;
+// }
+

@@ -1,0 +1,23 @@
+<ng-container *ngIf="imfList.length">
+  <nz-spin nzTip="Loading..." [nzSpinning]="!imfList.length">
+    <nz-tree-select
+      [style]="style"
+      [nzDropdownMatchSelectWidth]="true"
+      nz-tooltip
+      [nzTooltipTitle]="imfToolTip"
+      nzTooltipPlacement="right"
+      [nzDropdownStyle]="{ 'max-height': '200px' }"
+      [nzShowExpand]="true"
+      [nzNodes]="imfList"
+      [nzShowSearch]="true"
+      [nzHideUnMatched]="true"
+      nzPlaceHolder="{{ placeHolder }}"
+      [(ngModel)]="selectedIMFValue"
+      (ngModelChange)="emitValue()"
+      [nzAllowClear] = "!readOnlyFlag"
+      [disabled]="disabled || readOnlyFlag"
+      nzDropdownClassName="{{ className }}"
+    >
+    </nz-tree-select>
+  </nz-spin>
+</ng-container>

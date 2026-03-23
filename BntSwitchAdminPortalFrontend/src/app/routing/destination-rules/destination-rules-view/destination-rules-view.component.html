@@ -1,0 +1,59 @@
+<div class="col-md-12">
+  <a class="btn" href="javascript:;" (click)="onBack()"
+    ><i class="fa fa-arrow-circle-o-left fa-sm backButton"></i>{{ 'BACK' | translate }}
+  </a>
+  <ul class="rulevesionview">
+    <li *ngFor="let item of prejson">
+      <div>
+        <span class="label badge-danger badgesColor badgeMargin badgesWidthFirst">
+          {{ 'VERSION' | translate }}: {{ item.version }}
+        </span>
+        <span class="label badge-danger badgesColors badgeMargin badgesWidthSecond">
+          {{ 'DESTINATIONS' | translate }}: {{ item.destination }}
+        </span>
+        <span class="label badge-danger success-badges badgeMargin badgesWidthThird">
+          {{ 'RULE' | translate }}:
+          {{ item.verified ? 'Verified' : 'Unverified' }}
+        </span>
+        <a *ngIf="!item.show" class="cursor pull-right" (click)="onShowRule(item)"
+          ><i class="fa fa-plus-square" aria-hidden="true"></i> {{ 'SHOW_RULE' | translate }}</a
+        >
+        <a *ngIf="item.show" class="cursor pull-right" (click)="onShowRule(item)"
+          ><i class="fa fa-minus-square" aria-hidden="true"></i> {{ 'HIDE_RULE' | translate }}</a
+        >
+        <a
+          *ngIf="permissionObject.update"
+          class="cursor pull-right marright"
+          (click)="getRowData(item)"
+        >
+          {{ 'EDIT' | translate }}</a
+        >
+      </div>
+      <div *ngIf="item.show">
+        <div class="col-md-12 innerDiv rowJson">
+          <div class="midDiv columnJson">
+            <div style="width: 35%">
+              <rv-pretty-json [obj]="showJson(item)"></rv-pretty-json>
+            </div>
+          </div>
+          <div *ngIf="this.permissionObject.update || this.permissionObject.write">
+            <button
+              class="btn-success btn-flat btn btn-md buttonRule"
+              (click)="confirmRule(item)"
+              [disabled]="item.verified"
+            >
+              {{ 'VERIFY' | translate }}
+            </button>
+            <button
+              class="btn-danger btn-flat btn btn-md"
+              (click)="updateRule(item)"
+              [disabled]="item.verified"
+            >
+              {{ 'REJECT' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

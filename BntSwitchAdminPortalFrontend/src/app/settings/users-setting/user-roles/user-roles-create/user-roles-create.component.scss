@@ -1,0 +1,24 @@
+.line-gap{
+  line-height: 27px;
+}
+.user-roles_check-align{
+  display: inherit;
+}
+.user-roles_lables-align{
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+.disabled {
+  pointer-events: none;
+  color: #ccc;
+}

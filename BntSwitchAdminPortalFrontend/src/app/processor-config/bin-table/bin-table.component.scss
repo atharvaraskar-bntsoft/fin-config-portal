@@ -1,0 +1,37 @@
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+
+.scheduleDate {
+  position: relative;
+  top: 32px;
+  right: 130px;
+}
+
+.insertBox {
+  margin-left: 63px;
+  margin-top: -25px;
+}
+
+.sizeWidth {
+  width: 700px;
+}
+
+.inputCalender {
+  width: 180px;
+}
+
+.mainImport {
+  padding-left: 65px;
+}
+
+.buttonClass {
+  padding-right: 16px;
+}

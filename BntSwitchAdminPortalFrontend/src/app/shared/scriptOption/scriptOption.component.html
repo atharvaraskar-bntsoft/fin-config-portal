@@ -1,0 +1,13 @@
+<ng-container>
+  <div class="col-md-12 row-template">
+    <!-- <ace-editor [(text)]="scriptText" class="editor" #editor></ace-editor> -->
+    <ngx-monaco-editor class="editor" [options]="editorOptions" [(ngModel)]="scriptText"></ngx-monaco-editor>
+  </div>
+  <span style="color: red" *ngIf="scriptError">Please fill all mandatory fields</span>
+</ng-container>
+<div class="col-md-12 text-right mt-4">
+  <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+  <button nz-button nzType="primary" style="margin-left: 10px" (click)="saveScript()">
+    Save
+  </button>
+</div>

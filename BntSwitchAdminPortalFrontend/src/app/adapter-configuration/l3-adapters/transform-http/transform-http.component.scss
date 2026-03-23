@@ -1,0 +1,345 @@
+.input-align {
+  width: 17%;
+  margin-left: 7px;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+}
+.row-align {
+  margin-left: -20px;
+}
+.mt-3 {
+  margin-top: 10px;
+}
+label {
+  color: #000;
+}
+.row-template > div {
+  margin-right: 5px;
+  display: flex;
+}
+.row-transform {
+  margin-top: -10px;
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+.marginRight {
+  margin-right: 5px;
+}
+.marginleft {
+  margin-left: 5px;
+}
+.select-css {
+  padding: 3px 2px 3px 2px;
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+  border-radius: 0.5em;
+  width: 100%;
+}
+.mat-radio {
+  padding-left: 25px;
+  padding-top: 5px;
+}
+
+.rulsCss {
+  border-radius: 5px;
+}
+
+.imfField {
+  padding-left: 10%;
+}
+.imfMerchant {
+  padding-left: 30px;
+  padding-top: 10px;
+}
+.input-value {
+  width: 50%;
+  border-radius: 5px;
+}
+.configDiv {
+  background: #d3d3d31c;
+  border: 1px solid;
+  width: auto;
+  height: 340px;
+  margin-top: 1px;
+  overflow: scroll;
+}
+.nzRadio {
+  font-size: 11px !important;
+}
+.enrichFieldsCss {
+  margin: 5px 5px;
+  padding: 5px 5px;
+  width: auto;
+  height: 55vh;
+  border: 1px solid;
+  overflow: scroll;
+}
+.margin {
+  margin: 10px 5px;
+}
+.customWidth {
+  width: 20px !important;
+  height: 25px !important;
+}
+
+.responseCodeCss {
+  width: auto;
+  height: 368px;
+  background: #d3d3d31c;
+  border: 1px solid;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.footerDiv {
+  width: 100%;
+  height: 50px;
+  margin-top: 0px;
+  margin-right: 0px;
+}
+
+.RuleDiv {
+  background: #d3d3d31c;
+  border: 1px solid;
+  width: auto;
+  height: auto;
+}
+.heading {
+  padding-left: 5px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.headerAlign {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.65);
+}
+.input-response {
+  width: auto;
+  border-radius: 5px;
+}
+.row-transform {
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+.transform {
+  border: 1px solid;
+  padding-left: 25px;
+  border-radius: 5px;
+}
+textarea {
+  margin-left: 10px;
+}
+.iconCss {
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  width: 30px;
+  padding-left: 8px;
+}
+.dashedLine {
+  border-top: 1px dashed black;
+  color: transparent;
+  margin-top: 40px;
+  width: 90%;
+  margin-right: 50px;
+}
+.btnRight {
+  float: right;
+  margin: 20px;
+}
+
+::ng-deep .mat-step-label-selected {
+  background-color: #81b5d4;
+  opacity: 1 !important;
+}
+.headingData {
+  position: relative;
+  top: 19rem;
+}
+
+.tab-margin {
+  margin-left: 13px;
+}
+
+:host ::ng-deep .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab {
+  height: 40px;
+  margin: 0 2px 0 0;
+  padding: 0 16px;
+  line-height: 38px;
+  background: #509ef8;
+  border: 1px solid #509ef8;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.post-card {
+  border: #ccc solid 1px;
+  padding: 0 !important;
+}
+.post-heading {
+  font-size: 13px;
+  padding: 5px 15px 10px;
+}
+:host ::ng-deep .ant-tabs {
+  margin: 0;
+  padding: 0;
+  font-variant: tabular-nums;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  position: relative;
+}
+
+:host ::ng-deep .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
+  height: 40px;
+  color: #1890ff;
+  background: #fff;
+  border-color: #1890ff;
+  border-bottom: 1px solid #fff;
+}
+
+:host ::ng-deep .ant-tabs-nav .ant-tabs-tab:hover {
+  color: #ffffff;
+}
+
+:host ::ng-deep .ant-tabs-nav .ant-tabs-tab-disabled,
+.ant-tabs-nav .ant-tabs-tab-disabled:hover {
+  color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+:host ::ng-deep .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-disabled {
+  color: #f5f5f5;
+  cursor: not-allowed;
+}
+.transform-heading {
+  position: relative;
+  top: 19rem;
+}
+.ant-modal {
+  width: 600 px;
+}
+:host ::ng-deep .ant-tabs-bar {
+  margin: 0 0 0px;
+}
+.transform-data {
+  margin-top: 10px;
+  padding-left: 0px;
+}
+th {
+  line-height: 0.5;
+  text-align: center !important;
+}
+.textAlign {
+  text-align: center !important;
+}
+.icon-hover:hover {
+  background-color: #ddd;
+}
+::ng-deep .ant-modal-header {
+  padding: 16px 24px;
+  color: rgba(0, 0, 0, 0.65);
+  background: #1890ff;
+  border-bottom: 1px solid #e8e8e8;
+  border-radius: 4px 4px 0 0;
+}
+::ng-deep .ant-modal-title {
+  margin: 0;
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+}
+.enrichEqual {
+  margin-left: 5px;
+  padding-left: 25px;
+  padding-top: 7px;
+}
+
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+.previous-button {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.tranformSoapCodeCss {
+  width: auto;
+  height: 368px;
+  border: 1px solid;
+  overflow-y: scroll;
+  overflow-x: auto;
+}
+.payment {
+  margin: 15px;
+}
+.mappingInput {
+  width: 100%;
+  border-radius: 5px;
+}
+.executeDiv {
+  margin-top: 5px;
+  margin-left: 5%;
+}
+.listParam {
+  margin-left: 16%;
+}
+.postIcon {
+  padding-left: 10px;
+  margin-top: 5px;
+  padding-right: 20px;
+  height: 32px !important;
+}
+::ng-deep .ant-modal-footer {
+  padding: 10px 16px;
+  text-align: right;
+  background: 0 0;
+  border-top: 0px solid #f0f0f0;
+  border-radius: 0 0 2px 2px;
+}
+.td-color {
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1.8;
+}
+.th-color {
+  color: rgba(0, 0, 0, 0.65);
+  background: #fafafa;
+}
+.table-height {
+  overflow-y: auto;
+  height: 251px;
+}
+.table-height thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.copyReqRes {
+  margin-left: 8%;
+  width: 25%;
+}
+.copySelectWidth {
+  width: 80%;
+}

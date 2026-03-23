@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- TODO: 2 below bean should be Deleted not needed  -->
+
+	<bean name="gs-client-space-idgen" class="com.bnt.gs.client.Space">
+		<property name="URL" value="jini://127.0.0.1/*/idgenspace" />
+	</bean>
+
+	<bean name="gs-client-space-txnspace" class="com.bnt.gs.client.Space">
+		<property name="URL" value="jini://127.0.0.1/*/txnspace" />
+	</bean>
+
+	<bean name="gs-client-space-configspace" class="com.bnt.gs.client.Space">
+		<property name="URL" value="jini://127.0.0.1/*/configspace" />
+	</bean>
+
+	<bean id="gsClient" class="com.bnt.gs.client.Spaces">
+		<property name="spaces">
+			<map>
+				<entry key="ID_GENERATOR" value-ref="gs-client-space-idgen"></entry>
+				<entry key="TXN" value-ref="gs-client-space-txnspace"></entry>
+				<entry key="CONFIG" value-ref="gs-client-space-configspace"></entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean name="gsClientIdGenerator" class="com.bnt.gs.client.GigaSpaceIDGenerator">
+		<property name="spaceFactory" ref="gsClient" />
+		<property name="nameSpace" value="txn_id" />
+		<property name="prefetchIdCount" value="5000" />
+	</bean>
+
+	<bean name="spaceAdapter" class="com.bnt.gs.client.SpaceAdapter">
+		<property name="gsClientIdGenerator" ref="gsClientIdGenerator" />
+	</bean>
+	
+</beans>

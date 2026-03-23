@@ -1,0 +1,17 @@
+.td-color {
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1.8;
+}
+.th-color {
+  color: rgba(0, 0, 0, 0.65);
+  background: #fafafa;
+}
+.table-height {
+  overflow-y: auto;
+  height: 65vh;
+}
+.table-height thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

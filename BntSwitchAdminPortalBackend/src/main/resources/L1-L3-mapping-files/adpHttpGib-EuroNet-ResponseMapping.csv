@@ -1,0 +1,7 @@
+ATM EURONET-EBCDIC,11111,,,
+Generic FieldName,ATM Field (OUT),L1FieldName,ISO 8583 Field(IN),L3FieldName
+Transaction Date,transaction_date,message_collection[0].message_exchange.response.audit_info.created_on,Local Transaction Date,message_collection[1].message_exchange.response.audit_info.created_on
+Approval Code,response_code,message_collection[0].message_exchange.response.response_code,Response,message_collection[1].message_exchange.response.response_code
+Auth Code,authorization_code,message_collection[0].message_exchange.response.transaction_response.auth_code,AuthorisationCode,message_collection[1].message_exchange.response.transaction_response.auth_code
+Authorized Amount,authorized_amount,message_collection[0].message_exchange.response.transaction_response.authorized_amount.amount,TotalAmount,message_collection[1].message_exchange.response.transaction_response.authorized_amount.amount
+Authorized Amount Currency,authorized_amountCurrency,message_collection[0].message_exchange.response.transaction_response.authorized_amount.currency_code,Currency,message_collection[1].message_exchange.response.transaction_response.authorized_amount.currency_code

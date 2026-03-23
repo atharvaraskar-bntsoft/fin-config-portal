@@ -1,0 +1,60 @@
+<div class="fade-in template">
+  <div>
+    <a class="btn" routerLink="/processor-config/dek"
+      ><i class="fa fa-arrow-circle-o-left fa-sm"></i>{{ 'BACK' | translate }}</a
+    >
+  </div>
+  <div class="col-md-5">
+    <form [formGroup]="fg" (ngSubmit)="onSubmit(fg)">
+      <div class="form-Group" [ngClass]="displayFieldCss('clearText')">
+        <label class="rquired">{{ 'GENERATE_TEXTBOX' | translate }}</label>
+        <nz-input-group [nzSuffix]="suffixTemplete">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="clearText"
+            minlength="32"
+            maxlength="32"
+            placeholder="{{ 'GENERATE_TEXTBOX' | translate }}"
+            nz-input
+          />
+        </nz-input-group>
+        <ng-template #suffixTemplete>
+          <i
+            *ngIf="!showPassword"
+            class="fa fa-eye-slash"
+            aria-hidden="true"
+            (click)="showPassword = !showPassword"
+          ></i>
+          <i
+            *ngIf="showPassword"
+            class="fa fa-eye-slash"
+            aria-hidden="true"
+            (click)="showPassword = !showPassword"
+          ></i>
+        </ng-template>
+        <button
+          class="btn btn-flat btn-primary button-position"
+          [disabled]="textValue"
+          (click)="generateKey()"
+          type="button"
+        >
+          {{ 'GENERATEKEY' | translate }}
+        </button>
+
+        <app-field-error-display
+          [displayError]="isFieldValid('clearText')"
+          errorMsg="{{ 'GENERATE_TEXTBOX_ERROR' | translate }}"
+        ></app-field-error-display>
+      </div>
+      <div>
+        <button class="btn" routerLink="/processor-config/dek" type="button">
+          {{ 'CANCEL' | translate }}
+        </button>
+
+        <button class="btn btn-flat btn-primary pull-right" type="submmit" [disabled]="submitted">
+          {{ dekData?.otherCustodianTextExist ? ('GENERATE' | translate) : ('SUBMIT' | translate) }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

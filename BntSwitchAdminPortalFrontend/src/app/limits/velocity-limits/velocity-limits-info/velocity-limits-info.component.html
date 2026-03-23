@@ -1,0 +1,173 @@
+<nz-drawer
+  [nzTitle]="title"
+  (nzOnClose)="close()"
+  [nzMaskClosable]="false"
+  [nzVisible]="isvisibleview"
+  nzPlacement="right"
+  [nzWidth]="900"
+>
+  <ng-container *nzDrawerContent>
+    <nz-spin style="height: 600px" nzTip="Loading..." [nzSpinning]="loading">
+      <nz-card>
+        <div class="col-md-12 fade-in template" *ngIf="row">
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <h3 class="row-tag">{{ row.merchantInstitutionId?.name }}</h3>
+            </div>
+            <div class="col-md-6" style="margin-top: 20px; margin-bottom: 10px">
+              <button
+                class="btn pull-right btn-sm btn-danger btn-flat"
+                *ngIf="permissionObject.delete && row.locked === '0'"
+                nzType="primary"
+                nzDanger
+                nz-popconfirm
+                style="color: white"
+                nzPopconfirmTitle="Are you sure to delete this record?"
+                nzPopconfirmPlacement="bottom"
+                [nzIcon]="iconTpl"
+                (nzOnConfirm)="deleteRecord(row)"
+              >
+                {{ 'DELETE' | translate }}
+                <ng-template #iconTpl>
+                  <span nz-icon nzType="question-circle-o" style="color: red"></span>
+                </ng-template>
+              </button>
+              <button
+                class="btn pull-right btn-sm btn-primary btn-flat"
+                *ngIf="permissionObject.update && row.locked === '0'"
+                (click)="editDetails(row)"
+              >
+                {{ 'EDIT' | translate }}
+              </button>
+            </div>
+          </div>
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <h4>{{ 'APPLY_LIMIT_TO' | translate }}</h4>
+              <table class="table table-bordered table-striped">
+                <caption></caption>
+                <tbody>
+                  <tr>
+                    <th>{{ 'INSTITUTION_GROUP' | translate }}</th>
+                    <td>
+                      <a class="cursor" (click)="onInstitution(row)">{{
+                        row.merchantInstitutionId?.name
+                      }}</a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="row.type?.id >= 2">
+                    <th>{{ 'INSTITUTION_CHAIN' | translate }}</th>
+                    <td>
+                      <a class="cursor" (click)="onMerchant(row)">{{ row.merchantId?.name }}</a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="row.type?.id >= 3">
+                    <th>{{ 'LOCATION' | translate }}</th>
+                    <td>
+                      <a class="cursor" (click)="onLocation(row)">{{ row.locationId?.name }}</a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="row.type?.id === 4">
+                    <th>{{ 'DEVICE' | translate }}</th>
+                    <td>
+                      <a class="cursor" (click)="onDevice(row)">{{ row.deviceId.code }}</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <h4>{{ 'TRANSACTION_TYPE' | translate }}</h4>
+              <table class="table table-bordered table-striped">
+                <caption></caption>
+                <tbody>
+                  <tr>
+                    <th>{{ row.transactionTypes?.name }}</th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                <h4>{{ 'LIMIT_AMOUNT' | translate }}</h4>
+                <table class="table table-bordered table-striped">
+                  <caption></caption>
+                  <tbody>
+                    <tr>
+                      <th>{{ 'SINGLE_TRANSACTION' | translate }}</th>
+                      <td *ngIf="row?.limitAmount?.singleTransaction">
+                        {{ row.limitAmount?.singleTransaction | number : '1.2-2' }}
+                      </td>
+                      <td *ngIf="!row.limitAmount?.singleTransaction">N/A</td>
+                    </tr>
+                    <tr>
+                      <th>
+                        {{ 'PER' | translate }} {{ row.minutesCount }}
+                        {{ 'MINUTES' | translate }}
+                      </th>
+                      <td *ngIf="row?.limitAmount?.perTime">
+                        {{ row.limitAmount?.perTime | number : '1.2-2' }}
+                      </td>
+                      <td *ngIf="!row.limitAmount?.perTime">N\A</td>
+                    </tr>
+                    <tr>
+                      <th>{{ 'PER_DAY' | translate }}</th>
+                      <td *ngIf="row?.limitAmount?.perDay">
+                        {{ row.limitAmount?.perDay | number : '1.2-2' }}
+                      </td>
+                      <td *ngIf="!row.limitAmount?.perDay">N/A</td>
+                    </tr>
+                    <tr>
+                      <th>{{ 'PER_MONTH' | translate }}</th>
+                      <td *ngIf="row?.limitAmount?.perMonth">
+                        {{ row.limitAmount?.perMonth | number : '1.2-2' }}
+                      </td>
+                      <td *ngIf="!row.limitAmount?.perMonth">N/A</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="col-md-6">
+                <h4>{{ 'LIMIT_COUNT' | translate }}</h4>
+                <table class="table table-bordered table-striped">
+                  <caption></caption>
+                  <tbody>
+                    <tr>
+                      <th>{{ 'SINGLE_TRANSACTION' | translate }}</th>
+                      <td *ngIf="row?.limitCount?.singleTransaction">
+                        {{ row.limitCount?.singleTransaction }}
+                      </td>
+                      <td *ngIf="!row.limitCount?.singleTransaction">N/A</td>
+                    </tr>
+                    <tr>
+                      <th>
+                        {{ 'PER' | translate }} {{ row.minutesCount }}
+                        {{ 'MINUTES' | translate }}
+                      </th>
+                      <td *ngIf="row?.limitCount?.perTime">{{ row.limitCount?.perTime }}</td>
+                      <td *ngIf="!row.limitCount?.perTime">N/A</td>
+                    </tr>
+                    <tr>
+                      <th>{{ 'PER_DAY' | translate }}</th>
+                      <td *ngIf="row?.limitCount?.perDay">{{ row.limitCount?.perDay }}</td>
+                      <td *ngIf="!row.limitCount?.perDay">N/A</td>
+                    </tr>
+                    <tr>
+                      <th>{{ 'PER_MONTH' | translate }}</th>
+                      <td *ngIf="row?.limitCount?.perMonth">{{ row.limitCount?.perMonth }}</td>
+                      <td *ngIf="!row.limitCount?.perMonth">N/A</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #deletebtn>
+          <button (click)="close()"><em nz-icon nzType="close" nzTheme="outline"></em></button>
+        </ng-template>
+      </nz-card>
+    </nz-spin>
+  </ng-container>
+</nz-drawer>

@@ -1,0 +1,57 @@
+.delete_align {
+  position: relative;
+  left: 200px;
+  bottom: 25px;
+  color: #f46771;
+  width: 50% !important;
+  margin: 0 auto !important;
+  display: block !important;
+  float: none !important;
+}
+
+.text-danger {
+  left: 0;
+}
+
+.delete_align {
+  position: unset;
+  width: unset;
+  color: #f46771;
+  margin: 6px auto !important;
+  display: block !important;
+  float: none 6pximportant;
+}
+
+.delete_align:hover {
+  cursor: pointer;
+}
+
+.btn-property {
+  padding: 2px 6px;
+}
+
+.table {
+  margin-bottom: 10px;
+}
+
+.div-right {
+  margin-bottom: 2px;
+  display: flow-root;
+}
+
+.ant-btn {
+  height: 34px;
+}
+
+.ant-form-item {
+  margin-bottom: 0px;
+}
+
+.text-danger {
+  position: unset;
+  margin-left: 4px;
+}
+
+.text-danger .fa.fa-trash {
+  font-size: 16px;
+}

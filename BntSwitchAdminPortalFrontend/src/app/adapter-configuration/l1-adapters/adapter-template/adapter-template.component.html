@@ -1,0 +1,73 @@
+<form class="example-container" [style.fontSize.px]="15" [formGroup]="adapterTemplateForm">
+  <div class="row">
+    <div class="col-md-2">
+      <mat-form-field appearance="legacy">
+        <mat-label>{{
+          'ADAPTER_LABEL.NAME' | translate }}</mat-label>
+        <input formControlName="name" matInput [(ngModel)]="name" rv-noSpaces [readOnly]="isDisable || readOnlyFlag"
+          (keydown)="textCheck($event)" (change)="getTemplateFormat($event, null, 'nameValidator')">
+        <mat-error *ngIf="!nameValidator">{{ this.nameValidationMessage }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-md-2" *ngIf="templateValueList && templateValueList.length > 0" >
+      <mat-form-field appearance="legacy">
+        <mat-label>{{
+          'ADAPTER_LABEL.TEMPLATE' | translate }}</mat-label>
+        <mat-select [(ngModel)]="template" formControlName="template" required
+        [(value)]="template" placeholder="Select Template"
+        (selectionChange)="getTemplateFormat($event.value)">
+          <mat-option [disabled]="(isDisable || readOnlyFlag) || !nameValidator"  [value]="item" *ngFor="let item of templateValueList">{{item.value}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-md-2 auto-width" style="margin-top:15px;">
+      <section class="example-section">
+        <mat-checkbox [color]="'primary'" (change)="changeSinglePRoperty($event)" [disabled]="readOnlyFlag"  formControlName="singleProperty" class="example-margin" [(ngModel)]="singleProperty">Single Property</mat-checkbox>
+      </section>
+    </div>
+    <div class="col-md-2 no-padding auto-width" style="margin-top:15px;"
+    *ngIf="!isHttp_urlencoded && name && template && template.value.indexOf('SOAP') === -1 && !isJson && !isXmlHttp && !readOnlyFlag">
+      <section class="example-section">
+        <mat-checkbox [color]="'primary'" [disabled]="activeTab !== 0 || readOnlyFlag" (change)="changeMultiPackager($event)" formControlName="multiPackager"  [(ngModel)]="multiPackager" class="example-margin">Multi-Packager</mat-checkbox>
+      </section>
+    </div>
+    <div class="col-md-2">
+      <mat-form-field appearance="legacy">
+        <mat-label tooltip="{{ 'ADAPTER_LABEL.IMF_VERSION' | translate }}" placement="left" delay="500">{{
+          'ADAPTER_LABEL.IMF_VERSION' | translate }}</mat-label>
+        <mat-select [(ngModel)]="imfId.version" (selectionChange)="getTemplateFormat($event, 'imf')" matNativeControl required formControlName="imfId">
+          <mat-option [value]="item.version" *ngFor="let item of getIfmList" [disabled]="readOnlyFlag">{{item.version}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-md-2"
+    *ngIf="!isHttp_urlencoded && name && template && template.value.indexOf('SOAP') === -1 && activeTab == 0 && !isJson && !isXmlHttp && !readOnlyFlag">
+      <label>{{ 'IMPORT_EXPORT_PACKAGER' | translate }}</label>
+      <br/>
+      <span class="ml-l1" style="cursor: pointer">
+        <label for="uploads" style="cursor: pointer; display: contents" data-toggle="tooltip" title="Import Packager">
+          <i class="fa fa-upload fa-lg" aria-hidden="true" data-toggle="tooltip" title="Import Packager"></i>
+          <input name="file" type="file" accept="application/xml" (change)="onDocumentChange($event)" id="uploads"
+            style="display: none" />
+        </label>
+        <label style="cursor: pointer; display: contents" data-toggle="tooltip" title="Export Packager">
+          <i class="fa fa-download fa-lg" style="position: relative; top: 2px; left: 15px" (click)="downloadTemplate()"
+            aria-hidden="true" data-toggle="tooltip" title="Export Packager"></i>
+        </label>
+      </span>
+    </div>
+  </div>
+</form>
+<nz-modal [(nzVisible)]="isVisibleMultiPackager" nzTitle="Do You want to uncheck Multi-Packager" (nzOnCancel)="multiPackagerCancel()" (nzOnOk)="multiPackagerOk()"
+  [nzOkLoading]="isOkLoading">
+  <ng-container *nzModalContent>
+    <p>When clicked the Ok button, We will be lose response mappings?</p>
+  </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Change imf version" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading">
+  <ng-container *nzModalContent>
+    <p>IMF changes may impact request-response mapping. Do you want to continue?</p>
+  </ng-container>
+</nz-modal>

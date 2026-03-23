@@ -1,0 +1,43 @@
+.header {
+  padding-top: 1%;
+  font-size: 150%;
+  background-color: #4e9ff8e3;
+  color: aliceblue;
+}
+.head_title {
+  margin-top: 8px;
+  position: relative;
+  display: block;
+  height: 60px;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.15);
+  padding: 17px 19px;
+  font-size: 22px;
+  background-color: #4e9ff8e3;
+  color: aliceblue;
+}
+.requestHeader {
+  font-size: 14px;
+  margin-right: 50px;
+}
+
+.header-align {
+  top: 40px;
+  left: calc(50% - 130px);
+  position: absolute;
+}
+
+tbody {
+  display: block;
+  height: 100%;
+  overflow: auto;
+  font-size: 16px;
+}
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.word-align {
+  word-wrap: break-word;
+}

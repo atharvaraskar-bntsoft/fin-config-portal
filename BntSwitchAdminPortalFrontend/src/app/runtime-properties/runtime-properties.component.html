@@ -1,0 +1,11 @@
+<div class="col-sm-4" style="overflow: hidden;overflow-y: scroll;max-height: 80vh;">
+  <mat-card>
+    <file-manager [fileElements]="fileElements | async" [path]="currentPath" [canNavigateUp]="canNavigateUp"
+      (folderAdded)="addFolder($event)" (elementRemoved)="removeElement($event)" (fileDetails)="setFileData($event)"
+      (navigatedDown)="navigateToFolder($event)" (navigatedUp)="navigateUp()" (elementRenamed)="renameElement($event)"
+      (elementMoved)="moveElement($event)"></file-manager>
+  </mat-card>
+</div>
+<div *ngIf="showFileDataflag" class="col-sm-8" >
+  <mat-card><app-newFolderDialog  [fileData]="fileDetails"></app-newFolderDialog></mat-card>
+</div>

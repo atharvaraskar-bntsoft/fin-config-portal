@@ -1,0 +1,198 @@
+<div class="col-md-12" class="margin: 10px;">
+  <span style="color: red" *ngIf="paramError">Please enter all mandatory fields</span>
+</div>
+<ng-container *ngFor="let parameter of StepParameter; let idx = index">
+  <ng-container *ngIf="parameter.dataType.toLowerCase() === 'list'">
+    <div class="col-md-12">
+      <label>Parameter {{ idx + 1 }}</label>
+    </div>
+    <div class="col-md-12" *ngFor="let param of listParam[idx]; let id = index" style="margin-bottom: 10px">
+      <div class="col-md-8">
+        <div class="col-md-8">
+          <nz-tree-select *ngIf="param.type1 === 'imf'" [nzAllowClear]="!readOnlyFlag" style="width: 100%"
+            [nzDropdownMatchSelectWidth]="true" nz-tooltip [nzTooltipTitle]="imfToolTip" nzTooltipPlacement="right"
+            [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true" [nzNodes]="imfListNew"
+            [nzShowSearch]="true" [nzHideUnMatched]="true" nzPlaceHolder="Select IMF" [disabled]="readOnlyFlag"
+            [(ngModel)]="param.value">
+          </nz-tree-select>
+          <ng-select appendTo="body" [clearable]="false" class="filter-shadow" style="width: 100%"
+            [closeOnSelect]="true" bindValue="value" bindLabel="name" [disabled]="readOnlyFlag" [items]="param.list"
+            [(ngModel)]="param.value" placeholder="{{ param.name }}" *ngIf="param.type1 === 'other'">
+          </ng-select>
+          <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+            type="text" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+            *ngIf="param.type1 === 'text' && param.type !== 'Integer'" />
+          <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+            type="number" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+            *ngIf="param.type1 === 'text' && param.type === 'Integer'" />
+        </div>
+        <div class="col-md-4" *ngIf="checkNameHavingSourceKeyword(parameter)">
+          <label nz-checkbox nzTooltipTitle="prompt text" [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button
+            nz-tooltip [(ngModel)]="param.checked">Text</label>
+        </div>
+      </div>
+      <div class="col-md-4 plusMinusCss">
+        <span class="toto input-align rulsCss icon-border-radius"
+          *ngIf="id + 1 === listParam[idx].length && !readOnlyFlag" style="margin-right: 5px">
+          <i class="fa fa-plus" (click)="addParam('list', param, idx)"></i></span>
+        <span class="toto input-align rulsCss icon-border-radius" *ngIf="id > 0 && !readOnlyFlag"><i class="fa fa-minus"
+            (click)="removeParam('list', idx, id)"></i></span>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="parameter.dataType.toLowerCase() === 'map'">
+    <div class="col-md-12">
+      <label class="required">Parameter {{ idx + 1 }}</label>
+    </div>
+    <div class="col-md-12" *ngFor="let param of mapParam[idx]; let id = index">
+      <div class="col-md-3"
+        *ngIf="(actionName === 'ENRICH_ORIGINAL_TRANSACTION' || actionName === 'UPDATE_ORIGINAL') && imfList">
+        <app-tree-structure [jsonData]="imfList" class="filter-shadow param-dropdown" [resimf]="param.value"
+          [useCase]="param.type1useCase" (ImfValue)="selectType1ImfFn($event, param)" [readOnlyFlag]="readOnlyFlag">
+        </app-tree-structure>
+        <ng-container *ngIf="param.type1useCase == 2 || param.type1useCase == 3">
+          <ng-select appendTo="body" [clearable]="false" class="filter-shadow param-dropdown" [disabled]="readOnlyFlag"
+            [closeOnSelect]="true" bindValue="value" bindLabel="value" [items]="serviceList"
+            [(ngModel)]="param.type1service" placeholder="Select Service">
+          </ng-select>
+          <ng-select appendTo="body" *ngIf="param.type1useCase == 3" [disabled]="readOnlyFlag" [clearable]="false"
+            class="filter-shadow param-dropdown" [closeOnSelect]="true" bindValue="value" bindLabel="name"
+            [items]="typeList" [(ngModel)]="param.type1type" placeholder="Select Type">
+          </ng-select>
+        </ng-container>
+      </div>
+      <div class="col-md-3" *ngIf="(actionName !== 'ENRICH_ORIGINAL_TRANSACTION' && actionName !== 'UPDATE_ORIGINAL')">
+        <nz-tree-select *ngIf="param.type1 === 'imf'" style="width: 280px" [nzDropdownMatchSelectWidth]="true"
+          nz-tooltip [nzTooltipTitle]="imfToolTip" nzTooltipPlacement="right" [nzAllowClear]="!readOnlyFlag"
+          [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true" [disabled]="readOnlyFlag"
+          [nzNodes]="imfListNew" [nzShowSearch]="true" [nzHideUnMatched]="true" nzPlaceHolder="Select IMF"
+          [(ngModel)]="param.value">
+        </nz-tree-select>
+        <ng-select appendTo="body" [clearable]="false" class="filter-shadow" style="width: 100%" [closeOnSelect]="true"
+          bindValue="value" [disabled]="readOnlyFlag" bindLabel="name" [items]="param.list" [(ngModel)]="param.value"
+          placeholder="{{ param.name }}" *ngIf="param.type1 === 'other'">
+        </ng-select>
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" type="text"
+          [(ngModel)]="param.value" placeholder="{{ param.name }}" *ngIf="param.type1 === 'text'" />
+      </div>
+      <div class="col-md-2" style="width: 50px">
+        <label> : </label>
+      </div>
+      <div class="col-md-3" *ngIf="(actionName !== 'ENRICH_ORIGINAL_TRANSACTION' && actionName !== 'UPDATE_ORIGINAL')">
+        <nz-tree-select *ngIf="param.type2 === 'imf'" style="width: 230px" [nzDropdownMatchSelectWidth]="true"
+          nz-tooltip [nzTooltipTitle]="imfToolTip" [disabled]="readOnlyFlag" nzTooltipPlacement="right"
+          [nzAllowClear]="!readOnlyFlag" [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true"
+          [nzNodes]="imfListNew" [nzShowSearch]="true" [nzHideUnMatched]="true" nzPlaceHolder="Select IMF"
+          [(ngModel)]="param.value2">
+        </nz-tree-select>
+        <ng-select appendTo="body" [clearable]="false" class="filter-shadow" style="width: 100%"
+          [disabled]="readOnlyFlag" [closeOnSelect]="true" bindValue="value" bindLabel="name" [items]="param.list"
+          [(ngModel)]="param.value2" placeholder="{{ param.name2 }}" *ngIf="param.type2 === 'other'">
+        </ng-select>
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+          type="text" [(ngModel)]="param.value2" placeholder="{{ param.name2 }}" *ngIf="param.type2 === 'text'" />
+      </div>
+      <div class="col-md-3"
+        *ngIf="(actionName === 'ENRICH_ORIGINAL_TRANSACTION' || actionName === 'UPDATE_ORIGINAL') && imfList">
+        <app-tree-structure [readOnlyFlag]="readOnlyFlag" [jsonData]="imfList" class="filter-shadow param-dropdown"
+          [resimf]="param.value2" [useCase]="param.type2useCase" (ImfValue)="selectType2ImfFn($event, param)">
+        </app-tree-structure>
+        <ng-container *ngIf="param.type2useCase == 2 || param.type2useCase == 3">
+          <ng-select appendTo="body" [clearable]="false" class="filter-shadow param-dropdown" [disabled]="readOnlyFlag"
+            [closeOnSelect]="true" bindValue="value" bindLabel="value" [items]="serviceList"
+            (change)="changeService($event, param)" [(ngModel)]="param.type2service" placeholder="Select Service">
+          </ng-select>
+          <ng-select appendTo="body" [clearable]="false" *ngIf="param.type2useCase == 3 && param.type2service"
+            class="filter-shadow param-dropdown" [disabled]="readOnlyFlag" [closeOnSelect]="true" bindValue="value"
+            bindLabel="name" (change)="changeTypes($event, param)" [items]="typeList" [(ngModel)]="param.type2type"
+            placeholder="Select Type">
+          </ng-select>
+        </ng-container>
+      </div>
+      <div class="col-md-3"
+        *ngIf="(actionName === 'ENRICH_ORIGINAL_TRANSACTION' || actionName === 'UPDATE_ORIGINAL') && imfList">
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" type="text"
+          [disabled]="readOnlyFlag" [(ngModel)]="param.value3" (keydown)="changeInputs($event, param)"
+          placeholder="Imf value" *ngIf="param.type2 === 'imf'" />
+      </div>
+      <div class="col-md-3"
+        *ngIf="(actionName !== 'ENRICH_ORIGINAL_TRANSACTION' && actionName !== 'UPDATE_ORIGINAL') && imfList">
+        <input class="toto input-align input-search" style="width: 100%; border-radius: 5px" [disabled]="readOnlyFlag"
+          type="text" [(ngModel)]="param.value2" placeholder="{{ param.name2 }}" *ngIf="param.type2 === 'imf'" />
+      </div>
+      <div class="col-md-1 plusMinusCss">
+        <span class="toto input-align rulsCss icon-border-radius" (click)="addParam('map', param, idx)"
+          style="margin-right: 5px" *ngIf="id + 1 === mapParam[idx].length && !readOnlyFlag">
+          <i class="fa fa-plus"></i></span>
+        <span class="toto input-align rulsCss icon-border-radius" *ngIf="id > 0 && !readOnlyFlag"
+          (click)="removeParam('map', idx, id)"><i class="fa fa-minus"></i></span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="
+      parameter.dataType.toLowerCase() !== 'list' && parameter.dataType.toLowerCase() !== 'map'
+    ">
+    <div class="col-md-12">
+      <label>Parameter {{ idx + 1 }}</label>
+    </div>
+    <div class="col-md-12" *ngFor="let param of otherParam[idx]; let id = index">
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-6">
+          <div class="col-md-12">
+            <nz-tree-select *ngIf="param.type1 === 'imf'" style="width: 280px" [nzDropdownMatchSelectWidth]="true"
+              nz-tooltip [disabled]="readOnlyFlag" [nzTooltipTitle]="imfToolTip" nzTooltipPlacement="right"
+              [nzAllowClear]="!readOnlyFlag" [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true"
+              [nzNodes]="imfListNew" [nzShowSearch]="true" [nzHideUnMatched]="true" nzPlaceHolder="Select IMF"
+              [(ngModel)]="param.value">
+            </nz-tree-select>
+          </div>
+          <div class="col-md-12">
+            <ng-select appendTo="body" [clearable]="false" class="filter-shadow" [closeOnSelect]="true"
+              bindValue="value" [disabled]="readOnlyFlag" bindLabel="name" [items]="param.list"
+              [(ngModel)]="param.value" placeholder="{{ param.name }}" *ngIf="param.type1 === 'other' && !param.checked">
+              <ng-template ng-option-tmp let-item="item">
+                <div [title]="item.tooltip">{{ item.name }}</div>
+              </ng-template>
+            </ng-select>
+            <ng-select appendTo="body" [clearable]="false" class="filter-shadow" [closeOnSelect]="true"
+            bindValue="value" [disabled]="readOnlyFlag" bindLabel="name" [items]="param.list"
+            [(ngModel)]="param.value" placeholder="{{ param.name }}" *ngIf="param.type1 === 'other' && param.checked &&  param.list  && param?.list?.length > 0">
+            <ng-template ng-option-tmp let-item="item">
+              <div [title]="item.tooltip">{{ item.name }}</div>
+            </ng-template>
+          </ng-select>
+            <input class="form-control" style="border-radius: 5px; width: 417px;" type="text"
+            [disabled]="readOnlyFlag" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+            *ngIf="param.type1 === 'other' && param.type === 'String' && param.checked &&  !param.list  && param?.list?.length === 0" />
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="checkNameHavingSourceKeyword(parameter)">
+          <label nz-checkbox nzTooltipTitle="prompt text" [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button
+            nz-tooltip [(ngModel)]="param.checked">Text</label>
+        </div>
+      </div>
+      <div class="row" style="margin-left: 0px;">
+        <div class="col-md-6">
+          <input class="form-control" style="border-radius: 5px; width: 417px;" type="text"
+            [disabled]="readOnlyFlag" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+            *ngIf="param.type1 === 'text' && param.type !== 'Integer'" />
+          <input class="form-control" style="border-radius: 5px; width: 417px;" type="number"
+            [disabled]="readOnlyFlag" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+            *ngIf="param.type1 === 'text' && param.type === 'Integer'" />
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+<div class="row row-margin row-align row-template pull-right">
+  <div class="col-sm-12">
+    <button nz-button nzType="default" *ngIf="showCancelBtn" (click)="cancel()" style="margin-top: 50px">
+      Cancel
+    </button>
+    <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px; margin-top: 50px"
+      (click)="add()">
+      Save
+    </button>
+  </div>
+</div>

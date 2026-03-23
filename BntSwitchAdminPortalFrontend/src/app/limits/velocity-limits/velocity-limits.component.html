@@ -1,0 +1,240 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="row col-md-2" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="name"
+        bindLabel="code"
+        [(ngModel)]="filter.applyLimit"
+        [closeOnSelect]="true"
+        [items]="applyList"
+        placeholder="{{ 'ALL_OBJECTS' | translate }}"
+        (change)="getFilterObjectData($event)"
+      >
+        <ng-template ng-option-tmp let-item="item">
+          {{ item.code | translate }}
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="row col-md-2" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [items]="transactionList"
+        [(ngModel)]="filter.txnType"
+        (change)="getFilterTxnData($event)"
+        placeholder="{{ 'ALL_TXN_TYPE' | translate }}"
+      ></ng-select>
+    </div>
+    <div class="row col-md-2" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [(ngModel)]="filter.status"
+        [closeOnSelect]="true"
+        [items]="statusList"
+        (change)="getFilterStatusData($event)"
+        placeholder="{{ 'ALL_STATUS' | translate }}"
+      ></ng-select>
+    </div>
+    <a
+      role="button"
+      *ngIf="resetButtonFlag"
+      class="btn-link button-effect"
+      (click)="resetFilterSearch()"
+      >Reset Filters</a
+    >
+
+    <div class="row pull-right button-margin" style="margin-right: 5px">
+      <button
+        *ngIf="permissionObject.write"
+        class="btn btn-primary btn-md btn-flat"
+        routerLink="create"
+      >
+        <em class="fa fa-plus-circle"></em>
+        {{ 'CREATE_VELOCITY_LIMIT' | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div class="defaultDataTable">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped dataTableHeight"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="40"
+        [footerHeight]="40"
+        [rowHeight]="getRowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <strong>Showing {{ rows.length }} out of {{ totalRecords }} records</strong>
+            </div>
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+
+  <ng-template #applyTemplate let-row="row" ngx-datatable-cell-template>
+    <ng-container *ngIf="row?.type">
+      <span class="row-tag" [ngSwitch]="row?.type.id">
+        <span *ngIf="row?.merchantInstitutionId">
+          <span *ngSwitchCase="1">{{ row?.merchantInstitutionId.name }} </span>
+        </span>
+        <span *ngIf="row.merchantId">
+          <span *ngSwitchCase="2">
+            {{ row.merchantId.name }}
+          </span>
+        </span>
+        <span *ngIf="row.locationId">
+          <span *ngSwitchCase="3">{{ row.locationId.name }} </span>
+        </span>
+        <span *ngIf="row.deviceId">
+          <span *ngSwitchCase="4">{{ row.deviceId.code }}</span>
+        </span>
+      </span>
+      <br />
+      <span class="row-tag"> {{ row.apply.institution | translate }} </span>
+      <br />
+      <span class="row-tag">{{ row.apply.transaction }}</span> <br />
+    </ng-container>
+  </ng-template>
+
+  <ng-template #statusTemplate let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <div *ngIf="permissionObject.update">
+        <nz-switch
+          [ngModel]="row.locked === '1' ? false : true"
+          (ngModelChange)="onStatusChange(row)"
+          [nzLoading]="statusLoading"
+        >
+        </nz-switch>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #amountTemplate let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span *ngIf="row.amount.single"
+        ><label>{{ 'SINGLE_TRANSACTION' | translate }}</label
+        >:{{ row.amount.single | number : '1.2-2' }}</span
+      >
+      <br *ngIf="row.amount.perMinutes" />
+      <span *ngIf="row.amount.perMinutes"
+        ><label>{{ 'PER' | translate }} {{ row.minutesCount }} {{ 'MINUTES' | translate }}</label
+        >:{{ row.amount.perMinutes | number : '1.2-2' }}</span
+      >
+      <br *ngIf="row.amount.perDay" />
+      <span *ngIf="row.amount.perDay"
+        ><label>{{ 'PER_DAY' | translate }}</label
+        >:{{ row.amount.perDay | number : '1.2-2' }}</span
+      >
+      <br *ngIf="row.amount.perMonth" />
+      <span *ngIf="row.amount.perMonth"
+        ><label>{{ 'PER_MONTH' | translate }}</label
+        >:{{ row.amount.perMonth | number : '1.2-2' }}</span
+      >
+    </ng-container>
+  </ng-template>
+
+  <ng-template #countTemplate let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <span *ngIf="row.count.single"
+        ><label>{{ 'SINGLE_TRANSACTION' | translate }}</label
+        >:{{ row.count.single }}</span
+      >
+      <br *ngIf="row.count.perMinutes" />
+      <span *ngIf="row.count.perMinutes"
+        ><label>{{ 'PER' | translate }} {{ row.minutesCount }} {{ 'MINUTES' | translate }}</label
+        >:{{ row.count.perMinutes }}</span
+      >
+      <br *ngIf="row.count.perDay" />
+      <span *ngIf="row.count.perDay"
+        ><label>{{ 'PER_DAY' | translate }}</label
+        >:{{ row.count.perDay }}</span
+      >
+      <br *ngIf="row.count.perMonth" />
+      <span *ngIf="row.count.perMonth"
+        ><label>{{ 'PER_MONTH' | translate }}</label
+        >:{{ row.count.perMonth }}</span
+      >
+    </ng-container>
+  </ng-template>
+
+  <ng-template #more let-row="row" ngx-datatable-cell-template>
+    <ng-container>
+      <div>
+        <a
+          *ngIf="permissionObject.update && row.locked"
+          class="btn-link button-effect"
+          role="button"
+          (click)="editDetails(row)"
+          >{{ 'EDIT' | translate }}</a
+        >
+      </div>
+      <div>
+        <a
+          *ngIf="permissionObject.delete && row.locked"
+          nzType="primary"
+          nzDanger
+          nz-popconfirm
+          style="color: red"
+          nzPopconfirmTitle="Are you sure to delete this record?"
+          nzPopconfirmPlacement="bottom"
+          [nzIcon]="iconTpl"
+          (nzOnConfirm)="deleteDetails(row)"
+          >{{ 'DELETE' | translate }}</a
+        >
+        <ng-template #iconTpl>
+          <span nz-icon nzType="question-circle-o" style="color: red"></span>
+        </ng-template>
+      </div>
+      <div>
+        <a role="button" class="btn-link button-effect" (click)="viewOnDrawer(row.id)">{{
+          'VIEW_DETAILS' | translate
+        }}</a>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>
+<div *ngIf="isvisibleview">
+  <app-velocity-limits-info
+    [isvisibleview]="isvisibleview"
+    [idView]="idView"
+    (closeDrawer)="close($event)"
+    (create)="create($event)"
+  ></app-velocity-limits-info>
+</div>

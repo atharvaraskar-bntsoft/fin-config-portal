@@ -1,0 +1,10 @@
+<label class="container">
+  <input
+    type="checkbox"
+    [(ngModel)]="model"
+    [checked]="value"
+    (ngModelChange)="onChange($event)"
+    data-md-icheck
+  />
+  <span class="checkmark"></span>
+</label>

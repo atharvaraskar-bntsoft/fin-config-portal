@@ -1,0 +1,7 @@
+GICC VISA Base 24- ISO,11111,,,
+Generic FieldName,GICC Field (OUT),L1FieldName,ISO Field (IN),L3FieldName
+Transaction Date,transaction_date,message_collection[0].message_exchange.response_message.audit_info.created_on,Local Transaction Date,message_collection[1].message_exchange.response_message.audit_info.created_on
+Response Code,response_code,message_collection[0].message_exchange.response_message.response_code,Response,message_collection[1].message_exchange.response_message.response_code
+Approval Code,authorization_code,message_collection[0].message_exchange.response_message.transaction_response.approval_code,AuthorisationCode,message_collection[1].message_exchange.response_message.transaction_response.approval_code
+Authorized Amount,authorized_amount,message_collection[0].message_exchange.response_message.amounts.amount_transaction.value,TotalAmount,message_collection[1].message_exchange.response_message.amounts.amount_transaction.value
+Authorized Amount Currency,authorizedAmountCurrency,message_collection[0].message_exchange.response_message.amounts.amount_transaction.currency,Currency,message_collection[1].message_exchange.response_message.amounts.amount_transaction.currency

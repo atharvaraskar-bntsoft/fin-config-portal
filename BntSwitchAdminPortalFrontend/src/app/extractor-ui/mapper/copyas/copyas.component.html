@@ -1,0 +1,127 @@
+<div class="col-md-12">
+  <div class="col-md-12">
+    <div class="col-md-10">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-8">
+            <nz-radio-group nzName="radiogroup" (ngModelChange)="changeStatus(copyAsObject?.listMappingCopyAsIs)"
+              [(ngModel)]="copyAsObject.listMappingCopyAsIs.status">
+              <label nz-radio nzValue="M">Mandatory</label>
+              <label nz-radio nzValue="O">Optional</label>
+              <label nz-radio nzValue="C">Conditional</label>
+            </nz-radio-group>
+            <a *ngIf="copyAsObject.listMappingCopyAsIs.status === 'C' && copyAsObject.listMappingCopyAsIs.condition"
+              (click)="createCondition(copyAsObject.listMappingCopyAsIs)" class="required">Edit
+              Condition</a>
+            <a *ngIf="copyAsObject.listMappingCopyAsIs.status === 'C' && !copyAsObject.listMappingCopyAsIs.condition"
+              (click)="createCondition(copyAsObject.listMappingCopyAsIs)" class="required">Create
+              Condition</a>
+            <a nz-popconfirm nzPopconfirmTitle="Do you want to delete Condition?"
+              *ngIf="copyAsObject.listMappingCopyAsIs.status === 'C' && copyAsObject.listMappingCopyAsIs.condition"
+              style="color:red;" (nzOnConfirm)="deleteCondition(copyAsObject.listMappingCopyAsIs)"><i
+                class="fa fa-trash fa-lg"></i></a>
+            <span class="invalid-feedback"
+              *ngIf="!copyAsObject.listMappingCopyAsIs.condition && copyAsObject.listMappingCopyAsIs.status === 'C' && submit">
+              Please Enter Condition
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only">
+            <label class="required">Assign value to internal field</label>
+          </div>
+          <div class="col-md-4">
+            <app-imf-extract (emitIMFValue)="onChange($event, copyAsObject.listMappingCopyAsIs)"
+              [imfValue]="copyAsObject.listMappingCopyAsIs.imfField.alias" [imfList]="imfList"
+              [internalFormatError]="true"></app-imf-extract>
+            <span class="invalid-feedback" *ngIf="!copyAsObject.listMappingCopyAsIs.imfField.text && submit">This field
+              is
+              required</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group"
+        *ngIf="copyAsObject.listMappingCopyAsIs.imfField.useCase == 2 || copyAsObject.listMappingCopyAsIs.imfField.useCase == 3">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only">
+            <label class="required">Service:</label>
+          </div>
+          <div class="col-md-4">
+            <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Service"
+              [(ngModel)]="copyAsObject.listMappingCopyAsIs.imfField.service">
+              <nz-option *ngFor="let list of serviceList" [nzValue]="list.value" [nzLabel]="list.value">
+              </nz-option>
+            </nz-select>
+            <span class="invalid-feedback" *ngIf="!copyAsObject.listMappingCopyAsIs.imfField.service && submit">This
+              field is
+              required</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="copyAsObject.listMappingCopyAsIs.imfField.useCase == 3">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only">
+            <label class="required">Type:</label>
+          </div>
+          <div class="col-md-4">
+            <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Type"
+              [(ngModel)]="copyAsObject.listMappingCopyAsIs.imfField.type">
+              <nz-option *ngFor="let list of typeList" [nzValue]="list.value" [nzLabel]="list.name">
+              </nz-option>
+            </nz-select>
+            <span class="invalid-feedback" *ngIf="!copyAsObject.listMappingCopyAsIs.imfField.type && submit">This field
+              is
+              required</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only"><label>Post Validation</label></div>
+          <div class="col-md-8" *ngIf="copyAsObject.listMappingCopyAsIs.listValidationFunction.length == 0">
+            <button type="button" (click)="createPostValidation(copyAsObject.listMappingCopyAsIs)"
+              class="btn btn-default">
+              <i class="fa fa-plus"></i></button>
+          </div>
+          <div class="col-md-8" *ngIf="copyAsObject.listMappingCopyAsIs.listValidationFunction.length != 0">
+            <button type="button" (click)="createPostValidation(copyAsObject.listMappingCopyAsIs)"
+              class="btn btn-default">
+              <i class="fa fa-edit"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only">
+            <label class="required">Set IPC</label>
+          </div>
+          <div class="col-md-4">
+            <nz-select class="form-control" [disabled]="readOnlyFlag" appendTo="body" bindValue="value"
+              bindLabel="value" [(ngModel)]="copyAsObject.listMappingCopyAsIs.ipc" placeholder="Select IPC">
+              <nz-option *ngFor="let list of ipcList" [nzValue]="list.value" [nzLabel]="list.value"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 text-right">
+    <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+    <nz-divider nzType="vertical"></nz-divider>
+    <button type="submit" class="btn btn-primary" (click)="onSubmit(copyAsObject.listMappingCopyAsIs)">Submit</button>
+  </div>
+</div>
+<div *ngIf="isVisible">
+  <nz-drawer [nzMaskClosable]="false" [nzVisible]="isVisible" nzTitle="Condition" [nzWidth]="1040" [nzClosable]="true"
+    (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+      <app-condition-builder *ngIf="jsonData" [jsonData]="jsonData" [ruleCondition]="conditionObj"
+        (addSubRule)="getRule($event)" (closeCreate)="close($event)">
+      </app-condition-builder>
+    </ng-container>
+  </nz-drawer>
+</div>

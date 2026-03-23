@@ -1,0 +1,32 @@
+export const AcquirerCreateConfig = {
+  texts: {
+    en_EN: {
+      ACQUIRER_CREATE_ACQUIRER: 'Acquirer',
+      ACQUIRER_CREATE_ACQUIRER_NAME: 'Acquirer Name',
+      ACQUIRER_CREATE_BACK: 'Back',
+      ACQUIRER_CREATE_CANCEL: 'Cancel',
+      ACQUIRER_CREATE_DISABLED: 'Disabled',
+      ACQUIRER_CREATE_ENABLED: 'Enabled',
+      ACQUIRER_CREATE_INSTITUTION: 'Institution',
+      ACQUIRER_CREATE_INSTITUTION_NAME: 'Institution Name',
+      ACQUIRER_CREATE_PROCESSOR: 'Processor',
+      ACQUIRER_CREATE_PROCESSOR_NAME: 'Processor Name',
+      ACQUIRER_CREATE_STATUS: 'Status',
+      ACQUIRER_CREATE_SUBMIT: 'Submit',
+    },
+    fr_FR: {
+      ACQUIRER_CREATE_ACQUIRER: 'Acquéreur',
+      ACQUIRER_CREATE_ACQUIRER_NAME: "Nom de l'acquéreur",
+      ACQUIRER_CREATE_BACK: 'Retour',
+      ACQUIRER_CREATE_CANCEL: 'Annuler',
+      ACQUIRER_CREATE_DISABLED: 'désactivé',
+      ACQUIRER_CREATE_ENABLED: 'Activé',
+      ACQUIRER_CREATE_INSTITUTION: 'Institution',
+      ACQUIRER_CREATE_INSTITUTION_NAME: "nom de l'institution",
+      ACQUIRER_CREATE_PROCESSOR: 'Processeur',
+      ACQUIRER_CREATE_PROCESSOR_NAME: 'Nom du processeur',
+      ACQUIRER_CREATE_STATUS: 'Statut',
+      ACQUIRER_CREATE_SUBMIT: 'Soumettre',
+    },
+  },
+};

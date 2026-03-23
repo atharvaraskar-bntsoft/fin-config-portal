@@ -1,0 +1,735 @@
+<div>
+  <a class="btn" routerLink="/adapter-configuration/scheme-imf-mapping">
+    <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+    {{ 'BACK' | translate }}
+  </a>
+</div>
+<div class="row row-margin row-align" style="margin-left: 30px; margin-right: 50px">
+  <div class="col-md-3">
+    <label>Scheme: </label>
+    <ng-select
+      [clearable]="false"
+      bindLabel="value"
+      (change)="changeScheme($event)"
+      style="width: 100%"
+      [closeOnSelect]="true"
+      [items]="schemeList"
+      [(ngModel)]="scheme"
+      placeholder="Select Scheme"
+      [disabled]="disabled"
+    >
+    </ng-select>
+  </div>
+  <div class="col-md-3">
+    <label>Fields: </label>
+    <ng-select
+      [clearable]="false"
+      bindLabel="name"
+      (change)="changeField($event)"
+      style="width: 100%"
+      [closeOnSelect]="true"
+      [items]="fieldList"
+      [(ngModel)]="field"
+      placeholder="Select Field"
+      [disabled]="disabled"
+    >
+    </ng-select>
+  </div>
+  <!-- <div class="col-md-3">
+      <label>IMF Version: </label>
+        <ng-select [clearable]="false" bindLabel="version" (change)="changeVersion(imfVersion.id)" style="width: 100%;"
+        [closeOnSelect]="true" [items]="imfVersionList" [(ngModel)]="imfVersion" placeholder="Select version" [disabled]="disabled">
+        </ng-select>
+    </div> -->
+  <div class="col-md-3">
+    <label>Type: </label>
+    <ng-select
+      [clearable]="false"
+      bindLabel="value"
+      (change)="changeType($event)"
+      style="width: 100%"
+      [closeOnSelect]="true"
+      [items]="typeList"
+      [(ngModel)]="type"
+      placeholder="Select Type"
+    >
+    </ng-select>
+  </div>
+</div>
+
+<div>
+  <div class="col-md-12 fade-in template">
+    <div class="row row-margin row-align row-template" style="margin-left: 30px">
+      <div class="row col-md-4 row-transform">
+        <input
+          class="toto"
+          type="radio"
+          name="Field_presence"
+          value="Mandatory"
+          checked="true"
+          placeholder="Mandatory"
+          (click)="fieldPresenceChange('isMandatory')"
+        />
+        <label for="Mandatory" style="font-weight: 300; padding-left: 10px; padding-right: 10px"
+          >Mandatory</label
+        >
+        <input
+          class="toto"
+          type="radio"
+          name="Field_presence"
+          value="Optional"
+          placeholder="Optional"
+          (click)="fieldPresenceChange('Optional')"
+        />
+        <label for="Optional" style="font-weight: 300; padding-left: 10px; padding-right: 10px"
+          >Optional</label
+        >
+        <input
+          class="toto"
+          type="radio"
+          name="Field_presence"
+          value="Conditional"
+          placeholder="Conditional"
+          (click)="fieldPresenceChange('Conditional')"
+        />
+        <label for="Conditional" style="font-weight: 300; padding-left: 10px; padding-right: 10px"
+          >Conditional</label
+        >
+      </div>
+      <div class="row col-md-4">
+        <ng-select
+          [clearable]="false"
+          class="filter-shadow"
+          style="width: 100%"
+          *ngIf="isConditional"
+          [closeOnSelect]="true"
+          bindLabel="name"
+          [items]="fieldList"
+          [(ngModel)]="conditionalId"
+          placeholder="Select Conditional"
+        ></ng-select>
+      </div>
+      <div class="row col-md-4"></div>
+    </div>
+
+    <div class="transform" style="margin-left: 30px" *ngIf="isRequest">
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-12">
+          <label>Parse and Extract Data (if present)</label>
+        </div>
+      </div>
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-6">
+          <input
+            class="toto"
+            type="radio"
+            checked="true"
+            name="Copy_Extract_value"
+            value="itemList.isExtract"
+            (click)="extractDataChange(false)"
+          />
+          <label for="Copy_internal_format" style="font-weight: 300; padding-left: 10px"
+            >Copy as is to internal format
+          </label>
+        </div>
+        <div class="row col-md-6">
+          <input
+            class="toto"
+            type="radio"
+            name="Copy_Extract_value"
+            value="itemList.isExtract"
+            (click)="extractDataChange(true)"
+          />
+          <label for="Eextract_value" style="font-weight: 300; padding-left: 10px"
+            >Extract value from composite field
+          </label>
+        </div>
+      </div>
+      <div *ngIf="isExtract">
+        <div *ngFor="let item of blockList; let a = index">
+          <div class="row row-margin row-align row-template">
+            <div class="row col-md-4">
+              <label for="Post Validation">BLOCK {{ a + 1 }}</label>
+            </div>
+            <div class="row col-md-4">
+              <span
+                class="toto input-align rulsCss"
+                (click)="addBlockList()"
+                *ngIf="a + 1 === blockList.length"
+                ><i class="fa fa-plus"></i
+              ></span>
+            </div>
+            <div class="row col-md-4">
+              <span
+                class="toto input-align rulsCss"
+                (click)="removeBlockList()"
+                *ngIf="a + 1 === blockList.length && a > 0"
+                ><i class="fa fa-minus"></i
+              ></span>
+            </div>
+          </div>
+          <div
+            class="row row-margin row-align row-template"
+            *ngFor="let block of item.transformArray; let i = index"
+          >
+            <div class="row col-md-2">Step {{ i + 1 }}</div>
+            <div class="row col-md-2">
+              <label>Operation</label>
+            </div>
+            <div class="row col-md-4">
+              <ng-select
+                [clearable]="false"
+                class="filter-shadow"
+                style="width: 100%"
+                [closeOnSelect]="true"
+                bindLabel="name"
+                [items]="transformList"
+                [(ngModel)]="block.value"
+                placeholder="Select Value"
+                (change)="parmsChange(block)"
+              ></ng-select>
+            </div>
+            <!-- <div class="row col-md-2" style="width: 100px;">
+            <span *ngIf="block.value != null && block.value['paramCount'] > 0">
+              <button class="btn btn-primary" type="button" (click)="parmsChange()">parms</button>
+            </span>
+          </div> -->
+            <div class="row col-md-4" *ngFor="let param of block.params">
+              <input
+                class="toto input-align input-search"
+                type="text"
+                [(ngModel)]="param.value"
+                placeholder="Params"
+              />
+            </div>
+            <div class="row col-md-2" style="width: 100px">
+              <span
+                class="toto input-align rulsCss"
+                style="margin-right: 5px"
+                *ngIf="i == item.transformArray.length - 1"
+                (click)="addBlockStep(i, item.transformArray)"
+                ><i class="fa fa-plus"></i
+              ></span>
+
+              <span
+                class="toto input-align rulsCss"
+                *ngIf="i > 0 && i == item.transformArray.length - 1"
+                (click)="removeBlockStep(i, item.transformArray)"
+                ><i class="fa fa-minus"></i
+              ></span>
+            </div>
+          </div>
+          <div class="row row-margin row-align row-template">
+            <div class="row col-md-12">
+              <label for="Post Validation">Post Validation</label>
+            </div>
+          </div>
+          <div class="row row-margin row-align row-template">
+            <div class="row col-md-4">
+              <ng-select
+                [clearable]="false"
+                class="filter-shadow"
+                style="width: 100%"
+                [closeOnSelect]="true"
+                [items]="validationList"
+                [(ngModel)]="item.PostValidation['validation']"
+                bindLabel="name"
+                placeholder="Select validation"
+              >
+              </ng-select>
+            </div>
+            <div class="row col-md-4">
+              <ng-select
+                [clearable]="false"
+                class="filter-shadow"
+                style="width: 100%"
+                [closeOnSelect]="true"
+                [items]="numberOpraters"
+                [(ngModel)]="item.PostValidation['operator']"
+                bindLabel="value"
+                placeholder="Select Operator"
+              >
+              </ng-select>
+            </div>
+            <div class="row col-md-4">
+              <input
+                class="toto input-align input-value"
+                type="text"
+                [(ngModel)]="item.PostValidation.value"
+                placeholder="value"
+              />
+            </div>
+          </div>
+          <div *ngFor="let format of item.formatList; let j = index">
+            <div class="row row-margin row-align row-template">
+              <div class="row col-md-3">Should confirm to format</div>
+              <div class="row col-md-4">
+                <ng-select
+                  [clearable]="false"
+                  class="filter-shadow"
+                  style="width: 100%"
+                  [closeOnSelect]="true"
+                  [items]="numberOpraters"
+                  [(ngModel)]="format.operator"
+                  bindLabel="value"
+                  placeholder="Select Operator"
+                ></ng-select>
+              </div>
+              <div class="row col-md-3">
+                <ng-select
+                  [clearable]="false"
+                  class="filter-shadow"
+                  style="width: 100%"
+                  [closeOnSelect]="true"
+                  [items]="track2List"
+                  [(ngModel)]="format.value"
+                  bindLabel="name"
+                  placeholder="Select Value"
+                >
+                </ng-select>
+              </div>
+              <div class="row col-md-2" style="width: 100px">
+                <span
+                  class="toto input-align rulsCss"
+                  style="margin-right: 5px"
+                  *ngIf="j == item.formatList.length - 1"
+                  (click)="addValidationFormat(j, item.formatList)"
+                  ><i class="fa fa-plus"></i
+                ></span>
+                <span
+                  class="toto input-align rulsCss"
+                  *ngIf="j > 0 && j == item.formatList.length - 1"
+                  (click)="removeValidationFormat(j, item.formatList)"
+                  ><i class="fa fa-minus"></i
+                ></span>
+              </div>
+            </div>
+          </div>
+          <div class="row row-margin row-align row-template">
+            <div class="row col-md-4" style="margin-right: -5px">
+              Assign value to internal field
+            </div>
+            <div class="row col-md-4">
+              <ng-select
+                [clearable]="false"
+                class="filter-shadow"
+                style="width: 100%"
+                [closeOnSelect]="true"
+                bindLabel="value"
+                [items]="imfList"
+                [(ngModel)]="item.IMFvalue"
+                placeholder="Select IMF"
+              ></ng-select>
+            </div>
+            <div class="row col-md-4"></div>
+          </div>
+          <div class="row row-margin row-align row-template">
+            <div class="row col-md-4" style="margin-right: -5px">Set IPC</div>
+            <div class="row col-md-4">
+              <ng-select
+                [clearable]="false"
+                class="filter-shadow"
+                style="width: 100%"
+                [closeOnSelect]="true"
+                bindLabel="value"
+                [items]="ipcList"
+                [(ngModel)]="item.IPCvalue"
+                placeholder="Select IPC"
+              ></ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!isExtract">
+        <div class="row row-margin row-align row-template">
+          <div class="row col-md-12">
+            <label for="Post Validation">Post Validation</label>
+          </div>
+        </div>
+        <div class="row row-margin row-align row-template">
+          <div class="row col-md-4">
+            <ng-select
+              [clearable]="false"
+              class="filter-shadow"
+              style="width: 100%"
+              [closeOnSelect]="true"
+              [items]="validationList"
+              [(ngModel)]="postLength"
+              bindLabel="name"
+              placeholder="Select validation"
+            >
+            </ng-select>
+          </div>
+          <div class="row col-md-4">
+            <ng-select
+              [clearable]="false"
+              class="filter-shadow"
+              style="width: 100%"
+              [closeOnSelect]="true"
+              [items]="numberOpraters"
+              [(ngModel)]="postOperator"
+              bindLabel="value"
+              placeholder="Select Operator"
+            >
+            </ng-select>
+          </div>
+          <div class="row col-md-4">
+            <input
+              class="toto input-align input-value"
+              type="text"
+              [(ngModel)]="postName"
+              placeholder="Name"
+            />
+          </div>
+        </div>
+        <div *ngFor="let postValid of itemList.validationFormatList; let j = index">
+          <div class="row row-margin row-align row-template">
+            <div class="row col-md-3">Should confirm to format</div>
+            <div class="row col-md-4">
+              <ng-select
+                [clearable]="false"
+                class="filter-shadow"
+                style="width: 100%"
+                [closeOnSelect]="true"
+                [items]="numberOpraters"
+                [(ngModel)]="postValid.operator"
+                bindLabel="value"
+                placeholder="Select Operator"
+              ></ng-select>
+            </div>
+            <div class="row col-md-3">
+              <ng-select
+                [clearable]="false"
+                class="filter-shadow"
+                style="width: 100%"
+                [closeOnSelect]="true"
+                [items]="track2List"
+                [(ngModel)]="postValid.value"
+                bindLabel="name"
+                placeholder="Select Value"
+              >
+              </ng-select>
+            </div>
+            <div class="row col-md-2" style="width: 100px">
+              <span
+                class="toto input-align rulsCss"
+                style="margin-right: 5px"
+                *ngIf="j == itemList.validationFormatList.length - 1"
+                (click)="addValidationFormat(j)"
+                ><i class="fa fa-plus"></i
+              ></span>
+              <span
+                class="toto input-align rulsCss"
+                *ngIf="j > 0 && j == itemList.validationFormatList.length - 1"
+                (click)="removeValidationFormat(j)"
+                ><i class="fa fa-minus"></i
+              ></span>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="row row-margin row-align row-template">
+          <div class="row col-md-12" >
+            <label>Use mapper to evaluate field (If applicable)</label>
+          </div>
+        </div> -->
+        <!-- <div class="row row-margin row-align row-template">
+          <div class="row col-md-6" >
+            <input
+              class="toto"
+              type="radio"
+              checked="true"
+              name="Mapper"
+              value="In_Built_Mapper" (click)="mapperChange(true)"/>
+              <label for="In_Built_Mapper" style="font-weight: 300;padding-left: 10px;">In Built Mapper
+              </label>
+          </div>
+          <div class="row col-md-4" >
+              <input
+                class="toto"
+                type="radio"
+                name="Mapper"
+                value="Custom" (click)="mapperChange(false)"/>
+            <label for="Custom" style="font-weight: 300; padding-left: 10px;">Custom
+            </label>
+          </div>
+          <div class="row col-md-2" ></div>
+        </div> -->
+        <!-- <div class="row row-margin row-align row-template" *ngIf="isInBuildMapper">
+          <div class="row col-md-6" >
+            <ng-select [clearable]="false"class="filter-shadow" style="width: 100%;"
+                [closeOnSelect]="true"
+                placeholder="Select POS Card Reading Capability"></ng-select>
+          </div>
+          <div class="row col-md-6" >
+          </div>
+        </div> -->
+        <!-- <div class="row row-margin row-align row-template" *ngIf="!isInBuildMapper">
+          <div class="row col-md-2" >
+            Value
+          </div>
+          <div class="row col-md-3" >
+            <input
+              class="toto" style="width: 100%;"
+              type="text"
+              name="customMapper"/>
+          </div>
+          <div class="row col-md-4" >
+            <ng-select [clearable]="false"class="filter-shadow" style="width: 100%;"
+                [closeOnSelect]="true"
+                [items]="numberOpraters"
+                bindLabel="value"
+                placeholder="Select Operator"></ng-select>
+          </div>
+          <div class="row col-md-3" >
+            <input
+              class="toto" style="width: 100%;"
+              type="text"
+              name="customMapper"/>
+          </div>
+        </div> -->
+        <div class="row row-margin row-align row-template">
+          <div class="row col-md-4" style="margin-right: -5px">Assign value to internal field</div>
+          <div class="row col-md-4">
+            <ng-select
+              [clearable]="false"
+              class="filter-shadow"
+              style="width: 100%"
+              [closeOnSelect]="true"
+              bindLabel="value"
+              [items]="imfList"
+              [(ngModel)]="imfValue"
+              placeholder="Select IMF"
+            ></ng-select>
+          </div>
+          <div class="row col-md-4"></div>
+        </div>
+        <div class="row row-margin row-align row-template">
+          <!-- <div class="row col-md-2" >
+            <label for="OnFail"  style="font-weight: 300;">On fail</label>
+          </div>
+          <div class="row col-md-2" >
+            <input
+              class="toto"
+              type="radio"
+              name="fail"
+              value="Ignore"/>
+            <label for="Ignore" style="font-weight: 300; padding-left: 2px;">Ignore</label>
+          </div>
+          <div class="row col-md-8">
+            <div class="row col-md-4" >
+            <input
+              class="toto"
+              type="radio"
+              name="fail"
+              value="OrSetIPC"/>
+            <label for="OrSetIPC"  style="font-weight: 300; padding-left: 2px;">Or set IPC</label></div> -->
+          <div class="row col-md-4" style="margin-right: -5px">Set IPC</div>
+          <div class="row col-md-4">
+            <ng-select
+              [clearable]="false"
+              class="filter-shadow"
+              style="width: 100%"
+              [closeOnSelect]="true"
+              bindLabel="value"
+              [items]="ipcList"
+              [(ngModel)]="ipcValue"
+              placeholder="Select IPC"
+            ></ng-select>
+          </div>
+        </div>
+        <!-- <div class="row col-md-4" >
+            <ng-select [clearable]="false"class="filter-shadow" style="width: 100%;"
+              [closeOnSelect]="true"
+              bindLabel="value"
+              [items]="ipcList"
+              [(ngModel)]="ipcValue"
+              placeholder="Select IPC"></ng-select>
+          </div> -->
+      </div>
+      <div class="row row-margin row-align row-template pull-right">
+        <div style="padding-right: 50px">
+          <button class="btn btn-primary" type="button" [disabled]="!field" (click)="save()">
+            Save
+          </button>
+          <button class="btn btn-primary" type="button" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-12"></div>
+      </div>
+    </div>
+
+    <div class="transform" style="margin-left: 30px" *ngIf="!isRequest">
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-4">Service:</div>
+        <div class="row col-md-4">
+          <ng-select
+            [clearable]="false"
+            class="filter-shadow"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            [items]="serviceList"
+            bindLabel="value"
+            placeholder="Select Service"
+          ></ng-select>
+        </div>
+        <div class="row col-md-4"></div>
+      </div>
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-4">Assinge value to response field:</div>
+        <div class="row col-md-4"></div>
+        <div class="row col-md-4">
+          <ng-select
+            [clearable]="false"
+            class="filter-shadow"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            [items]="assingeValueList"
+            bindLabel="value"
+            placeholder="Select Assinge Value"
+          ></ng-select>
+        </div>
+      </div>
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-6">
+          <input
+            class="toto"
+            type="radio"
+            checked="true"
+            name="Copy_Response_value"
+            value="itemList.isExtract"
+            (click)="extractDataChange(false)"
+          />
+          <label for="Copy_internal_format" style="font-weight: 300; padding-left: 10px"
+            >Copy as is to response field
+          </label>
+        </div>
+        <div class="row col-md-6">
+          <input
+            class="toto"
+            type="radio"
+            name="Copy_Response_value"
+            value="itemList.isExtract"
+            (click)="extractDataChange(true)"
+          />
+          <label for="Eextract_value" style="font-weight: 300; padding-left: 10px"
+            >Do operation before copy to response field
+          </label>
+        </div>
+      </div>
+
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-3">
+          <ng-select
+            [clearable]="false"
+            class="filter-shadow"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            [items]="validationList"
+            [(ngModel)]="resValidation"
+            bindLabel="name"
+            placeholder="Select validation"
+          >
+          </ng-select>
+        </div>
+        <div class="row col-md-4">
+          <ng-select
+            [clearable]="false"
+            class="filter-shadow"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            [items]="numberOpraters"
+            bindLabel="value"
+            placeholder="Select Operator"
+          ></ng-select>
+        </div>
+        <div class="row col-md-4">
+          <input class="toto input-align input-search" type="text" placeholder="Value" />
+        </div>
+      </div>
+      <div *ngFor="let postValid of itemList.validationFormatList; let j = index">
+        <div class="row row-margin row-align row-template">
+          <div class="row col-md-3">
+            {{ postValid.name }}
+          </div>
+          <div class="row col-md-4">
+            <ng-select
+              [clearable]="false"
+              class="filter-shadow"
+              style="width: 100%"
+              [closeOnSelect]="true"
+              [items]="numberOpraters"
+              [(ngModel)]="postValid.operator"
+              bindLabel="value"
+              placeholder="Select Operator"
+            >
+            </ng-select>
+          </div>
+          <div class="row col-md-3">
+            <ng-select
+              [clearable]="false"
+              class="filter-shadow"
+              style="width: 100%"
+              [closeOnSelect]="true"
+              [(ngModel)]="postValid.value"
+              bindLabel="value"
+              placeholder="Select Value"
+            ></ng-select>
+          </div>
+          <div class="row col-md-2" style="width: 100px">
+            <span
+              class="toto input-align rulsCss"
+              style="margin-right: 5px"
+              *ngIf="j == itemList.validationFormatList.length - 1"
+              (click)="addValidationFormat(j)"
+              ><i class="fa fa-plus"></i
+            ></span>
+            <span
+              class="toto input-align rulsCss"
+              *ngIf="j > 1 && j == itemList.validationFormatList.length - 1"
+              (click)="removeValidationFormat(j)"
+              ><i class="fa fa-minus"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-2">Value</div>
+        <div class="row col-md-3">
+          <input class="toto" style="width: 100%" type="text" name="customMapper" />
+        </div>
+        <div class="row col-md-4">
+          <ng-select
+            [clearable]="false"
+            class="filter-shadow"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            bindLabel="value"
+            [items]="numberOpraters"
+            placeholder="Select Operator"
+          ></ng-select>
+        </div>
+        <div class="row col-md-3">
+          <input class="toto" style="width: 100%" type="text" name="customMapper" />
+        </div>
+      </div>
+
+      <div class="row row-margin row-align row-template pull-right">
+        <div style="padding-right: 50px">
+          <button class="btn btn-primary" type="button" [disabled]="!field" (click)="save()">
+            Save
+          </button>
+          <button class="btn btn-primary" type="button" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+      <div class="row row-margin row-align row-template">
+        <div class="row col-md-12"></div>
+      </div>
+    </div>
+
+    <div class="row row-margin row-align row-template">
+      <div class="row col-md-12"></div>
+    </div>
+  </div>
+</div>

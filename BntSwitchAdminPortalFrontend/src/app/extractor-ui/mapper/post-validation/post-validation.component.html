@@ -1,0 +1,107 @@
+<div class="form-group">
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-12 text-right">
+      <span class="toto input-align rulsCss icon-border-radius btn btn-default" (click)="addValidation()"><i
+          class="fa fa-plus"></i></span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 form-group" *ngFor="let valid of listValidationFunction; let j=index">
+      <div [ngClass]="checkCssClass(valid)">
+        <nz-select class="form-control" [(ngModel)]="valid.name" bindLabel="name" placeholder="Select validation"
+          (ngModelChange)="validationParam(valid, j, item)">
+          <nz-option *ngFor="let list of validationList" [nzValue]="list.actionName" [nzLabel]="list.actionName">
+          </nz-option>
+          <ng-template ng-option-tmp let-item="item">
+            <div [title]="item.parameters.tooltip" *ngIf="item.parameters">
+              {{ item.name }}
+            </div>
+            <div *ngIf="!item.parameters">{{ item.name }}</div>
+          </ng-template>
+        </nz-select>
+        <span class="error" *ngIf="((valid.name===null || valid.name==='') && submit)">Please select field.</span>
+      </div>
+      <div class="col-md-2" *ngIf="valid.operatorList && valid.operatorList.length > 0">
+        <nz-select class="filter-shadow" [disabled]="readOnlyFlag" [(ngModel)]="valid['operator']" bindLabel="label"
+          placeholder="Select Operator">
+          <nz-option *ngFor="let list of valid.operatorList" [nzValue]="list.label" [nzLabel]="list.label">
+          </nz-option>
+        </nz-select>
+        <span class="error" *ngIf="((valid['operator']===null || valid['operator']==='') && submit)">Please select
+          Operator.</span>
+      </div>
+      <div class="col-md-6 no-padding"
+        *ngIf="valid.listValidationFunctionArgs && valid.listValidationFunctionArgs.length">
+        <div class="form-group"
+          [ngClass]="{'col-md-12': (valid.listValidationFunctionArgs && valid.listValidationFunctionArgs==1), 'col-md-6 no-padding' : (valid.listValidationFunctionArgs && valid.listValidationFunctionArgs.length==2) }"
+          *ngFor="let param of valid.listValidationFunctionArgs">
+          <div class="col-md-12" *ngIf="param.list && param.list.length && param.label === 'source'">
+            <nz-select style="width:100%;" [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag"
+              [closeOnSelect]="true" bindValue="id" bindLabel="name" [items]="param.list" [(ngModel)]="param.value"
+              placeholder="{{ param.name }}" *ngIf="param.label === 'source'">
+              <nz-option *ngFor="let list of param.list" [nzValue]="list.id" [nzLabel]="list.name">
+              </nz-option>
+              <ng-template ng-option-tmp let-item="item">
+                <div [title]="item.tooltip">{{ item.name }}</div>
+              </ng-template>
+            </nz-select>
+            <span class="error"
+              *ngIf="((param.value===null || param.value==='') && param.label === 'source' && submit)">Please select
+              value.</span>
+          </div>
+          <div class="col-md-12" *ngIf="param.list && param.list.length && param.label === 'imf'">
+            <nz-select style="width:100%;" [clearable]="false" class="filter-shadow" [disabled]="readOnlyFlag"
+              [closeOnSelect]="true" bindLabel="alias" bindValue="name" [items]="param.list" [(ngModel)]="param.value"
+              placeholder="{{ param.name }}" *ngIf="param.label === 'imf'">
+              <ng-template ng-option-tmp let-item="item">
+                <div [title]="item.name">{{ item.alias }}</div>
+              </ng-template>
+              <nz-option *ngFor="let list of param.list" [nzValue]="list.name" [nzLabel]="list.alias">
+              </nz-option>
+            </nz-select>
+
+            <span class="error"
+              *ngIf="((param.value===null || param.value==='') && param.label === 'imf' && submit)">Please select
+              value.</span>
+
+          </div>
+          <div class="col-md-12 " *ngIf="!param.list && param.type !== 'Integer'">
+            <input style="width:100%;" class="toto input-align input-search form-control" [disabled]="readOnlyFlag"
+              type="text" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+              *ngIf="!param.list && param.type !== 'Integer'" />
+
+            <span class="error"
+              *ngIf="((param.value===null || param.value==='') && !param.list && param.type !== 'Integer' && submit)">Please
+              select param value.</span>
+
+          </div>
+          <div class="col-md-12 " *ngIf="!param.list && param.type === 'Integer'">
+            <input style="width:100%;" class="toto input-align input-search form-control" type="number"
+              [disabled]="readOnlyFlag" [(ngModel)]="param.value" placeholder="{{ param.name }}"
+              *ngIf="!param.list && param.type === 'Integer'" />
+
+            <span class="error"
+              *ngIf="((param.value===null || param.value==='') && !param.list && param.type === 'Integer' && submit)">Please
+              select param value.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <span *ngIf="listValidationFunction.length > 0 && !readOnlyFlag" (click)="removeValidation(j)"
+          class="icon-border-radius btn btn-default"><i class="fa fa-minus"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </ng-container> -->
+<div class="row row-margin row-align row-template pull-right">
+  <div class="col-sm-12">
+    <button nz-button nzType="default" (click)="close()" style="margin-top: 50px">
+      Cancel
+    </button>
+    <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px; margin-top: 50px"
+      (click)="savePostValidation()">
+      Save
+    </button>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+/*
+::ng-deep  .modal-dialog{
+  top: 10% !important;
+  overflow-y: initial !important
+}
+::ng-deep .modal-title{
+  float: left !important;
+}
+*/
+/* .modal-dialog{
+  top: 10% !important;
+} */
+
+tbody {
+  display: block;
+  height: 325px;
+  overflow: auto;
+}
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.cursor {
+  cursor: pointer;
+}
+.dataTable-height {
+  height: 78vh;
+}
+.default-dataTable {
+  height: 80vh;
+}
+.green {
+  color: green;
+}
+.red {
+  color: red;
+}
+input {
+  background-image: url('../../../../assets/img/search.png');
+  background-position: 6px 7px;
+  padding: 12px 20px 12px 36px;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+.input-search {
+  width: 320px;
+}
+:host .modal.fade .modal-dialog {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 15%;
+}

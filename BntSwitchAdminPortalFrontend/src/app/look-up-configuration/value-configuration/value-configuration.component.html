@@ -1,0 +1,32 @@
+<div class="col-md-12 fade-in template">
+  <div>
+    <a class="btn" routerLink="/look-up-configuration"
+      ><i class="fa fa-arrow-circle-o-left fa-sm" style="margin-left: -25px"></i>
+      {{ 'BACK' | translate }}</a
+    >
+  </div>
+
+  <div class="row">
+    <div style="height: 80vh">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        style="height: 78vh"
+        [loadingIndicator]="loading"
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+      </ngx-datatable>
+    </div>
+  </div>
+
+  <ng-template #status let-row="row" ngx-datatable-cell-template>
+    <nz-switch [ngModel]="row.active == '0' ? false : true" [nzDisabled]="true"> </nz-switch>
+  </ng-template>
+</div>

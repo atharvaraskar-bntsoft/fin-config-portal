@@ -1,0 +1,16 @@
+<nz-tree-select
+  style="width: 280px"
+  [nzDropdownMatchSelectWidth]="true"
+  nz-tooltip
+  [nzTooltipTitle]="imfToolTip"
+  nzTooltipPlacement="right"
+  [nzDropdownStyle]="{ 'max-height': '200px' }"
+  [nzShowExpand]="true"
+  [nzNodes]="nodes"
+  [nzShowSearch]="true"
+  [nzHideUnMatched]="true"
+  nzPlaceHolder="Please select"
+  [(ngModel)]="value"
+  (ngModelChange)="onChange($event)"
+>
+</nz-tree-select>

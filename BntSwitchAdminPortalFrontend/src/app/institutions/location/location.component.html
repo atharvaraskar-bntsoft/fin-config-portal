@@ -1,0 +1,408 @@
+<div class="portal-search">
+  <div class="form-inline">
+    <input
+      class="toto form-control input-search"
+      type="text"
+      placeholder="{{ 'DEVICE_SEARCH' | translate }}"
+      (keyup.enter)="getFilterNameData($event)"
+      [(ngModel)]="place"
+    />
+    <button
+      type="submit"
+      [disabled]="searchResetButton"
+      class="btn btn-primary btn-md btn-flat top-icon"
+      (click)="resetSearch()"
+    >
+      {{ 'RESET' | translate }}
+    </button>
+  </div>
+</div>
+<div class="col-md-12 fade-in template filteroverlapTemplate">
+  <div class="row row-margin locationFilter">
+    <div class="filteroverlap">
+      <div class="row col-md-2" style="margin-right: 5px">
+        <ng-select
+          class="filter-shadow"
+          bindValue="id"
+          bindLabel="name"
+          [closeOnSelect]="true"
+          [items]="institutionList"
+          [(ngModel)]="filter.merchant"
+          (change)="getFilterInstitution($event)"
+          placeholder="{{ 'ALL_INSTITUTION' | translate }}"
+        ></ng-select>
+      </div>
+      <div class="row col-md-2" style="margin-right: 5px">
+        <ng-select
+          class="filter-shadow"
+          bindValue="id"
+          bindLabel="name"
+          [closeOnSelect]="true"
+          [(ngModel)]="filter.status"
+          [items]="statusList"
+          (change)="getFilterStatus($event)"
+          placeholder="{{ 'ALL_STATUS' | translate }}"
+        ></ng-select>
+      </div>
+      <div class="row col-md-2" style="margin-right: 5px">
+        <ng-select
+          class="filter-shadow"
+          bindValue="name"
+          bindLabel="name"
+          [closeOnSelect]="true"
+          [items]="addressList"
+          [(ngModel)]="filter.address"
+          placeholder="{{ 'ALL_ADDRESS' | translate }}"
+          (change)="getFilterAddress($event)"
+        >
+        </ng-select>
+      </div>
+      <a
+        role="button"
+        *ngIf="resetButtonFlag"
+        class="btn-link button-effect"
+        (click)="resetFilterSearch()"
+        >{{ 'RESET_FILTERS' | translate }}</a
+      >
+    </div>
+  </div>
+  <div class="row" [ngClass]="{ loading: loading }" *ngIf="!mapView">
+    <div>
+      <ngx-datatable
+        appNgxDatatableWatcher
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped default-dataTable"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 50px" *ngIf="mapView">
+  <agm-map
+    style="height: 534px; width: 100%"
+    *ngIf="mapView"
+    [latitude]="39.91"
+    [longitude]="116.38"
+    [zoom]="zoom"
+  >
+    <agm-marker-cluster
+      imagePath="https://raw.githubusercontent.com/googlemaps/v3-utility-library/master/markerclustererplus/images/m"
+    >
+      <agm-marker
+        *ngFor="let m of coordinates; let i = index"
+        [latitude]="m.lat"
+        [longitude]="m.lng"
+        (markerClick)="clickedMarker(infowindow)"
+      >
+        <agm-info-window #infowindow>
+          <div class="info-window" id="info-window_{{ m.data.id }}">
+            <div class="info-window__head">
+              <div class="info-window__name">
+                <svg width="24px" height="24px" viewBox="0 0 24 24" style="fill: #cbcfda">
+                  <path
+                    d="M10.6330937,22.5618823
+                                        C10.6330937,22.5618823 3,15.0241537 3,10
+                                        C3,5.04489413 7.02943725,1 12,1
+                                        C16.9705627,1 21,5.04489413 21,10
+                                        C21,15.0241537 13.3767032,22.5512167
+                                        13.3767032,22.5512167
+                                        C12.6186064,23.3624145
+                                        11.3880152,23.3561328
+                                        10.6330937,22.5618823 Z M12,12
+                                        C13.6568542,12 15,10.6568542 15,9
+                                        C15,7.34314575 13.6568542,6 12,6
+                                        C10.3431458,6 9,7.34314575 9,9
+                                        C9,10.6568542 10.3431458,12 12,12 Z"
+                    id="Combined-Shape"
+                  ></path>
+                </svg>
+                {{ m.data.name }}
+              </div>
+              {{
+                m.data['locationDetail']['address1'] +
+                  ' ' +
+                  '' +
+                  m.data['locationDetail']['address2'] +
+                  ', ' +
+                  '' +
+                  m.data['locationDetail']['city'] +
+                  ', ' +
+                  '' +
+                  m.data['locationDetail']['countryState']['stateName'] +
+                  ', ' +
+                  '' +
+                  m.data['locationDetail']['country']['countryName']
+              }}
+            </div>
+            <div class="info-window__content">
+              <div>
+                <span
+                  >Status:
+                  <label class="row-tag" *ngIf="!m.data.status"
+                    ><span class="badge badge-danger badges failure-badges">{{
+                      'INACTIVE' | translate
+                    }}</span></label
+                  >
+                  <label class="row-tag" *ngIf="m.data.status"
+                    ><span class="badge badge-success badges success-badges">{{
+                      'ACTIVE' | translate
+                    }}</span></label
+                  ></span
+                >
+                <span>Code: {{ m.data['code'] }}</span>
+                <span
+                  >Merchant:<a
+                    class="btn-link button-effect"
+                    role="button"
+                    data-event="merchant"
+                    data-id="{{ m.data['id'] }}"
+                    >{{ m.data['merchant']['name'] }}</a
+                  ></span
+                >
+                <span
+                  ><a
+                    class="btn-link button-effect"
+                    role="button"
+                    data-event="device"
+                    data-id="{{ m.data['id'] }}"
+                    >{{ m.data['totalDevice'] }} Devices</a
+                  ></span
+                >
+              </div>
+            </div>
+            <div class="info-window__footer">
+              <a
+                *ngIf="permissionObject?.update"
+                role="button"
+                class="btn-link button-effect delete-color"
+                (click)="getLocationDetail(m.data)"
+              >
+                View Detail</a
+              >
+              <a
+                *ngIf="permissionObject?.update"
+                role="button"
+                class="btn-link button-effect delete-color"
+                (click)="getRowData(m.data)"
+              >
+                Edit</a
+              >
+              <a
+                *ngIf="permissionObject?.delete"
+                role="button"
+                (click)="deleteRow(m.data)"
+                class="btn-link button-effect delete-color"
+              >
+                {{ 'DELETE' | translate }}</a
+              >
+            </div>
+          </div>
+        </agm-info-window>
+      </agm-marker>
+      <!-- multiple markers -->
+    </agm-marker-cluster>
+  </agm-map>
+</div>
+
+<ng-template #date let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <span class="row-tag">{{ row.activateOn | newDate }}</span
+    ><br />
+    <!-- <span class="row-tag">{{ row.activateOn | date: 'h:mm:ss a' }}</span> -->
+  </ng-container>
+</ng-template>
+<ng-template #expiry let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <span class="row-tag">{{ row.expiryOn | newDate }}</span
+    ><br />
+    <!-- <span class="row-tag">{{ row.expiryOn | date: 'h:mm:ss a' }}</span> -->
+  </ng-container>
+</ng-template>
+<ng-template #name let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <span class="row-tag">{{ row.name }}</span> <br />
+    <span class="row-tag">{{ 'MERCHANT_ID_LOCATION' | translate }}: {{ row.code }}</span>
+    <br />
+
+    <a
+      *ngIf="row.totalDevice"
+      class="cursor"
+      [ngClass]="{ isDisabled: row.totalDevice === 0 }"
+      routerLink="/institutions/devices/filter"
+      [queryParams]="{
+        merchantGroup: row?.merchantInstitution?.id,
+        merchant: row?.merchant?.id,
+        location: row.id
+      }"
+      >{{ row.totalDevice }} {{ 'DEVICES' | translate }}</a
+    >
+  </ng-container>
+</ng-template>
+<ng-template #locked let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <div *ngIf="permissionObject?.update">
+      <nz-switch
+        [ngModel]="row.locked == '1' ? false : true"
+        (ngModelChange)="changeStatus(row)"
+        [nzLoading]="statusLoading"
+        [nzDisabled]="true"
+      >
+      </nz-switch>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #posSafetyFlag let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <nz-switch [ngModel]="row.posSafetyFlag === '0' ? false : true" [nzDisabled]="true">
+    </nz-switch>
+  </ng-container>
+</ng-template>
+
+<ng-template #actions let-row="row" ngx-datatable-cell-template>
+  <div>
+    <div></div>
+    <div>
+      <a role="button" class="btn-link button-effect" (click)="viewDetail(row.id)">View Details</a>
+    </div>
+  </div>
+</ng-template>
+
+<div
+  class="modal fade"
+  tabindex="-1"
+  [ngClass]="{ in: visibleAnimate }"
+  [ngStyle]="{
+    display: visible ? 'block' : 'none',
+    opacity: visibleAnimate ? 1 : 1
+  }"
+  *ngIf="visible"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{ 'CONFIRMDELETE' | translate }}
+          <button
+            class="close pull-right"
+            data-dismiss="modal"
+            type="button"
+            aria-label="Close"
+            (click)="cancel()"
+          >
+            ×
+          </button>
+        </h4>
+      </div>
+      <div class="modal-body">
+        {{ 'LOCATION_DELETE' | translate }}{{ objectData.name
+        }}{{ 'LOCATION_DELETE_AND' | translate }}{{ objectData.totalDevice }}
+        {{ 'LOCATION_DELETE_DEVICES' | translate }}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-flat" (click)="cancel()">
+          {{ 'CLOSE' | translate }}
+        </button>
+        <button class="btn btn-danger btn-flat pull-right" (click)="delete()">
+          {{ 'DELETE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  tabindex="-1"
+  [ngClass]="{ in: visiblePopUpAnimate }"
+  [ngStyle]="{
+    display: visiblePopUp ? 'block' : 'none',
+    opacity: visiblePopUpAnimate ? 1 : 1
+  }"
+  *ngIf="visiblePopUp"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header import-header">
+        <h4 class="modal-title" style="text-align: center">
+          {{ 'IMPORT' | translate }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <p>{{ 'LOCATION_IMPORT_COMMENT1' | translate }}</p>
+          <app-import-file
+            [url]="importUrl"
+            [importPath]="'assets/pages/import.csv'"
+          ></app-import-file>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-md btn-flat" (click)="cancelPopUp()">
+          {{ 'CLOSE' | translate }}
+        </button>
+        <button class="btn btn-primary btn-md btn-flat" (click)="resetUpload()">
+          {{ 'RESET' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>
+<div *ngIf="isvisibleView">
+  <nz-drawer
+    [nzWidth]="800"
+    [nzVisible]="isvisibleView"
+    nzPlacement="right"
+    [nzTitle]="title"
+    (nzOnClose)="closeView()"
+    [nzMaskClosable]="false"
+  >
+    <ng-container *nzDrawerContent>
+      <app-location-info
+        [isvisibleView]="isvisibleView"
+        [idView]="idView"
+        (closeDrawer)="closeView($event)"
+        (createview)="createview($event)"
+      ></app-location-info>
+    </ng-container>
+  </nz-drawer>
+</div>

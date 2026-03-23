@@ -1,0 +1,532 @@
+<!-- class="portal-search" -->
+<div class="portal-search">
+  <div class="form-inline">
+    <input class="toto form-control input-search input-search-custom" type="text" [(ngModel)]="place"
+      placeholder="Transaction Id" (keyup.enter)="getFilterNameData($event)" />
+    <input class="toto form-control input-search input-search-custom" type="text" [(ngModel)]="maskedCardNumber"
+      placeholder="Masked Card Number" maxlength="16" (keyup.enter)="getFilterMaskedcardNumber($event)" />
+    <a role="button" class="refresh-icon-txn"><i class="fa fa-refresh fa-lg" aria-hidden="true"
+        (click)="refreshData()"></i></a>
+  </div>
+</div>
+
+<nz-spin [nzSpinning]="filterLoading" nzTip="Loading..." style="height: 500px;">
+  <div class="col-md-12 fade-in template">
+    <div class="row row-margin">
+      <div class="row col-md-11">
+        <div class="row row-margin">
+          <!-- (change)="getFilterTxnType($event)" -->
+          <div class="col-md-3">
+            <ng-select class="filter-shadow" bindValue="name" [(ngModel)]="filterkey.txnType" bindLabel="name"
+              [closeOnSelect]="true" [items]="txnTypeList" placeholder="{{ 'ALL_TXN_TYPE' | translate }}">
+            </ng-select>
+          </div>
+          <!-- (change)="getFilterStatus($event)" -->
+
+          <div class="col-md-3">
+            <ng-select class="filter-shadow" bindValue="id" bindLabel="name" [(ngModel)]="filterkey.logStatus"
+              [closeOnSelect]="true" [items]="statusList" placeholder="{{ 'ALL_STATUS' | translate }}"></ng-select>
+          </div>
+          <!-- (ngModelChange)="getSourceMerchantFilterData($event)" -->
+          <div class="col-md-3">
+            <nz-select nzAllowClear nzShowSearch nzServerSearch (nzOnSearch)="onMerchantSearch($event)"
+              [(ngModel)]="filterkey.merchant" (nzScrollToBottom)="loadMerchantData()" nzPlaceHolder="All Merchant ID">
+              <nz-option *ngFor="let o of sourceMerchantData" [nzValue]="o.key" [nzLabel]="o.value">
+              </nz-option>
+              <nz-option *ngIf="isLoading && merchantLoad" nzDisabled nzCustomContent>
+                <i nz-icon nzType="loading" class="loading-icon"></i>
+                Loading Data...
+              </nz-option>
+              <nz-option *ngIf="!merchantLoad" nzDisabled nzCustomContent> No More Data </nz-option>
+            </nz-select>
+          </div>
+          <!-- (ngModelChange)="getSourceDeviceFilterData($event)" -->
+          <div class="col-md-3">
+            <nz-select nzAllowClear nzShowSearch nzServerSearch (nzOnSearch)="onDeviceSearch($event)"
+              [(ngModel)]="filterkey.device" (nzScrollToBottom)="loadDeviceData()" nzPlaceHolder="All Terminal ID">
+              <nz-option *ngFor="let o of sourceDeviceData" [nzValue]="o.key" [nzLabel]="o.value">
+              </nz-option>
+              <nz-option *ngIf="isLoading && deviceLoad" nzDisabled nzCustomContent>
+                <i nz-icon nzType="loading" class="loading-icon"></i>
+                Loading Data...
+              </nz-option>
+              <nz-option *ngIf="!deviceLoad" nzDisabled nzCustomContent> No More Data </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col-md-4">
+            <nz-range-picker class="transaction-date-filter" [nzAllowClear]="false" [nzDisabledDate]="disabledDate" [nzRanges]="ranges" [(ngModel)]="filter.period"
+              nzShowTime nzFormat="yyyy/MM/dd HH:mm:ss" (ngModelChange)="onChange($event)"></nz-range-picker>
+          </div>
+
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-md btn-flat button-width" (click)="getTransactionLogsData()">
+              <i class="fa fa-search"></i> {{ 'SEARCH' | translate }}
+            </button>
+            <ul class="txn-filter-reset-more">
+              <li>
+                <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" [(nzVisible)]="menuVisible">
+                  Advance filter
+                  <i nz-icon nzType="down"></i>
+                </a>
+              </li>
+              <li>
+                <a role="button" *ngIf="resetButtonFlag" class="btn-link button-effect" (click)="resetFilterSearch()">{{
+                  'RESET_FILTERS' | translate }}</a>
+              </li>
+            </ul>
+          </div>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <div style="background: #ececec; padding: 10px; width: 58vw">
+              <nz-card [nzBordered]="false" nzTitle="Advance filter" class="advance-filter" [nzExtra]="extraTemplate" style="width: 100%">
+                <div class="col-12">
+                  <div class="col-md-12">
+                    <div class="row col-12 row-margin">
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Date</label>
+                        </div>
+
+                        <div class="col-md-9">
+                          <nz-range-picker class="transaction-date-filter" [nzAllowClear]="false" [nzDisabledDate]="disabledDate"
+                            [nzRanges]="ranges" [(ngModel)]="filter.period" nzShowTime nzFormat="yyyy/MM/dd HH:mm:ss"
+                            (ngModelChange)="onChange($event)"></nz-range-picker>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Transaction Type</label>
+                        </div>
+                        <div class="col-md-9">
+                          <ng-select class="filter-shadow" bindValue="name" [(ngModel)]="filterkey.txnType"
+                            bindLabel="name" [closeOnSelect]="true" [items]="txnTypeList"
+                            placeholder="{{ 'ALL_TXN_TYPE' | translate }}">
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row col-12 row-margin" style="margin-top: 10px">
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Acquirer - Source</label>
+                        </div>
+                        <div class="col-md-9">
+                          <nz-select nzAllowClear nzShowSearch nzServerSearch (nzOnSearch)="onSearch($event)"
+                            [(ngModel)]="filterkey.sourceAcq" (nzScrollToBottom)="loadMore()"
+                            nzPlaceHolder="Acquirer Institution ID - Source">
+                            <nz-option *ngFor="let o of sourceAcquirerData" [nzValue]="o.value" [nzLabel]="o.value">
+                            </nz-option>
+                            <nz-option *ngIf="isLoading && sourceLoad" nzDisabled nzCustomContent>
+                              <i nz-icon nzType="loading" class="loading-icon"></i>
+                              Loading Data...
+                            </nz-option>
+                            <nz-option *ngIf="!sourceLoad" nzDisabled nzCustomContent>
+                              No More Data
+                            </nz-option>
+                          </nz-select>
+                        </div>
+
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>RRN</label>
+                        </div>
+                        <div class="col-md-9">
+                          <input class="toto form-control input-search-rrn" type="text" [(ngModel)]="rrn"
+                            placeholder="Retrieval Reference Number" (keyup.enter)="getFilterRetrievalData($event)" />
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div class="row col-12 row-margin" style="margin-top: 10px">
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Merchant ID</label>
+                        </div>
+                        <div class="col-md-9">
+                          <input type="text" placeholder="Merchant ID" nz-input [(ngModel)]="filterkey.merchant"
+                            (ngModelChange)="onMerchantSearch($event)" [nzAutocomplete]="autoMerchant" />
+                          <nz-autocomplete #autoMerchant>
+                            <nz-auto-option *ngFor="let o of sourceMerchantData" [nzValue]="o.key">{{o.value}}
+                            </nz-auto-option>
+                          </nz-autocomplete>
+                          <!-- <input nz-input class="toto form-control input-search-rrn" type="text"
+                          [(ngModel)]="filterkey.merchant"
+                            placeholder="Merchant ID" (keyup.enter)="getFilterMerchantID($event)" /> -->
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>UUID</label>
+                        </div>
+                        <div class="col-md-9">
+                          <input class="toto form-control input-search-uuid" type="text" [(ngModel)]="uuid"
+                            placeholder="UUID" (keyup.enter)="getFilterUuidData($event)" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row col-12 row-margin" style="margin-top: 10px">
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Terminal ID</label>
+                        </div>
+                        <div class="col-md-9">
+                          <input type="text" placeholder="Terminal ID" nz-input [(ngModel)]="filterkey.device"
+                            (ngModelChange)="onDeviceSearch($event)" [nzAutocomplete]="auto" />
+                          <nz-autocomplete #auto>
+                            <nz-auto-option *ngFor="let o of sourceDeviceData" [nzValue]="o.key">{{o.value}}
+                            </nz-auto-option>
+                          </nz-autocomplete>
+                          <!-- <input nz-input class="toto form-control input-search-rrn"  type="text"
+                        [(ngModel)]="filterkey.device"
+                        placeholder="Terminal ID" (keyup.enter)="getFilterTerminalID($event)" /> -->
+                        </div>
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Amount</label>
+                        </div>
+                        <div class="col-md-9">
+                          <input class="toto form-control input-search-amount" type="text" [(ngModel)]="reqamount"
+                            placeholder="Amount" (keyup.enter)="getFilterAmountData($event)" />
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="row col-12 row-margin" style="margin-top: 10px">
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Acquirer- Destination</label>
+                        </div>
+                        <div class="col-md-9">
+                          <input class="toto form-control input-search-acquirer" type="text" [(ngModel)]="acquirerID"
+                            placeholder="Acquirer Institution ID - Destination"
+                            (keyup.enter)="getFilterAcquirerIDData($event)" />
+                        </div>
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Response Code</label>
+                        </div>
+                        <div class="col-md-9">
+                          <input class="toto form-control input-search-responseCode" type="text"
+                            [(ngModel)]="responseCode" placeholder="Response Code"
+                            (keyup.enter)="getFilterResponseCodeData($event)" />
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="row col-12 row-margin" style="margin-top: 10px">
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Message Type</label>
+                        </div>
+                        <div class="col-md-9">
+                          <ng-select class="filter-shadow" bindValue="id" bindLabel="name"
+                            [(ngModel)]="selectedMessageList" [closeOnSelect]="true" [items]="messageList"
+                            placeholder="Message Type">
+                          </ng-select>
+                        </div>
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Auth Status</label>
+                        </div>
+                        <div class="col-md-9">
+                          <ng-select class="filter-shadow" style="text-transform: capitalize" bindValue="id"
+                            bindLabel="name" [(ngModel)]="selectedAuthList" [closeOnSelect]="true" [items]="authList"
+                            placeholder="Auth Status">
+                          </ng-select>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="row col-12 row-margin" style="margin-top: 10px">
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>Destination Endpoint</label>
+                        </div>
+                        <div class="col-md-9">
+                          <nz-select nzAllowClear nzShowSearch nzServerSearch
+                            (nzOnSearch)="onDestinationEndpointNameSearch($event)"
+                            [(ngModel)]="filterkey.processorAdpCode"
+                            (nzScrollToBottom)="loadDestinationEndpointNameData()"
+                            nzPlaceHolder="All Destination Endpoint Name">
+                            <nz-option *ngFor="let o of sourceDestinationEndpointNameData" [nzValue]="o.value"
+                              [nzLabel]="o.key">
+                            </nz-option>
+                            <nz-option *ngIf="isLoading && destinationLoad" nzDisabled nzCustomContent>
+                              <i nz-icon nzType="loading" class="loading-icon"></i>
+                              Loading Data...
+                            </nz-option>
+                            <nz-option *ngIf="!destinationLoad" nzDisabled nzCustomContent>
+                              No More Data
+                            </nz-option>
+                          </nz-select>
+                        </div>
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3" style="margin-top: 5px">
+                          <label>SAF Processed</label>
+                        </div>
+                        <div class="col-md-9">
+                          <ng-select class="filter-shadow" style="text-transform: capitalize" bindValue="id"
+                            bindLabel="name" [(ngModel)]="selectedSafQueueList" [closeOnSelect]="true"
+                            [items]="safQueueList" placeholder="SAF Processed">
+                          </ng-select>
+                        </div>
+                        <div class="col-md-8">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </nz-card>
+              <ng-template #extraTemplate>
+                <a role="button" *ngIf="resetButtonFlag" class="btn-link button-effect" style="margin-right: 10px"
+                  (click)="resetFilterSearch()">{{ 'RESET_FILTERS' | translate }}</a>
+                <a role="button" class="btn-link button-effect" style="margin-right: 10px; color: rgba(0, 0, 0, 0.65)"
+                  (click)="allFitrerdValue()">Apply Filters</a>
+                <a role="button" class="btn-link button-effect" (click)="closeMenu()">Close</a>
+              </ng-template>
+            </div>
+          </nz-dropdown-menu>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <button class="btn btn-Link filter-shadow" (click)="onReview($event)">
+          <i class="fa fa-flag" style="color: orange" aria-hidden="true"></i>
+          {{ 'FOR_REVIEW' | translate }}
+        </button>
+      </div>
+    </div>
+    <div class="row row-margin">
+      <div>
+        <div class="portal-pagination">
+          <ngx-datatable appNgxDatatableWatcher style="height: 78vh" #myTable
+            class="bootstrap fullscreen striped" [rows]="rows" [columns]="columns" [columnMode]="'force'"
+            [headerHeight]="headerHeight" [footerHeight]="40" [rowHeight]="rowHeight" [scrollbarV]="true"
+            (scroll)="onScroll($event)">
+            <ngx-datatable-footer appNgxDatatableWatcher>
+              <ng-template
+                ngx-datatable-footer-template
+                let-rowCount="rowCount"
+                let-pageSize="pageSize"
+                let-selectedCount="selectedCount"
+                let-curPage="curPage"
+                let-offset="offset"
+                let-isVisible="isVisible"
+              >
+                <div>
+                  <b>{{ rows?.length }} Records</b>
+                </div>
+                <datatable-pager
+                  appNgxDatatableWatcher
+                  [pagerLeftArrowIcon]="'datatable-icon-left'"
+                  [pagerRightArrowIcon]="'datatable-icon-right'"
+                  [pagerPreviousIcon]="'datatable-icon-prev'"
+                  [pagerNextIcon]="'datatable-icon-skip'"
+                  [page]="curPage"
+                  [size]="pageSize"
+                  [count]="rowCount"
+                  [hidden]="!(rowCount / pageSize > 1)"
+                  (change)="table.onFooterPage($event)"
+                >
+                </datatable-pager>
+              </ng-template>
+            </ngx-datatable-footer>
+            <!-- <ngx-datatable-footer appNgxDatatableWatcher>
+              <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
+                <div>
+                  <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+                </div>
+                <datatable-pager appNgxDatatableWatcher [pagerLeftArrowIcon]="'datatable-icon-left'"
+                  [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
+                  [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
+                  [hidden]="!(rowCount / pageSize > 1)" (change)="table.onFooterPage($event)">
+                  test
+                </datatable-pager>
+               
+              </ng-template>
+            </ngx-datatable-footer> -->
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-spin>
+
+<ng-template #date let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <span class="row-tag">{{ row?.dateString }} ({{ getTime?.name}})</span><br />
+    <span class="row-tag">{{ row?.localDateTime}}</span><br />
+  </ng-container>
+</ng-template>
+
+<ng-template #merchant let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <div>
+      <label>{{ 'MERCHANT_ID' | translate }}</label>: {{ row?.merchantCode }}
+    </div>
+    <div>
+      <label>{{ 'TERMINAL_ID' | translate }}</label>: {{ row?.deviceCode }}
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #amount let-row="row" ngx-datatable-cell-template>
+  <ng-container *ngIf="row?.approvedAmount === '-'">
+    <div>
+      <label>{{ 'APP_AMOUNT' | translate }}</label>: {{ row?.approvedCurrency }}
+    </div>
+    <label>{{ 'REQ_AMOUNT' | translate }}</label>: {{ row?.approvedCurrency }}
+  </ng-container>
+  <ng-container *ngIf="row?.approvedAmount !== '-'">
+    <div>
+      <label>{{ 'APP_AMOUNT' | translate }}</label>: {{ row?.approvedCurrency }}
+      <span data-toggle="tooltip" title="{{ row?.approvedAmount }}">{{ row?.approvedAmount ? row.approvedAmount :
+        'NA' }}
+      </span>
+    </div>
+    <label>{{ 'REQ_AMOUNT' | translate }}</label>: {{ row?.requestedCurrency }}
+    <span data-toggle="tooltip" title="{{ row?.requestedAmount }}">{{ row?.requestedAmount ? row.requestedAmount :
+      'NA' }}
+    </span>
+  </ng-container>
+</ng-template>
+
+<ng-template #status let-row="row" ngx-datatable-cell-template>
+  <div>
+    {{ row?.responseCode }}
+  </div>
+  <ng-container>
+    <label class="row-tag" *ngIf="row?.txnResponse && row?.txnResponse?.type == 0"><span data-toggle="tooltip"
+        title="{{ row?.txnResponse.text }}" class="badge badge-danger badges failure-badges">{{ 'FAILED' | translate
+        }}</span></label>
+    <label class="row-tag" *ngIf="row?.txnResponse && row?.txnResponse?.type === 1"><span
+        title="{{ row?.txnResponse?.text }}" class="badge badge-warning badges progress-badges">{{ 'IN_PROGRESS' |
+        translate }}</span></label>
+    <label class="row-tag" *ngIf="row?.txnResponse && row?.txnResponse?.type === 2"><span
+        title="{{ row?.txnResponse?.text }}" class="badge badge-success badges success-badges">{{ 'APPROVED' | translate
+        }}</span></label><br />
+    <label *ngIf="row?.for_review"><i class="fa fa-flag fa-2x" style="color: orange" aria-hidden="true"></i></label>
+  </ng-container>
+</ng-template>
+
+<ng-template #transaction let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <ul class="row-li-tag content-align">
+      <li class="row-tag">
+        <label> ID</label>:
+        <span data-toggle="tooltip" title="{{ row?.txnId }}">{{ row?.txnId | slice: 0:20 }}<span
+            *ngIf="row?.txnId?.length > 20">...</span></span>
+        <span style="margin-left: 5px" class="row-tag" nzTooltipPlacement="bottom" [nz-tooltip]="transactionMessage">
+          <i class="fa fa-info-circle" style="color: #348de2" aria-hidden="true"></i>
+        </span>
+      </li>
+      <li class="row-tag" *ngIf="row?.txnType"><label>Txn Type</label>: {{ row.txnType }}</li>
+      <li class="row-tag" *ngIf="row?.messageTypeIndicator">
+        <label>Message Type</label>: {{ row?.messageTypeIndicator }}
+      </li>
+      <li class="row-tag" *ngIf="row?.rrn">
+        <label>RRN</label>: {{ row?.rrn }}
+      </li>
+      <ng-template #transactionMessage>
+        <span style="max-width: 200px" style="white-space: pre-line">{{ getParams(row) }}</span>
+      </ng-template>
+    </ul>
+  </ng-container>
+</ng-template>
+
+<ng-template #acquirer let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <ul class="row-li-tag content-align">
+      <li class="row-tag" *ngIf="row?.acqInstitutionDestination">
+        <label>Destination</label>: {{ row?.acqInstitutionDestination }}
+      </li>
+      <li class="row-tag" *ngIf="row?.acqInstitutionSource">
+        <label>Source</label>: {{ row?.acqInstitutionSource }}
+      </li>
+      <li class="row-tag" *ngIf="row?.destinations">
+        <label>End Point</label>: {{ row?.destinations }}
+      </li>
+    </ul>
+  </ng-container>
+</ng-template>
+
+<ng-template #more let-row="row" ngx-datatable-cell-template>
+  <div>
+    <a class="btn-link button-effect" role="button" (click)="viewJson(row)">{{
+      'VIEW_JSON' | translate
+      }}</a>
+  </div>
+  <div>
+    <a *ngIf="row.destinations" class="btn-link button-effect" role="button" style="margin-right: 2px"
+      (click)="requestMatrix(row)">{{ 'REQUEST_MATRIX' | translate }}</a>
+  </div>
+  <div>
+    <a *ngIf="row.destinations" class="btn-link button-effect" role="button" (click)="responseMatrix(row)">{{
+      'RESPONSE_MATRIX' | translate }}</a>
+  </div>
+  <div>
+    <a *ngIf="row.txnId" role="button" class="btn-link button-effect" (click)="txnLogDrawer(row)">{{
+      'VIEW_DETAILS' | translate
+      }}</a>
+  </div>
+</ng-template>
+
+<div class="modal fade" tabindex="-1" [ngClass]="{ in: visibleAnimate }" [ngStyle]="{
+    display: visible ? 'block' : 'none',
+    opacity: visibleAnimate ? 1 : 1
+  }" *ngIf="visible">
+  <div class="modal-dialog" style="width: 630px" *ngIf="keyData">
+    <div class="modal-content">
+      <div class="modal-header">
+        {{ keyData.txnType }}
+        <a role="button" class="pull-right" (click)="copyToClipboard(keyData.jsonData, $event)">
+          <i class="fa fa-copy fa-lg"></i></a>
+        <span class="pull-right col-sm-2" *ngIf="copied">Copied!</span>
+      </div>
+      <div class="modal-body" style="height: 70vh; overflow: auto">
+        <rv-pretty-json [obj]="maskJSON"></rv-pretty-json>
+      </div>
+      <div class="modal-footer">
+        <button class="btn col-md-3 btn-flat pull-right" (click)="close()">
+          {{ 'CLOSE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>
+
+<div *ngIf="isvisibleview">
+  <app-transaction-log-details [isvisibleview]="isvisibleview" [idView]="idView" (closeDrawer)="txncloseDrawer($event)"
+    (create)="txncreate($event)"></app-transaction-log-details>
+</div>
+
+<div *ngIf="isvisibleviewRes">
+  <app-response-matrix [isvisibleviewRes]="isvisibleviewRes" [resIdView]="resIdView"
+    (closeDrawer)="rescloseDrawer($event)" (create)="rescreate($event)"></app-response-matrix>
+</div>
+
+<div *ngIf="visibleJson">
+  <app-view-json [visibleJson]="visibleJson" [keyData]="keyData" (closeDrawer)="closeJson($event)"
+    (create)="createJson($event)"></app-view-json>
+</div>
+
+<div *ngIf="visibleMat">
+  <app-request-matrix [visibleMat]="visibleMat" [matId]="matId" (closeDrawer)="matCloseDrawer($event)"
+    (create)="matCreate($event)"></app-request-matrix>
+</div>

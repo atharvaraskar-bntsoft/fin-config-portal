@@ -1,0 +1,170 @@
+<nz-spin nzTip="Loading..." [nzSpinning]="!mapperList">
+  <ng-container>
+    <div class="form-pannel">
+      <div class="form-group mt-4">
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-8">
+            <nz-radio-group nzName="radiogroup"
+              (ngModelChange)="conditionNull(mapperObject.listMapperMapping, $event)"
+              [(ngModel)]="mapperObject.listMapperMapping.status">
+              <label nz-radio nzValue="M">Mandatory</label>
+              <label nz-radio nzValue="O">Optional</label>
+              <label nz-radio nzValue="C">Conditional</label>
+            </nz-radio-group>
+            <a *ngIf="mapperObject.listMapperMapping.status === 'C' && mapperObject.listMapperMapping.condition"
+              (click)="createCondition(mapperObject, -1)" class="required">Edit
+              Condition</a>
+            <a *ngIf="mapperObject.listMapperMapping.status === 'C' 
+            && !mapperObject.listMapperMapping.condition" (click)="createCondition(mapperObject, -1)"
+              class="required">Create
+              Condition</a>
+            <a *ngIf="mapperObject.listMapperMapping.status === 'C' &&  mapperObject.listMapperMapping.condition"
+              style="color:red;" nz-popconfirm nzPopconfirmTitle="Do you want to delete Condition?" 
+              (nzOnConfirm)="deleteCondition(mapperObject.listMapperMapping)"><i
+                class="fa fa-trash fa-lg"></i></a>
+            <span class="invalid-block"
+              *ngIf="!isSubmit && mapperObject.listMapperMapping.status === 'C' && !mapperObject.listMapperMapping.condition">This
+              field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row mapper">
+          <div class="col-md-2 text-right">
+            <label class="required">Mapper</label>
+          </div>
+          <div class="col-md-7">
+            <nz-select class="filter-shadow" appendTo="body" style="width: 100%" bindLabel="name"
+              [(ngModel)]="selectedMapper" placeholder="Select mapper" (ngModelChange)="selectMapperFn($event)"
+              [disabled]="dependentSource || readOnlyFlag">
+              <nz-option *ngFor="let list of mapperList" [nzValue]="list" [nzLabel]="list.name">
+              </nz-option>
+              <ng-template ng-option-tmp let-item="item">
+                <div [title]="item.parametersUi.tooltip" *ngIf="item.parametersUi">
+                  {{ item.name }}
+                </div>
+                <div *ngIf="!item.parametersUi">{{ item.name }}</div>
+              </ng-template>
+            </nz-select>
+            <span class="invalid-block" *ngIf="!isSubmit && !selectedMapper">Please provide a valid mapper</span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="selectedMapper && selectedMapperParam.length > 0">
+        <ng-container *ngFor="let newparam of selectedMapperParam; let i = index">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-2 text-right">
+                <label *ngIf="
+                    newparam.name === 'source' ||
+                    newparam.name === 'imf' ||
+                    selectedMapper.name === 'GROOVY_EXECUTOR'
+                  " class="required">Parameter {{ i + 1 }}</label>
+                <label *ngIf="
+                    newparam.name !== 'source' &&
+                    newparam.name !== 'imf' &&
+                    selectedMapper.name !== 'GROOVY_EXECUTOR'
+                  ">Parameter {{ i + 1 }}</label>
+              </div>
+              <div class="col-md-7">
+                <ng-container *ngIf="newparam.name === 'source'">
+                  <nz-select class="filter-shadow" style="width: 100%" [(ngModel)]="newparam.value"
+                    [nzPlaceHolder]="newparam.label" (ngModelChange)="selectSourceParam($event, newparam)"
+                    [disabled]="dependentSource || readOnlyFlag">
+                    <nz-option *ngFor="let param of newparam.list" [nzValue]="param.name" [nzLabel]="param.name">
+                    </nz-option>
+                    <ng-template ng-option-tmp let-item="item">
+                      <div [title]="item.tooltip">{{ item.name }}</div>
+                    </ng-template>
+                  </nz-select>
+                  <span class="invalid-block" *ngIf="newparam.error && !newparam.value">Please provide a valid
+                    source</span>
+                </ng-container>
+
+                <ng-container *ngIf="newparam.name === 'imf' && mapperType === 'DBMapper' && newparam.name">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <app-imf-extract [style] ="'width:100%;'" (emitIMFValue)="onChange($event, newparam)" [index]="i" [imfList]="imfList"
+                        [feature]="imfFeature" [imfValue]="newparam.value.alias"
+                        [isMapper]="true" [internalFormatError]="true"></app-imf-extract>
+                      <span class="invalid-block" *ngIf="newparam.error && !newparam.value.text">Please provide a valid
+                        imf</span>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="newparam.name === 'imf' && mapperType === 'BuiltInMapper' && newparam.name">
+                  <div class="row mt-3">
+                    <div class="col-sm-4">
+                      <app-imf-extract [style] ="'width:171px;'" [feature]="imfFeature"
+                        (emitIMFValue)="onChange($event, newparam)" [index]="i" [imfValue]="newparam.value.text"
+                        [imfList]="imfList" [internalFormatError]="true"></app-imf-extract>
+                      <span class="invalid-block" *ngIf="newparam.error && !newparam.value.text">Please provide a valid
+                        imf</span>
+                    </div>
+                    <div class="col-sm-4" >
+                      <nz-select style="width:100%" class="filter-shadow" [closeOnSelect]="true" bindLabel="value"
+                        bindValue="value"
+                        nzPlaceHolder="Select Service" (ngModelChange)="selectService($event, newparam)"
+                        [(ngModel)]="newparam.selectedService" [disabled]="newparam.value.useCase === '1'">
+                        <nz-option *ngFor="let service of serviceList" [nzValue]="service.value"
+                          [nzLabel]="service.value">
+                        </nz-option>
+                      </nz-select>
+                      <span class="invalid-block" *ngIf="newparam.error && !(newparam.value.useCase == 1) && !newparam.selectedService">Please provide a valid value</span>
+                    </div>
+                    <div class="col-sm-4" >
+                      <nz-select style="width:100%" class="filter-shadow" [closeOnSelect]="true" bindLabel="name"
+                         bindValue="value"  (ngModelChange)="selectType($event, newparam)"
+                         [disabled]="newparam.value.useCase === '1' || newparam.value.useCase === '2'"
+                        nzPlaceHolder="Select type" [(ngModel)]="newparam.selectedType">
+                        <nz-option *ngFor="let type of typeList" [nzValue]="type.value" [nzLabel]="type.name">
+                        </nz-option>
+                      </nz-select>
+                      <span class="invalid-block" *ngIf="newparam.error && !(newparam.value.useCase == 1 || newparam.value.useCase == 2) && !newparam.selectedType">Please provide a valid value</span>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="
+                    newparam.name !== 'source' &&
+                    newparam.name !== 'imf' &&
+                    selectedMapper.name !== 'GROOVY_EXECUTOR'
+                  ">
+                  <input nz-input class="form-control" type="text" [(ngModel)]="newparam.value"
+                    [nzPlaceHolder]="newparam.label" [disabled]="dependentSource || readOnlyFlag" />
+                  <span class="invalid-block" *ngIf="newparam.error && !newparam.value">Please provide a valid
+                    value</span>
+                </ng-container>
+                <ng-container *ngIf="selectedMapper.name == 'GROOVY_EXECUTOR'">
+                  <ace-editor [(text)]="newparam.value" [readOnly]="readOnlyFlag" class="editor" #editor> </ace-editor>
+                  <span class="invalid-block" *ngIf="newparam.error && !newparam.value">Please provide a valid
+                    value</span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="text-right">
+            <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+            <button nz-button *ngIf="!readOnlyFlag" nzType="primary" style="margin-left: 10px" (click)="saveMapper()">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</nz-spin>
+<div *ngIf="isVisible">
+  <nz-drawer [nzMaskClosable]="false" [nzVisible]="isVisible" nzTitle="Condition" [nzWidth]="1040" [nzClosable]="true" (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+      <app-condition-builder *ngIf="jsonData" [jsonData]="jsonData" [ruleCondition]="conditionObj"
+        (addSubRule)="getRule($event)" (closeCreate)="close($event)">
+      </app-condition-builder>
+    </ng-container>
+  </nz-drawer>
+</div>

@@ -1,0 +1,8 @@
+message_collection,11111,,,
+Generic FieldName,GICC Field (OUT),L1FieldName,ISO Field (IN),L3FieldName
+Transaction Date,transaction_date,message_collection[0].message_exchange.response.audit_info.created_on,Local Transaction Date,message_collection[1].message_exchange.response.audit_info.created_on
+Approval Code,response_code,message_collection[0].message_exchange.response.response_code,Response,message_collection[1].message_exchange.response.response_code
+Auth Code,authorization_code,message_collection[0].message_exchange.response.transaction_response.auth_code,AuthorisationCode,message_collection[1].message_exchange.response.transaction_response.auth_code
+Authorized Amount,authorized_amount,message_collection[0].message_exchange.response.transaction_response.authorizedAmount.amount,TotalAmount,message_collection[1].message_exchange.response.transaction_response.authorizedAmount.amount
+Authorized Amount Currency,authorizedAmountCurrency,message_collection[0].message_exchange.response.transaction_response.authorizedAmount.currency_code,Currency,message_collection[1].message_exchange.response.transaction_response.authorizedAmount.currency_code
+Merchant Category Code,merchant_category_code,NA,Merchants Type,message_collection[1].message_exchange.request.additionalAttributes.MERCHANTCATEGORYCODE

@@ -1,0 +1,167 @@
+<div *ngIf="isTableVisible" class="table_container">
+  <h3>Edit Properties</h3>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="table_header">{{ 'PROPERTY_NAME' | translate }}</th>
+        <th class="table_header">{{ 'PROPERTY_VALUE' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          <label class="required">{{ 'FIELDS_NAMES' | translate }}</label>
+        </th>
+        <td>
+          <input
+            *ngIf="imfObj?.type === 'field'"
+            (keyup)="isFormValid()"
+            name="fieldName curly_show"
+            pattern="[A-Za-z_]+"
+            [disabled]="!imfObj.isEditable || readOnlyFlag"
+            onkeypress="return  (event.keyCode >= 65 && event.keyCode <= 90) || (event.charCode == 95) || (event.charCode >= 97 &&  event.charCode <= 122)"
+            type="text"
+            [(ngModel)]="imfObj.fieldName"
+            placeholder="key"
+            required
+            class="form-control"
+          />
+          <span class="curly_show_text">
+            {{ imfObj.fieldType === 'ARRAY' ? '[ ]' : '' }}
+          </span>
+
+          <!-- For Name Editing Purpose -->
+          <input
+            *ngIf="imfObj?.type === 'fields'"
+            (keyup)="isFormValid()"
+            [disabled]="!imfObj.isEditable || readOnlyFlag"
+            name="fieldName"
+            pattern="[a-z_]+"
+            onkeypress="return event.keyCode >= 48 && event.keyCode <= 57 || event.charCode == 95 || event.charCode >= 97 &&  event.charCode <= 122"
+            type="text"
+            [(ngModel)]="imfObj.name"
+            placeholder="key"
+            required
+            class="form-control"
+          />
+        </td>
+      </tr>
+      <tr *ngIf="imfObj?.type === 'field'">
+        <th scope="row">
+          <label class="required">{{ 'FIELD_TYPE' | translate }}</label>
+        </th>
+        <td>
+          <ng-select
+            [placeholder]="'Data Type'"
+            [disabled]="!imfObj.isEditable || readOnlyFlag || imfObj?.xmlType == 'xmlHttp'"
+            [items]="types"
+            (change)="isFormValid()"
+            [(ngModel)]="imfObj.fieldType"
+            *ngIf="imfObj?.type === 'field'"
+          >
+          </ng-select>
+        </td>
+      </tr>
+      <tr *ngIf="imfObj?.type === 'fields'">
+        <th scope="row">
+          <label class="required">{{ 'FIELD_TYPE' | translate }}</label>
+        </th>
+        <td>
+          <ng-select
+            [placeholder]="'Data Type'"
+            [disabled]="!imfObj.isEditable"
+            [items]="TypesfieldsList"
+            bindLabel="label"
+            bindValue="value"
+            (change)="isFormValid()"
+            [(ngModel)]="imfObj.fieldsType"
+            *ngIf="imfObj?.type === 'fields'"
+          >
+          </ng-select>
+        </td>
+      </tr>
+      <tr *ngIf="imfObj?.type === 'field' || imfObj?.type === 'xmlHttp'">
+        <th scope="row">
+          <label>{{ 'PATTERN' | translate }}</label>
+          <mat-icon [matTooltip]="imfPattern" [inline]="true" matTooltipClass="material-tooltip"
+            >info
+          </mat-icon>
+        </th>
+        <td>
+          <input
+          [disabled]="!imfObj.isEditable || readOnlyFlag"
+            class="form-control show_info"
+            [(ngModel)]="imfObj.pattern"
+            placeholder="Pattern"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <button mat-button class="buttons_color" (click)="submitIMF('cancel')">
+      {{ 'CANCEL' | translate }}
+    </button>
+    <button
+    *ngIf="imfObj.isEditable && !readOnlyFlag"
+      class="buttons_color button_space"
+      [disabled]="!isSaveEnable"
+      mat-button
+      (click)="submitIMF('save')"
+      s
+    >
+      {{ 'SAVE' | translate }}
+    </button>
+    <button mat-button class="buttons_color" (click)="openDeleteDialog()" *ngIf="imfObj.isEditable && !readOnlyFlag">
+      Delete Field(s)
+    </button>
+  </div>
+</div>
+
+<!-- For Delete Purpose -->
+
+<div
+  class="modal fade"
+  tabindex="-1"
+  [ngClass]="{ in: visibleAnimate }"
+  [ngStyle]="{
+    display: visible ? 'block' : 'none',
+    opacity: visibleAnimate ? 1 : 1
+  }"
+  *ngIf="visible"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{ 'CONFIRMDELETE' | translate }}
+          <button
+            class="close pull-right"
+            data-dismiss="modal"
+            type="button"
+            aria-label="Close"
+            (click)="cancel()"
+          >
+            ×
+          </button>
+        </h4>
+        <div class="modal-body">
+          <table class="table table-striped">
+            {{
+              'DELETE_MSG' | translate
+            }}
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-flat" (click)="cancel()">
+          {{ 'CLOSE' | translate }}
+        </button>
+        <button class="btn btn-danger btn-flat pull-right" (click)="submitIMF('delete')">
+          {{ 'DELETE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

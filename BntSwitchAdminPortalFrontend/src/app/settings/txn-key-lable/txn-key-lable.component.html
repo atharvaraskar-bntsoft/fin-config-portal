@@ -1,0 +1,97 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="pull-right row button-margin">
+      <button class="btn btn-primary btn-md btn-flat" routerLink="/logs/txnKeyLable/create">
+        <em class="fa fa-plus-circle"></em> Create
+      </button>
+    </div>
+  </div>
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div>
+      <ngx-datatable
+        appNgxDatatableWatcher
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <strong>Showing {{ rows.length }} out of {{ totalRecords }} records</strong>
+            </div>
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+  <ng-template #status let-row="row">
+    <nz-switch
+      *ngIf="row.preSeeded === '1'"
+      [ngModel]="row.active === '0' ? false : true"
+      (ngModelChange)="changeStatus(row)"
+      [nzLoading]="statusLoading"
+      [nzDisabled]="true"
+    ></nz-switch>
+    <nz-switch
+      *ngIf="row.preSeeded === '0'"
+      [ngModel]="row.active === '0' ? false : true"
+      (ngModelChange)="changeStatus(row)"
+      [nzLoading]="statusLoading"
+    ></nz-switch>
+  </ng-template>
+  <ng-template #action let-row="row" ngx-datatable-cell-template>
+    <div>
+      <div>
+        <a role="button" class="btn-link button-effect" (click)="getRowData(row)">{{
+          'EDIT' | translate
+        }}</a>
+      </div>
+
+      <div *ngIf="row.preSeeded === '0'">
+        <a
+          nzType="primary"
+          nzDanger
+          nz-popconfirm
+          style="color: red"
+          nzPopconfirmTitle="Are you sure to delete this record?"
+          nzPopconfirmPlacement="bottom"
+          [nzIcon]="iconTpl"
+          (nzOnConfirm)="deleteRow(row)"
+          >{{ 'DELETE' | translate }}</a
+        >
+        <ng-template #iconTpl>
+          <span nz-icon nzType="question-circle-o" style="color: red"></span>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+</div>

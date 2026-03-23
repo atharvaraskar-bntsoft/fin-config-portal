@@ -1,0 +1,89 @@
+<mat-tree [dataSource]="flatDataSource" [treeControl]="treeControl" class="height_tree">
+  <!-- This is the tree node template for leaf nodes -->
+  <mat-tree-node
+    *matTreeNodeDef="let node"
+    class="tree_parent_node"
+    [ngStyle]="getMargin(node)"
+    matTreeNodePadding
+    (click)="onClick(node)"
+    (contextmenu)="onContextMenu($event, node)"
+    [ngClass]="{ selected: node.nodeAdded }"
+  >
+    <!-- use a disabled button to provide padding for tree leaf -->
+    <span class="button_hover">{{ node.name }}</span>
+  </mat-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <mat-tree-node
+    *matTreeNodeDef="let node; when: hasChild"
+    class="tree_parent_node"
+    matTreeNodePadding
+    (contextmenu)="onContextMenu($event, node)"
+    [ngStyle]="getMargin(node)"
+  >
+    <button
+      id="{{ node.parent }}"
+      [style.margin-left.px]="-8"
+      mat-icon-button
+      matTreeNodeToggle
+      [ngClass]="{ selected: node.nodeAdded }"
+      [attr.aria-label]="'toggle ' + node.name"
+    >
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }} </mat-icon
+      ><span (click)="onClick(node)">{{ node.name }} {{ '{ }' }}</span>
+    </button>
+  </mat-tree-node>
+</mat-tree>
+<!-- Context menu for right click handling -->
+<div
+  style="visibility: hidden; position: fixed; z-index: 99999"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent let-item="item">
+    <button *ngIf="!item.attributes" [disabled]="readOnlyFlag" class="btn_color add" mat-menu-item (click)="addField(item)">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      <span [style.margin-left.px]="10">
+        {{ 'ADD_SINGLE_FIELD' | translate }}
+      </span>
+    </button>
+    <button *ngIf="!item.attributes" [disabled]="readOnlyFlag" class="btn_color add" mat-menu-item (click)="addFields(item)">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      <span [style.margin-left.px]="10">
+        {{ 'ADD_COMPLEX_FIELD' | translate }}
+      </span>
+    </button>
+    <button
+    [disabled]="readOnlyFlag"
+      *ngIf="item.attributes"
+      class="btn_color add"
+      mat-menu-item
+      (click)="addNestedField(item)"
+    >
+      <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+      <span [style.margin-left.px]="10">
+        {{ 'ADD_NESTED_FIELD' | translate }}
+      </span>
+    </button>
+    <button
+    [disabled]="readOnlyFlag"
+      *ngIf="item.attributes"
+      class="btn_color add"
+      mat-menu-item
+      (click)="addNestedFields(item)"
+    >
+      <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+      <span [style.margin-left.px]="10">
+        {{ 'ADD_NESTED_FIELDS' | translate }}
+      </span>
+    </button>
+    <button mat-menu-item *ngIf="item.isEditable" [disabled]="readOnlyFlag" (click)="openDeleteDialog(item)">
+      <i class="fa fa-trash fa-sm btn_color del" aria-hidden="true"></i>
+      <span class="btn_color del" [style.margin-left.px]="10">{{
+        'REMOVE_THIS_FIELD' | translate
+      }}</span>
+    </button>
+  </ng-template>
+</mat-menu>

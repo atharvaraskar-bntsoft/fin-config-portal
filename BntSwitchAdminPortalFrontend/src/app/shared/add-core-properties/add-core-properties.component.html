@@ -1,0 +1,59 @@
+<div>
+  <h2 mat-dialog-title>Add New Property</h2>
+  <form [formGroup]="addNewProperty" (ngSubmit)="saveItem(addNewProperty.value)">
+    <mat-dialog-content>
+      <div class="form-group">
+        <label class="required">Type</label>
+        <select class="form-control popup" placeholder="Select type" name="type" required formControlName="type">
+          <option value="core">Core</option>
+        </select>
+      </div>
+      <div class="form-group" [ngClass]="displayFieldCss('key')">
+        <label class="required">Name: </label>
+        <input class="form-control popup" type="text" required maxlength="100" placeholder="Name" rv-noSpaces
+          formControlName="key" (keydown)="utils.checkValidField($event.key)" />
+        <app-field-error-display [displayError]="isFieldValid('key')" errorMsg="Name is required">
+        </app-field-error-display>
+      </div>
+      <div class="form-group" [ngClass]="displayFieldCss('label')">
+        <label class="required">Label: </label>
+        <input class="form-control popup" type="text" maxlength="80" required placeholder="Label" rv-noSpaces
+          formControlName="label" (keydown)="utils.checkValidField($event.key)" />
+        <app-field-error-display [displayError]="isFieldValid('label')" errorMsg="Label is required">
+        </app-field-error-display>
+      </div>
+      <div class="form-group" [ngClass]="displayFieldCss('defaultvalue')">
+        <label>Default value: </label>
+        <input class="form-control popup" type="text" maxlength="100" placeholder="Default value" rv-noSpaces
+          formControlName="defaultvalue" (keydown)="utils.checkValidField($event.key)" />
+      </div>
+      <!-- <div class="form-group" [ngClass]="displayFieldCss('listvalues')">
+        <label>List values: </label>
+        <input class="form-control popup" type="text" maxlength="40" placeholder="List values should be comma separated"
+          formControlName="listvalues" />
+        <app-field-error-display [displayError]="isFieldValid('listvalues')"
+          errorMsg="Please Enter Comma Separated Values Only.">
+        </app-field-error-display>
+      </div> -->
+      <div class="form-check-input" [ngClass]="displayFieldCss('mandatory')">
+        <div>
+          <label class="check_box_container label-width">
+            Mandatory
+            <input (click)="checkStatus()" type="checkbox" formControlName="mandatory" checked />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <app-field-error-display [displayError]="isFieldValid('mandatory')" errorMsg="Mandatory is required">
+        </app-field-error-display>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button nz-button mat-dialog-close nzType="default">
+        {{ 'CLOSE' | translate }}
+      </button>
+      <button nz-button nzType="primary">
+        {{ 'Save' | translate }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

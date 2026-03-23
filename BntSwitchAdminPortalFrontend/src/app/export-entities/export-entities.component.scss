@@ -1,0 +1,36 @@
+.scroll {
+  height:200px;
+  width:91%;
+  overflow:hidden;
+  overflow-y:scroll;
+  border: 1px solid #d7d5d5;
+  margin-top: 5px;
+}
+
+.center-button
+{
+  float: left;
+  width: 45%;
+  padding: 3% 2px 1px 0%;
+  margin-right: 2px;
+  margin: 42% 10px -36% 9px;
+}
+
+li.selected {
+  background-color: #ccc ;
+}
+
+.export-button
+{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+:host .modal.fade .modal-dialog {
+  transition: -webkit-transform .3s ease-out;
+  transition: transform .3s ease-out;
+  transition: transform .3s ease-out, -webkit-transform .3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 15%;
+}

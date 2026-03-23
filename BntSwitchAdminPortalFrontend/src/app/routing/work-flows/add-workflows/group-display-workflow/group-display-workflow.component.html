@@ -1,0 +1,10 @@
+<ng-container *ngIf="services">
+  <ul class="tree-workflow" *ngFor="let service of services">
+    <li>
+      {{ service.serviceName }} <i *ngIf="service.precedingDecisionUi" [nzRotate]="90" nz-icon nzType="branches"
+      class="ant-tree-switcher-line-icon"></i>
+      <app-group-display-workflow [readOnlyFlag] = readOnlyFlag [services]="service.services" *ngIf="service.services.length">
+      </app-group-display-workflow>
+    </li>
+  </ul>
+</ng-container>

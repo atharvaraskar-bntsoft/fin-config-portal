@@ -1,0 +1,75 @@
+.content-align {
+  text-align: left;
+}
+nz-select {
+  width: 100%;
+}
+:host .modal.fade .modal-dialog {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 15%;
+}
+
+.badge {
+  width: 80px;
+}
+input.input-search {
+  background-image: url('../../../assets/img/search.png');
+  background-position: 6px 7px;
+  padding: 12px 20px 12px 36px;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+.input-search {
+  width: 320px;
+}
+
+.input-search-acquirer{
+  display: inline;
+  width: 100%;
+}
+
+.input-search-rrn{
+  display: inline;
+  width: 100%;
+}
+
+.input-search-uuid{
+  display: inline;
+  width: 100%;
+}
+
+.input-search-amount{
+  display: inline;
+  width: 100%;
+}
+
+.input-search-responseCode{
+  display: inline;
+  width: 100%;
+}
+.button-width {
+  width: 72px;
+  padding-left: 6px;
+  margin-right: 8px;
+}
+
+.filter-width {
+  width: 18%;
+}
+.refresh-icon-txn {
+  /*  position: absolute;
+  right: 5rem;
+  top: 0.5rem;*/
+  margin-left: 19px;
+}
+.txn-filter-reset-more {
+  position: absolute;
+  top: 0px;
+  right: calc(50% - 85px);
+  list-style: none;
+}

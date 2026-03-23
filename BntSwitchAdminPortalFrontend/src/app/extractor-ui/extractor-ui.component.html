@@ -1,0 +1,148 @@
+<div class="row" *ngIf="permissionObject.write">
+  <div class="col-md-12" style="text-align: right; margin-bottom: 10px">
+    <button nz-button nzType="primary" routerLink="create">Create Extract</button>
+  </div>
+</div>
+<nz-spin [nzSpinning]="loading" nzTip="Loading...">
+<div class="col-md-12 fade-in template">
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div style="height: 80vh">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        #myTable
+        [headerHeight]="headerHeight"
+        [loadingIndicator]="loading"
+        class="bootstrap fullscreen striped datatable-body"
+        [rows]="rows"
+        [columns]="columns"
+        columnMode="force"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>
+</nz-spin>
+<ng-template #jobName let-row="row" ngx-datatable-cell-template>
+  <span class="row-tag">{{ row.jobName }}</span>
+</ng-template>
+
+<ng-template #jobGroup let-row="row" ngx-datatable-cell-template>
+  <span class="row-tag">{{ row.jobGroup }}</span>
+</ng-template>
+
+<ng-template #version let-row="row" ngx-datatable-cell-template>
+  <div class="filteroverlapTemplate">
+    <ng-select
+    style="width: 70px;"
+      class="filter-shadow"
+      (change)="changeRow($event, row)"
+      [ngModel]="row.version"
+      appendTo="body"
+      bindLabel="version"
+      [closeOnSelect]="true"
+      [items]="row.versions"
+      [clearable]="false"
+    >
+    </ng-select>
+  </div>
+</ng-template>
+
+<ng-template #status let-row="row" ngx-datatable-cell-template>
+    <span class="row-tag">{{ row.jobStatus }}</span>
+</ng-template>
+
+<ng-template #action let-row="row" ngx-datatable-cell-template>
+  <a class="btn-link button-effect" role="button" [matMenuTriggerFor]="belowMenu">{{
+    'ACTIONS' | translate
+  }}</a>
+  <mat-menu #belowMenu="matMenu">
+    <div [hidden]="row.version == 0">
+      <mat-divider *ngIf="row.jobStatus == 'CREATED'"></mat-divider>
+    <div *ngIf="row.jobStatus == 'CREATED'" [hidden]="row.deployed == false">
+      <button mat-menu-item (click)="startExtractor(row)">
+        <i class="fa fa-play fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">{{ 'START' | translate }}</span>
+      </button>
+    </div>
+
+    <mat-divider *ngIf="row.jobStatus == 'SCHEDULED'"></mat-divider>
+
+    <mat-divider *ngIf="row.jobStatus == 'FAILED'"></mat-divider>
+
+    <mat-divider *ngIf="row.jobStatus == 'STOPPED'"></mat-divider>
+    <div *ngIf="row.jobStatus == 'STOPPED'">
+      <!-- <button mat-menu-item (click)="stopExtractor(row)">
+        <i class="fa fa-stop fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">{{ 'STOP' | translate }}</span>
+      </button> -->
+      <button mat-menu-item (click)="startExtractor(row)">
+        <i class="fa fa-play fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">{{ 'START' | translate }}</span>
+      </button>
+    </div>
+
+    <mat-divider *ngIf="row.jobStatus == 'RUNNING'"></mat-divider>
+    <div *ngIf="row.jobStatus == 'RUNNING'">
+      <button mat-menu-item (click)="pauseExtractor(row)">
+        <i class="fa fa-pause fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">{{ 'PAUSE' | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="stopExtractor(row)">
+        <i class="fa fa-stop fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">{{ 'STOP' | translate }}</span>
+      </button>
+    </div>
+
+    <mat-divider *ngIf="row.jobStatus == 'PAUSED'"></mat-divider>
+    <div *ngIf="row.jobStatus == 'PAUSED'">
+      <button mat-menu-item (click)="resumeExtractor(row)">
+        <i class="fa fa-play fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">{{ 'RESUME' | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="stopExtractor(row)">
+        <i class="fa fa-stop fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">{{ 'STOP' | translate }}</span>
+      </button>
+    </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="editExtractor(row)">
+      <i class="fa fa-pencil-square-o fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+      <span style="color: #3c8dbc; margin-left: 10px">{{ 'EDIT' | translate }}</span>
+    </button>
+    <mat-divider></mat-divider>
+  </mat-menu>
+</ng-template>

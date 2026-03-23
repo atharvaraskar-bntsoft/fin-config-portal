@@ -1,0 +1,57 @@
+<div>
+  <a class="btn" routerLink="/adapter-configuration/imf">
+    <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+    {{ 'BACK' | translate }}</a
+  >
+</div>
+<div class="row row-margin">
+  <div class="col-md-8">
+    <span style="margin-left: 13px">
+      <h3>{{ 'INTERNAL_MESSAGE_FORMAT' | translate }}</h3>
+    </span>
+  </div>
+</div>
+<div class="row col-md-12">
+  <div class="col-md-8" *ngIf="currentItem.imf && typeList.length">
+    <nz-spin nzTip="Loading..." [nzSpinning]="isSpinning">
+      <div [style.padding-top.px]="10" class="box-scroll">
+        <app-imf-hierarchy-tree
+          [saveMethods]="saveMethods"
+          [versionMethods]="versionMethods"
+          [dataSource]="jsonData"
+          [revertChanges]="shouldRevertChange"
+        ></app-imf-hierarchy-tree>
+      </div>
+    </nz-spin>
+  </div>
+  <div class="col-md-4" *ngIf="currentItem.imf">
+    <app-imf-creation-table [types]="typeList"></app-imf-creation-table>
+  </div>
+
+  <div class="button_align" *ngIf="isSaveVisible">
+    <button
+      class="btn btn-primary pull-right"
+      (click)="revertChanges()"
+      type="button"
+      [disabled]="!isSaveEnable"
+    >
+      {{ 'REVERT_ALL_CHANGES' | translate }}
+    </button>
+    <button
+      class="btn btn-primary pull-right"
+      (click)="save()"
+      type="button"
+      [disabled]="!isSaveEnable"
+    >
+      {{ 'SAVE_DRAFT' | translate }}
+    </button>
+    <button
+      class="btn btn-primary pull-right"
+      (click)="version()"
+      type="button"
+      [disabled]="!isSaveEnable"
+    >
+      {{ 'PUBLISH' | translate }}
+    </button>
+  </div>
+</div>

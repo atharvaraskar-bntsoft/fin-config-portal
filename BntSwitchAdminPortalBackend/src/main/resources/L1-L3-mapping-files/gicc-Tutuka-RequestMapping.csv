@@ -1,0 +1,7 @@
+ATM AconiteEMV- ISO,11111,,,
+GenericFieldName,ATM Field (IN),L1FieldName,ISO Field (OUT),L3FieldName
+Transaction Date,transaction_date,message_collection[0].message_exchange.request_message.audit_info.created_on,Local Transaction Date,message_collection[1].message_exchange.request_message.audit_info.created_on
+Transaction Amount,amount,message_collection[0].message_exchange.request_message.amounts.amount_transaction.value,Transaction Amount,message_collection[1].message_exchange.request_message.amounts.amount_transaction.value
+Currency Code,currency,message_collection[0].message_exchange.request_message.amounts.amount_transaction.currency,Transaction Currency Code,message_collection[1].message_exchange.request_message.amounts.amount_transaction.currency
+POS Entry Mode,entry_mode,message_collection[0].message_exchange.request_message.point_of_service_entry_mode.pin_entry_mode,POS Entry Mode,message_collection[1].message_exchange.request_message.point_of_service_entry_mode.pin_entry_mode
+Device Code,terminal_id,message_collection[0].message_exchange.request_message.terminal_identification,Card Acceptor Terminal Identification,message_collection[1].message_exchange.request_message.terminal_identification

@@ -1,0 +1,201 @@
+<div>
+      <nz-spin style="height: 800px" nzTip="Loading..." [nzSpinning]="loading">
+        <nz-card>
+          <div class="col-md-12 fade-in template" *ngIf="row">
+            <h4>
+              <label class="fa fa-university fa-sm"> {{ row.name }}</label>
+            </h4>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="detail-sub-header">
+                  <i class="fa fa-info-circle fa-sm iconColor marginleft bold"></i>
+                  {{ 'GENERAL_INFO' | translate }}
+                </div>
+                <div class="col-md-6">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th>{{ 'ACTIVE_SINCE' | translate }}</th>
+                        <td>{{ row.activateOn | newDate }}</td>
+                      </tr>
+                      <tr>
+                        <th>{{ 'ACTIVE_TO' | translate }}</th>
+                        <td>{{ row?.expiryOn | newDate }}</td>
+                      </tr>
+                      <tr>
+                        <th>{{ 'CODE' | translate }}</th>
+                        <td>{{ row?.code }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="col-md-4">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th>
+                          <a class="cursor" (click)="deviceDetails(row)"
+                            >{{ row?.totalDevice }} {{ 'DEVICES' | translate }}</a
+                          >
+                        </th>
+                        <td></td>
+                      </tr>
+                      <tr *ngIf="row?.description">
+                        <th>{{ 'DESCRIPTION' | translate }}</th>
+                        <td>{{ row?.description }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="detail-sub-header">
+                  <i
+                    class="fa fa-phone-square fa-sm iconColor"
+                    style="margin-left: 15px; font-weight: bold"
+                  ></i>
+                  {{ 'CONTACT_INFO' | translate }}
+                </div>
+
+                <div class="col-md-6">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th>{{ 'EMAIL' | translate }}</th>
+                        <td>
+                          <a href="mailto: {{ row?.locationDetail?.email }}">
+                            {{ row?.locationDetail?.email }}</a
+                          >
+                        </td>
+                      </tr>
+                      <tr *ngIf="row?.locationDetail?.phone">
+                        <th>{{ 'PHONE_NUMBER' | translate }}</th>
+                        <td>{{ row?.locationDetail?.phone }}</td>
+                      </tr>
+                      <tr *ngIf="row?.locationDetail?.fax">
+                        <th>{{ 'FAX' | translate }}</th>
+                        <td>{{ row?.locationDetail?.fax }}</td>
+                      </tr>
+                      <tr>
+                        <th>{{ 'ADDRESS' | translate }}</th>
+                        <td>
+                          {{ row?.locationDetail?.address1 }}
+                          {{ row?.locationDetail?.address2 }}
+                        </td>
+                      </tr>
+                      <tr *ngIf="row?.locationDetail?.city">
+                        <th>{{ 'CITY' | translate }}</th>
+                        <td>{{ row?.locationDetail?.city }}</td>
+                      </tr>
+                      <tr *ngIf="row?.locationDetail?.countryState?.stateName">
+                        <th>{{ 'STATE' | translate }}</th>
+                        <td>{{ row?.locationDetail?.countryState?.stateName }}</td>
+                      </tr>
+                      <tr *ngIf="row?.locationDetail?.zip">
+                        <th>{{ 'ZIP_CODE' | translate }}</th>
+                        <td>{{ row?.locationDetail?.zip }}</td>
+                      </tr>
+                      <tr *ngIf="row?.locationDetail?.country?.countryName">
+                        <th>{{ 'COUNTRY' | translate }}</th>
+                        <td>{{ row?.locationDetail?.country?.countryName }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-4" *ngIf="row.additionalAttribute">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th>{{ 'ADDITIONAL_ATTRIBUTES' | translate }}</th>
+
+                        <td>
+                          <a class="cursor" (click)="openModal(row)">{{
+                            'VIEW_ATTRIBUTES' | translate
+                          }}</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <nz-modal
+              [(nzVisible)]="isAttributesVisible"
+              [nzTitle]="attributesModalTitle"
+              [nzContent]="attributesModalContent"
+              [nzFooter]="attributesModalFooter"
+              nzClosable="true"
+              (nzOnCancel)="isAttributesVisible = false"
+              [nzWidth]="650"
+              [nzStyle]="{ top: '90px' }"
+            >
+              <ng-template #attributesModalTitle let-row="row">
+                {{ 'ADDITIONAL_ATTRIBUTES' | translate }}
+              </ng-template>
+              <ng-template #attributesModalContent>
+                <nz-table #schemaTable [nzData]="['']" nzBordered [nzFrontPagination]="false">
+                  <tbody>
+                    <tr *ngFor="let item of attributeData | keyvalue">
+                      <td>{{ item.key }}</td>
+                      <td>{{ item.value }}</td>
+                    </tr>
+                  </tbody>
+                </nz-table>
+              </ng-template>
+              <ng-template #attributesModalFooter>
+                <button nz-button nzType="default" (click)="closeModal()">
+                  {{ 'CLOSE' | translate }}
+                </button>
+              </ng-template>
+            </nz-modal>
+            <div
+              class="modal fade"
+              tabindex="-1"
+              [ngClass]="{ in: visibleAnimate }"
+              [ngStyle]="{
+                display: visible ? 'block' : 'none',
+                opacity: visibleAnimate ? 1 : 1
+              }"
+              *ngIf="visible"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">
+                      {{ 'CONFIRMDELETE' | translate }}
+                      <button
+                        class="close pull-right"
+                        data-dismiss="modal"
+                        type="button"
+                        aria-label="Close"
+                        (click)="cancel()"
+                      >
+                        ×
+                      </button>
+                    </h4>
+                  </div>
+                  <div class="modal-body">
+                    {{ 'AREYOUSURE' | translate }}
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-flat" (click)="cancel()">
+                      {{ 'CLOSE' | translate }}
+                    </button>
+                    <button class="btn btn-danger btn-flat" (click)="delete(row)">
+                      {{ 'DELETE' | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #deletebtn>
+            <button (click)="closeView()"><i nz-icon nzType="close" nzTheme="outline"></i></button>
+        </ng-template>
+        </nz-card>
+      </nz-spin>
+</div>

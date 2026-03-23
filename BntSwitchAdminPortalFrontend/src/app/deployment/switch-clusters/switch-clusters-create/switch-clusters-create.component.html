@@ -1,0 +1,82 @@
+<div class="fade-in template">
+  <div>
+    <a class="btn" routerLink="/deployment/switch-clusters"
+      ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+    >
+  </div>
+  <div class="col-md-6">
+    <form [formGroup]="fg" (ngSubmit)="onSubmit(fg)">
+      <div class="form-group col-md-6 alignment-box" style="margin-bottom: 0px;" [ngClass]="displayFieldCss('dataCentre')">
+        <label
+          class="required"
+          tooltip="{{ 'CLUSTER_LABEL.DATA_CENTER' | translate }}"
+          placement="right"
+          delay="500"
+          >{{ 'CLUSTER_LABEL.DATA_CENTER' | translate }}</label
+        >
+        <input
+          [readonly]="!this.isEditable"
+          type="text"
+          class="form-control"
+          formControlName="dataCentre"
+          maxlength="10"
+          rv-noSpaces
+          placeholder="{{ 'CLUSTER_LABEL.DATA_CENTER' | translate }}"
+        />
+        <app-field-error-display
+          [displayError]="isFieldValid('dataCentre')"
+          errorMsg="{{ 'DATA_CENTER_ERROR' | translate }}"
+        >
+        </app-field-error-display>
+        <br />
+      </div>
+      <div class="form-group col-md-6" style="margin-bottom: 0px;" [ngClass]="displayFieldCss('region')">
+        <label
+          class="required"
+          tooltip="{{ 'CLUSTER_LABEL.REGION' | translate }}"
+          placement="right"
+          delay="500"
+          >{{ 'CLUSTER_LABEL.REGION' | translate }}</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          formControlName="region"
+          rv-noSpaces
+          maxlength="10"
+          placeholder="{{ 'CLUSTER_LABEL.REGION' | translate }}"
+        />
+        <app-field-error-display
+          [displayError]="isFieldValid('region')"
+          errorMsg="{{ 'REGION_ERROR' | translate }}"
+        >
+        </app-field-error-display>
+      </div>
+
+      <div class="form-check-input col-md-12" style="padding-left: 0px;">
+        <label>{{ 'STATUS' | translate }}</label>
+        <div>
+          <label class="check_box_container">
+            {{ currentItem.active ? ('ENABLED' | translate) : ('DISABLED' | translate) }}
+            <input (change)="checkStatus()" formControlName="active" type="checkbox" />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-6" style="padding-left: 0px;">
+        <br />
+        <button class="btn cancel-align col-md-2" routerLink="/deployment/switch-clusters" type="button">
+          {{ 'CANCEL' | translate }}
+        </button>
+
+        <button
+          class="btn btn-flat btn-primary pull-right save-align col-md-2"
+          type="submit"
+          [disabled]="submitted"
+        >
+          {{ 'SAVE' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,190 @@
+<nz-spin [nzSpinning]="loading">
+  <div>
+    <a class="btn" routerLink="/processor-config/core-properties"
+      ><em class="fa fa-arrow-circle-o-left fa-sm"></em>
+      {{ 'Back' }}
+    </a>
+  </div>
+  <div class="row row-margin row-align row-template mt-4">
+    <div class="col-md-3">
+      <label class="required" placement="right">{{ 'Name' }}:</label>
+      <input
+        class="toto input-align input-search"
+        style="width: 100%; border-radius: 5px"
+        type="text"
+        maxlength="40"
+        placeholder="{{ 'Name' }}"
+        required
+        [(ngModel)]="coreProName"
+        [disabled]="readOnlyFlag"
+        rv-noSpaces
+        (change)="validateName($event)"
+        id="name"
+        #name="ngModel"
+      />
+      <div *ngIf="!name?.valid && (name?.dirty || name?.touched)" class="error">
+        <div *ngIf="name.errors.required">Name is required</div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="required" placement="right">{{ 'Type' }}:</label>
+      <ng-select
+        style="width: 100%"
+        [clearable]="false"
+        [closeOnSelect]="true"
+        [items]="typeValueList"
+        bindLabel="value"
+        [(ngModel)]="coreProType"
+        placeholder="{{ 'Type' }}"
+        [disabled]="readOnlyFlag"
+      >
+      </ng-select>
+    </div>
+    <div class="col-md-2 pull-right">
+      <button class="btn btn-primary btn-md btn-flat" (click)="addItem()">
+        <em class="fa fa-plus-circle"></em> Add Properties
+      </button>
+    </div>
+  </div>
+  <div style="margin: 15px 15px 0 15px">
+    <div *ngIf="defaultLoading">
+      <h1 class="headingData">
+        <nz-spin nzTip="Loading..."></nz-spin>
+      </h1>
+    </div>
+    <form [formGroup]="infoForm" (ngSubmit)="saveDraft()" *ngIf="rows.length">
+      <nz-table
+        #corePropertyTable
+        nzBordered
+        [nzData]="rows"
+        [nzPageSize]="totals"
+        [nzShowPagination]="false"
+        [nzScroll]="{ y: '55vh' }"
+        [nzSize]="tableSize"
+      >
+        <thead>
+          <tr>
+            <th scope="row" nzWidth="50%">{{ 'Field' }}</th>
+            <th scope="row" nzWidth="50%">{{ 'Value' }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of corePropertyTable.data; let i = index">
+            <tr>
+              <td class="td-color joined-word-break" [ngClass]="{ required: data.mandatory }">
+                <span title="{{ data.field }}">{{ data.label }}</span>
+              </td>
+              <td class="td-color joined-word-break">
+                <div>
+                  <span
+                    *ngIf="
+                      data.datatype === 'int' ||
+                      data.datatype === 'Integer' ||
+                      data.datatype === 'Long' ||
+                      data.datatype === 'Map' ||
+                      data.datatype === 'List'
+                    "
+                    style="margin-left: -5px"
+                  >
+                    <input
+                      [readonly]="data.isEditable === false"
+                      class="form-control input-response"
+                      type="text"
+                      [(ngModel)]="data.value"
+                      formControlName="{{ data.field }}"
+                      (keypress)="numberOnly($event)"
+                    />
+                  </span>
+                  <span
+                    *ngIf="data.datatype === 'String' && !data.listvalues"
+                    style="margin-left: -5px"
+                  >
+                    <input
+                      [readonly]="data.isEditable === false"
+                      class="form-control input-response"
+                      type="text"
+                      [(ngModel)]="data.value"
+                      formControlName="{{ data.field }}"
+                    />
+                  </span>
+                  <span *ngIf="data.datatype === 'Boolean'" style="margin-left: -5px">
+                    <select
+                      formControlName="{{ data.field }}"
+                      class="form-control"
+                      [(ngModel)]="data.value"
+                      style="border-radius: 5px"
+                    >
+                      <option [ngValue]="true">true</option>
+                      <option [ngValue]="false">false</option>
+                    </select>
+                  </span>
+                  <span *ngIf="data.datatype === '' || !data.datatype" style="margin-left: -5px">
+                    <input
+                      [readonly]="data.isEditable === false"
+                      class="form-control input-response"
+                      type="text"
+                      rv-noSpaces
+                      [(ngModel)]="data.value"
+                      formControlName="{{ data.field }}"
+                    />
+                  </span>
+                  <span
+                    *ngIf="data.datatype === 'String' && data.listvalues"
+                    style="margin-left: -5px"
+                  >
+                    <select
+                      formControlName="{{ data.field }}"
+                      class="form-control"
+                      [(ngModel)]="data.value"
+                      style="border-radius: 5px"
+                    >
+                      <option *ngFor="let item of data.listvalues" [ngValue]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                  </span>
+                </div>
+                <div
+                  class="delete_align"
+                  nzType="primary"
+                  nzDanger
+                  nz-popconfirm
+                  nzPopconfirmTitle="Are you sure to delete this record?"
+                  nzPopconfirmPlacement="bottom"
+                  [nzIcon]="iconTpl"
+                  (nzOnConfirm)="removeItem(data, i)"
+                >
+                  <em class="fa fa-trash fa-lg"></em>
+                  <ng-template #iconTpl>
+                    <span nz-icon nzType="question-circle-o" style="color: red"></span>
+                  </ng-template>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </nz-table>
+
+      <div class="margin pull-right" style="margin-right: 0px">
+        <div>
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="infoForm.invalid || !coreProName"
+          >
+            {{ 'Save Draft' }}
+          </button>
+          <button
+            class="btn btn-primary"
+            [disabled]="infoForm.invalid || !coreProName"
+            type="button"
+            (click)="publishMethod()"
+          >
+            {{ 'Publish' }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</nz-spin>

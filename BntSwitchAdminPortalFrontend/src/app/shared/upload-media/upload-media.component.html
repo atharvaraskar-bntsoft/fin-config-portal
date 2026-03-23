@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <!-- Multiple -->
+      <input
+        *ngIf="multiSelectFile"
+        type="file"
+        #fileID
+        ng2FileSelect
+        [uploader]="uploader"
+        multiple
+        (onFileSelected)="onFileSelected($event)"
+        [accept]="allowedMimeType?.toString()"
+      /><br />
+
+      <!-- Single -->
+      <input
+        #fileID
+        *ngIf="!multiSelectFile"
+        type="file"
+        ng2FileSelect
+        [uploader]="uploader"
+        (onFileSelected)="onFileSelected($event)"
+        [accept]="allowedMimeType?.toString()"
+      />
+    </div>
+    <ng-container *ngIf="multiSelectFile">
+      <div *ngFor="let item of uploader.queue">
+        <i class="fa fa-file-o" aria-hidden="true">
+          <span>
+            <strong [style.margin-left.px]="5">{{ item?.file?.name }}</strong>
+            <i
+              [style.margin-left.px]="5"
+              class="fa fa-trash-o"
+              aria-hidden="true"
+              (click)="item.remove()"
+            ></i>
+          </span>
+        </i>
+      </div>
+    </ng-container>
+  </div>
+</div>

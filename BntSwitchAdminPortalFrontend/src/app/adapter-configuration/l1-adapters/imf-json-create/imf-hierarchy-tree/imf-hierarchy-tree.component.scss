@@ -1,0 +1,46 @@
+@import '../../../../../variable.scss';
+.mat-tree {
+  font-family: 'lato', sans-serif;
+}
+
+.selected {
+  color: $main_color;
+  font-weight: bold;
+}
+
+.btn_color {
+  &.del {
+    color: $delete_color;
+  }
+  &.add {
+    color: $main_color;
+  }
+}
+
+::ng-deep .mat-menu-panel {
+  overflow: hidden !important;
+}
+
+.tree_parent_node {
+  border: 1px solid #dae2ea;
+  background: #f8faff;
+  margin: 4px;
+}
+
+.button_hover {
+  cursor: pointer;
+}
+
+.toaster__error {
+  color: white;
+  margin-top: 15px;
+  background-color: red;
+}
+.height_tree {
+  height: 465px;
+  overflow-y: scroll;
+}
+
+.color-orange {
+  color: #FFA500;
+}

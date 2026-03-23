@@ -1,0 +1,55 @@
+.delete_align {
+  position: relative;
+  left: 200px;
+  bottom: 25px;
+  color: #f46771;
+  width: 50% !important;
+  margin: 0 auto !important;
+  display: block !important;
+  float: none !important;
+}
+:host .modal.fade .modal-dialog {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  -ms-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+  margin-top: 15%;
+}
+.add-color {
+  color: #3c8dbc;
+}
+.label-width {
+  width: 100% !important;
+}
+:host ::ng-deep .ant-table-body {
+  overflow-x: hidden;
+}
+.text-danger {
+  left: 0;
+}
+.mat-dialog-title, .row-margin, .form-group {
+  margin-bottom: 0px;
+}
+.table tr td.p-20 {
+  padding-bottom: 20px;
+}
+.delete_align {
+  position: unset;
+  width: unset;
+  color: #f46771;
+  margin: 6px auto !important;
+  display: block !important;
+  float: none 6pximportant;
+}
+.delete_align:hover {
+  cursor: pointer;
+}
+.btn-property[disabled] {
+  color: rgba(0,0,0,.25);
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  text-shadow: none;
+  box-shadow: none;
+}

@@ -1,0 +1,26 @@
+<ng-container>
+  <nz-spin nzTip="Loading..." [nzSpinning]="!imfList.length">
+    <nz-tree-select
+      [style]="style"
+      [nzDropdownMatchSelectWidth]="true"
+      nz-tooltip
+      [nzTooltipTitle]="imfToolTip"
+      nzTooltipPlacement="right"
+      [nzDropdownStyle]="{ 'max-height': '200px' }"
+      [nzShowExpand]="true"
+      [nzNodes]="imfList"
+      [nzShowSearch]="true"
+      [nzHideUnMatched]="true"
+      nzPlaceHolder="{{ placeHolder }}"
+      [(ngModel)]="selectedIMFValue"
+      (ngModelChange)="emitValue()"
+      [nzAllowClear] = "!readOnlyFlag"      
+      nzDropdownClassName="{{ className }}"
+    required >
+    </nz-tree-select>
+    <span class="invalid-feedback"
+            *ngIf="!selectedIMFValue && !internalFormatError">
+            Please Enter Required Fields
+          </span>
+  </nz-spin>
+</ng-container>

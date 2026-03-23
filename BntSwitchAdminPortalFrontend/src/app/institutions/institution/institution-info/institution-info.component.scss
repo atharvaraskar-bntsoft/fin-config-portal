@@ -1,0 +1,24 @@
+.btn-space {
+  margin-left: 8px;
+}
+.icon-text {
+  padding-left: 10px;
+  font-weight: 700;
+}
+.icon {
+  margin-bottom: 10px;
+}
+.cursor {
+  cursor: pointer;
+}
+:host ::ng-deep .modal-dialog {
+  top: 25% !important;
+  overflow-y: initial !important;
+}
+.alignService {
+  word-break: break-all;
+}
+.font {
+  font-weight: bold; 
+  font-family: 'lato', sans-serif !important;
+}

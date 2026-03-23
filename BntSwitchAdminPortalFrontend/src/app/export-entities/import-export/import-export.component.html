@@ -1,0 +1,172 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <!-- Page Export Page -->
+    <ng-container *ngIf="permissionObject.write">
+      <button
+        *ngIf="page === 'EXPORT'"
+        class="btn btn-primary btn-md btn-flat pull-right"
+        routerLink="create-entities"
+      >
+        <i class="fa fa-plus-circle"></i>
+        {{ 'CREATE_SNAPSHOT' | translate }}
+      </button>
+    </ng-container>
+
+    <!-- For Import Page -->
+    <ng-container *ngIf="permissionObject.update">
+      <button
+        *ngIf="page === 'IMPORT'"
+        (click)="importJson()"
+        class="btn btn-primary btn-md btn-flat pull-right"
+      >
+        <i class="fa fa-cloud-upload"></i> Import Snapshot
+      </button>
+    </ng-container>
+  </div>
+  <nz-spin [nzSpinning]="loading" nzTip="Loading...">
+    <div style="height: 80vh">
+      <ngx-datatable
+        appNgxDatatableWatcher
+        style="height: 78vh"
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        [scrollbarH]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ records }} out of {{ totalRecords }} records</b>
+            </div>
+
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </nz-spin>
+  <ng-template #action let-row="row" ngx-datatable-cell-template>
+    <div *ngIf="permissionObject.read">
+      <a class="btn-link button-effect" role="button" (click)="viewJSON(row)">View JSON</a>
+    </div>
+    <div *ngIf="permissionObject.update">
+      <a class="btn-link button-effect" role="button" (click)="downloadSnapshot(row)"
+        >Download Snapshot</a
+      >
+    </div>
+  </ng-template>
+</div>
+
+<nz-modal
+  [nzWidth]="840"
+  [(nzVisible)]="visible"
+  [nzTitle]="jsonTitle"
+  (nzOnCancel)="visible = false"
+>
+  <ng-template #jsonTitle>
+    {{ page === 'EXPORT' ? 'Export Snapshot' : 'Import Snapshot' }}
+    <a
+      role="button"
+      style="margin-right: 40px"
+      class="pull-right"
+      data-toggle="tooltip"
+      title="Copy"
+      (click)="copyToClipboard(jsonObj)"
+    >
+      <i class="fa fa-copy fa-lg"></i
+    ></a>
+    <span class="pull-right col-sm-2" *ngIf="copied">Copied!</span>
+  </ng-template>
+  <ng-container *nzModalContent>
+    <div class="modal-body" style="max-height: 390px; overflow: auto">
+      <rv-pretty-json [obj]="jsonObj"></rv-pretty-json>
+    </div>
+    <div *nzModalFooter>
+      <button class="btn btn-primary btn-md btn-flat" (click)="close()">
+        {{ 'CLOSE' | translate }}
+      </button>
+    </div>
+  </ng-container>
+</nz-modal>
+
+<ng-template #versionList let-row="row" ngx-datatable-cell-template>
+  <ng-container *ngIf="row.snapshotExportedDetail[0].version === 0"> N/A </ng-container>
+  <ng-container *ngIf="row.snapshotExportedDetail[0].version">
+    <div>
+      {{ row.snapshotExportedDetail[0].version }}
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #entityType let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <div>
+      {{ row.snapshotExportedDetail[0].entityType }}
+    </div>
+  </ng-container>
+</ng-template>
+
+<nz-modal [(nzVisible)]="importPopup" [nzTitle]="importTitle" (nzOnCancel)="cancel()">
+    <ng-container *nzModalContent>
+      <div>
+        <app-upload-media
+          [allowedMimeType]="'application/json,.zip'"
+          (selectedFile)="selectedFile($event)"
+        ></app-upload-media>
+      </div>
+      </ng-container>
+      <ng-container *nzModalFooter>
+      <div>
+        <button class="btn btn-primary btn-md btn-flat" (click)="cancel()">
+          {{ 'CLOSE' | translate }}
+        </button>
+        <button class="btn btn-primary btn-md btn-flat" (click)="submitImport()" [disabled]="loading">
+          {{ 'Import' | translate }}
+        </button>
+      </div>
+    </ng-container>
+  </nz-modal>
+
+<nz-modal
+  [(nzVisible)]="confirmationPopup"
+  [nzTitle]="importTitle"
+  (nzOnCancel)="submitConfirmation('N')"
+>
+  <div *ngFor="let item of deltaList; let i = index">
+    <samp>{{ i + 1 }} . {{ item }}</samp>
+  </div>
+
+  <div *nzModalFooter>
+    <button class="btn btn-primary btn-md btn-flat" (click)="submitConfirmation('N')">No</button>
+    <button class="btn btn-primary btn-md btn-flat" (click)="submitConfirmation('Y')">Yes</button>
+  </div>
+</nz-modal>
+<app-not-found [isVisible]="!rows?.length && !loading"></app-not-found>

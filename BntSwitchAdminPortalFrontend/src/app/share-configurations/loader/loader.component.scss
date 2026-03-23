@@ -1,0 +1,28 @@
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(255, 255, 255, 0.7); /* clean white overlay */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999999;
+}
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loader-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}

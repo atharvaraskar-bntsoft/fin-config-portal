@@ -1,0 +1,46 @@
+.form_container {
+  width: 45%;
+  padding: 10px;
+  border: 0.5px solid;
+  box-shadow: 2px 2px;
+  input {
+    margin: 20px 0px 20px 0px;
+    height: 45px;
+    border-radius: 5px;
+  }
+  select {
+    margin: 20px 0px 10px 0px;
+    height: 45px;
+    border-radius: 5px;
+  }
+}
+
+.selectedComponentWarning {
+  color: red;
+  margin: 10px;
+}
+
+.schedule_container {
+  margin: 20px;
+}
+
+.button_align {
+  margin: 10px 0px 10px 0px;
+  :nth-child(2) {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+::ng-deep
+  .mat-checkbox-checked.mat-accent
+  .mat-checkbox-ripple
+  .mat-ripple-element {
+  opacity: 0.03 !important;
+  background-color: #2196f3 !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #2196f3;
+}

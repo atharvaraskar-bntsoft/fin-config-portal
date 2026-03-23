@@ -1,0 +1,104 @@
+<div>
+  <a class="btn" routerLink="/settings/master-configuration"
+    ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+  >
+</div>
+<nz-tabset
+  [nzTabPosition]="'top'"
+  [nzType]="'card'"
+  [nzSelectedIndex]="0"
+  (nzSelectChange)="tabChange($event)"
+>
+  <nz-tab nzTitle="{{ 'MESSAGE' | translate }}">
+    <ng-container [ngTemplateOutlet]="table"></ng-container>
+  </nz-tab>
+  <nz-tab nzTitle="{{ 'NETWORK' | translate }}">
+    <ng-container [ngTemplateOutlet]="table"></ng-container>
+  </nz-tab>
+</nz-tabset>
+
+<ng-template #table>
+  <div class="col-md-12 fade-in template">
+    <div class="row" [ngClass]="{ loading: loading }">
+      <div>
+        <ngx-datatable
+          appNgxDatatableWatcher
+          class="bootstrap striped fullscreen"
+          [rows]="rows"
+          [columns]="columns"
+          [columnMode]="'force'"
+          [headerHeight]="headerHeight"
+          [footerHeight]="40"
+          [rowHeight]="rowHeight"
+          [scrollbarV]="true"
+          [scrollbarH]="true"
+        >
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editTemplate let-row="row" ngx-datatable-cell-template>
+  <span (click)="editDetail(row)" class="edit__link"> Edit </span>
+</ng-template>
+
+<nz-modal [(nzVisible)]="isEditDialogVsl" nzTitle="Edit Details" (nzOnCancel)="cancelForm()">
+  <ng-container *nzModalContent>
+    <form [formGroup]="masterForm" (ngSubmit)="submitForm()">
+      <!-- Input -->
+      <div class="row col-md-12 input-align">
+        <label class="required">{{ 'label' | translate }}: </label>
+        <input
+          name="label"
+          type="text"
+          placeholder="Label"
+          required
+          formControlName="label"
+          class="form-control"
+        />
+      </div>
+      <div class="row col-md-12 input-align">
+        <label class="required">{{ 'value' | translate }}: </label>
+        <input
+          name="value"
+          type="text"
+          placeholder="value"
+          required
+          formControlName="value"
+          class="form-control"
+        />
+      </div>
+      <div class="row col-md-12 input-align tgl">
+        <label>{{ 'MANDATORY' | translate }}</label>
+        <nz-switch
+          nzCheckedChildren="True"
+          nzUnCheckedChildren="False"
+          formControlName="mandatory"
+        ></nz-switch>
+      </div>
+      <!-- Value -->
+      <div class="row col-md-12 input-align tgl">
+        <label>{{ 'HIDDEN' | translate }}</label>
+        <nz-switch
+          nzCheckedChildren="True"
+          nzUnCheckedChildren="False"
+          formControlName="hidden"
+        ></nz-switch>
+      </div>
+    </form>
+    <div *nzModalFooter>
+      <div [style.margin-top]="20">
+        <button nz-button nzType="default" (click)="cancelForm()">Cancel</button>
+        <button
+          nz-button
+          nzType="primary"
+          (click)="updateData(masterForm.value)"
+          [disabled]="!masterForm.valid"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

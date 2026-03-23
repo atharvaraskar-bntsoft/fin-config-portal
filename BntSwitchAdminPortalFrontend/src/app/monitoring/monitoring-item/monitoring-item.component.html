@@ -1,0 +1,49 @@
+<h6 class="fade-in template">{{ data['metaInfo']['header'] }}</h6>
+<table class="table table-bordered table-striped service-table fade-in template">
+  <tbody *ngFor="let row of data['data']; let i = index">
+    <tr>
+      <td class="show-status" style="width: 75%">
+        <a
+          href="javascript:void(0)"
+          (click)="showDetail(row, i)"
+          [class.bold-text]="row.isSelected"
+          >{{ getName(row) }}</a
+        >
+      </td>
+      <td style="width: 25%">
+        <span class="server-status">
+          <!-- <span *ngIf="row.status === 'PAUSED'" class="server-pause" title="Paused"></span>
+          <a
+            *ngIf="row.status === 'PAUSED'"
+            class="start_stop_button"
+            title="Start"
+            (click)="start(row, data['metaInfo']['header'])"
+            >{{ 'RESUME' | translate }}</a
+          > -->
+
+          <!-- <a *ngIf="row.status === 'UNREACHABLE'" class="start_stop_button no_button">{{
+            'UNREACHABLE' | translate
+          }}</a>
+
+          <span *ngIf="row.status === 'UP'" class="server-sucess" title="UP"></span>
+          <a
+            *ngIf="row.status === 'UP'"
+            class="start_stop_button"
+            title="Stop"
+            (click)="stop(row, data['metaInfo']['header'])"
+            >{{ 'SUSPEND' | translate }}</a
+          > -->
+
+          <span
+            [class.server-error]="row.status === 'UNREACHABLE'"
+            [class.server-sucess]="['UP', 'RUNNING'].includes(row.status)"
+            [class.server-pause]="row.status === 'PAUSED'"
+            title="{{ row.status | uppercase }}"
+          ></span>
+
+          <a class="start_stop_button no_button">{{ row.status | uppercase }}</a>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>

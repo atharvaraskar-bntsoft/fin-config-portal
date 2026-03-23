@@ -1,0 +1,17 @@
+::ng-deep .ant-modal-header {
+    color: rgba(0, 0, 0, 0.65);
+    background: #1890ff;
+}
+::ng-deep .ant-modal-title {
+    color: rgb(255, 255, 255);
+}
+
+::ng-deep .ant-table-placeholder {
+    display: none;
+}
+.margin-filter {
+    margin-right: 5px;
+}
+nz-select {
+    width: 100%;
+  }

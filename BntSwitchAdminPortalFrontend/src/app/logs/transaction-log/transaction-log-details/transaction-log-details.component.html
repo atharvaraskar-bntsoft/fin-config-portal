@@ -1,0 +1,564 @@
+<nz-drawer
+  [nzTitle]="title"
+  (nzOnClose)="close()"
+  [nzMaskClosable]="false"
+  [nzVisible]="isvisibleview"
+  nzPlacement="right"
+  [nzWidth]="1200"
+>
+  <ng-container *nzDrawerContent>
+    <nz-spin style="height: 600px" nzTip="Loading..." [nzSpinning]="loading">
+      <nz-card>
+        <div>
+          <div class="fade-in template" *ngIf="rows">
+            <div *ngIf="rows">
+              <div style="margin-left: 15px">
+                <h3 *ngIf="rows?.txnResponse">
+                  {{ 'TRANSACTION_RESPONSE' | translate }}
+                  <label class="row-tag" *ngIf="rows?.txnResponse?.type === 0"
+                    ><span class="badge badge-danger badges failure-badges">{{
+                      rows?.txnResponse?.text
+                    }}</span></label
+                  >
+                  <label class="row-tag" *ngIf="rows?.txnResponse?.type === 1"
+                    ><span class="badge badge-warning badges progress-badges">{{
+                      rows?.txnResponse?.text
+                    }}</span></label
+                  >
+                  <label class="row-tag" *ngIf="rows?.txnResponse?.type === 2"
+                    ><span class="badge badge-success badges success-badges">{{
+                      rows?.txnResponse?.text
+                    }}</span></label
+                  >
+                </h3>
+              </div>
+              <div>
+                <h4>
+                  <i class="fa fa-bars fa-sm iconColor" style="font-weight: bold"></i>
+                  {{ 'GENERAL_INFO' | translate }}
+                </h4>
+              </div>
+              <div style="margin-left: 15px; margin-top: 5px">
+                <div class="row" style="padding-left: 15px">
+                  <label>{{ 'TRANSACTION_ID' | translate }}:</label>
+                  <span> {{ rows.txnId }}</span>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <h4>
+                      <i class="fa fa-bars fa-sm iconColor" style="font-weight: bold"></i>
+                      {{ 'GENERAL_INFO' | translate }}
+                    </h4>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="col-md-6">
+                    <label>{{ 'TRANSACTION_ID' | translate }}:</label>
+                    <span> {{ rows.txnId }}</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>{{ 'TRANSACTION_RESPONSE' | translate }}</label>
+                    <label
+                      class="row-tag"
+                      *ngIf="rows?.txnResponse && rows?.txnResponse?.type === 0"
+                      ><span class="badge badge-danger badges failure-badges">{{
+                        rows?.txnResponse?.text
+                      }}</span></label
+                    >
+                    <label class="row-tag" *ngIf="rows?.txnResponse && rows?.txnResponse.type === 1"
+                      ><span class="badge badge-warning badges progress-badges">{{
+                        rows?.txnResponse?.text
+                      }}</span></label
+                    >
+                    <label class="row-tag" *ngIf="rows?.txnResponse && rows?.txnResponse.type === 2"
+                      ><span class="badge badge-success badges success-badges">{{
+                        rows?.txnResponse?.text
+                      }}</span></label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="col-md-6">
+                    <label>{{ 'TRANSACTION_TYPE' | translate }}</label
+                    >:
+                    <span> {{ rows.txnType }}</span>
+                  </div>
+                  <div class="row" style="margin-top: 5px">
+                    <label>{{ 'FOR_REVIEW' | translate }}</label>
+                    <a
+                      href="javascript:void(0)"
+                      (click)="setData(rows.forReview)"
+                      style="margin-left: 20px" 
+                      *ngIf="!rows.forReview"
+                      >{{ 'MARK_REVIEW' | translate }}</a
+                    >
+                    <a
+                      href="javascript:void(0)"
+                      (click)="setData(rows.forReview)"
+                      style="margin-left: 20px"
+                      *ngIf="rows.forReview"
+                      >{{ 'UNMARK_REVIEW' | translate }}</a
+                    >
+                  </div>
+                </div>
+                <div class="col-md-12 outerDiv">
+                  <div class="col-md-12" style="margin-top: 10px">
+                    <label>{{ 'INCOMING_REQUEST' | translate }}</label>
+                  </div>
+                  <div class="col-md-6" style="margin-bottom: 25px; margin-top: 10px">
+                    <table class="tableStyle table table-bordered">
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let r of rows.additionalParamsRequest.first_column;
+                            let index = index
+                          "
+                        >
+                          <th width="50%" title="{{ r.path }}">
+                            {{ r.text }}
+                          </th>
+                          <td width="50%">
+                            <div class="textwarp">
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | local) : r.value }}</span
+                              >
+                              <br />
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | utc) : '' }}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-md-6" style="margin-bottom: 25px; margin-top: 10px">
+                    <table class="tableStyle table table-bordered">
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let r of rows.additionalParamsRequest.second_column;
+                            let index = index
+                          "
+                        >
+                          <th width="50%" title="{{ r.path }}">
+                            {{ r.text }}
+                          </th>
+                          <td width="50%">
+                            <div class="textwarp">
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | local) : r.value }}
+                              </span>
+                              <br />
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | utc) : '' }}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="row col-md-12 tableMargin">
+                    <nz-collapse *ngIf="rows.additionalParamsRequest.third_column">
+                      <nz-collapse-panel
+                        *ngFor="let panel of rows.additionalParamsRequest.third_column"
+                        [nzHeader]="panel.title"
+                      >
+                      <table class="tableStyle table table-bordered">
+                        <tbody>
+                          <tr *ngFor="let panelItems of panel.value" >
+                            <th width="50%" title="{{ panelItems.path }}">
+                              {{ panelItems.text }}
+                            </th>
+                            <td width="50%">
+                              <div class="textwarp">
+                                <span title="{{ panelItems.path }}">
+                                  {{ panelItems.type === 'date' ? (panelItems.value | local) : panelItems.value }}
+                                </span>
+                                <br />
+                                <span title="{{ panelItems.path }}">
+                                  {{ panelItems.type === 'date' ? (panelItems.value | utc) : '' }}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      </nz-collapse-panel>
+                    </nz-collapse>
+                  </div>
+
+
+                </div>
+
+                <div class="col-md-12 outerDiv">
+                  <div class="col-md-12" style="margin-top: 10px">
+                    <label>{{ 'OUTGOING_RESPONSE' | translate }}</label>
+                  </div>
+                  <div class="col-md-6" style="margin-bottom: 25px; margin-top: 10px">
+                    <table class="tableStyle table table-bordered">
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let r of rows.additionalParamsResponse.first_column;
+                            let index = index
+                          "
+                        >
+                          <th width="50%" title="{{ r.path }}">
+                            {{ r.text }}
+                          </th>
+                          <td width="50%">
+                            <div class="textwarp">
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | local) : r.value }}</span
+                              >
+                              <br />
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | utc) : '' }}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-md-6" style="margin-bottom: 25px; margin-top: 10px">
+                    <table class="tableStyle table table-bordered">
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let r of rows.additionalParamsResponse.second_column;
+                            let index = index
+                          "
+                        >
+                          <th width="50%" title="{{ r.path }}">
+                            {{ r.text }}
+                          </th>
+                          <td width="50%">
+                            <div class="textwarp">
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | local) : r.value }}
+                              </span>
+                              <br />
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | utc) : '' }}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="row col-md-12 tableMargin" >
+                    <nz-collapse *ngIf="rows.additionalParamsResponse.third_column">
+                      <nz-collapse-panel
+                        *ngFor="let panel of rows.additionalParamsResponse.third_column"
+                        [nzHeader]="panel.title"
+                      >
+                      <table class="tableStyle table table-bordered">
+                        <tbody>
+                          <tr *ngFor="let panelItems of panel.value" >
+                            <th width="50%" title="{{ panelItems.path }}">
+                              {{ panelItems.text }}
+                            </th>
+                            <td width="50%">
+                              <div class="textwarp">
+                                <span title="{{ panelItems.path }}">
+                                  {{ panelItems.type === 'date' ? (panelItems.value | local) : panelItems.value }}
+                                </span>
+                                <br />
+                                <span title="{{ panelItems.path }}">
+                                  {{ panelItems.type === 'date' ? (panelItems.value | utc) : '' }}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      </nz-collapse-panel>
+                    </nz-collapse>
+                  </div>
+                </div>
+
+                <div class="col-md-12 outerDiv">
+                  <div class="col-md-12" style="margin-top: 10px">
+                    <label>Additonal Fields</label>
+                  </div>
+                  <div class="col-md-6" style="margin-bottom: 25px; margin-top: 10px">
+                    <table class="tableStyle table table-bordered">
+                      <tbody>
+                        <tr *ngFor="let r of rows.additionalFields.first_column; let index = index">
+                          <th width="50%" title="{{ r.path }}">
+                            {{ r.text }}
+                          </th>
+                          <td width="50%">
+                            <div class="textwarp">
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | local) : r.value }}</span
+                              >
+                              <br />
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | utc) : '' }}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-md-6" style="margin-bottom: 25px; margin-top: 10px">
+                    <table class="tableStyle table table-bordered">
+                      <tbody>
+                        <tr
+                          *ngFor="let r of rows.additionalFields.second_column; let index = index"
+                        >
+                          <th width="50%" title="{{ r.path }}">
+                            {{ r.text }}
+                          </th>
+                          <td width="50%">
+                            <div class="textwarp">
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | local) : r.value }}
+                              </span>
+                              <br />
+                              <span title="{{ r.path }}">
+                                {{ r.type === 'date' ? (r.value | utc) : '' }}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="row col-md-12 tableMargin">
+                    <nz-collapse *ngIf="rows.additionalFields.third_column">
+                      <nz-collapse-panel
+                        *ngFor="let panel of rows.additionalFields.third_column"
+                        [nzHeader]="panel.title"
+                      >
+                      <table class="tableStyle table table-bordered">
+                        <tbody>
+                          <tr *ngFor="let panelItems of panel.value" >
+                            <th width="50%" title="{{ panelItems.path }}">
+                              {{ panelItems.text }}
+                            </th>
+                            <td width="50%">
+                              <div class="textwarp">
+                                <span title="{{ panelItems.path }}">
+                                  {{ panelItems.type === 'date' ? (panelItems.value | local) : panelItems.value }}
+                                </span>
+                                <br />
+                                <span title="{{ panelItems.path }}">
+                                  {{ panelItems.type === 'date' ? (panelItems.value | utc) : '' }}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      </nz-collapse-panel>
+                    </nz-collapse>
+                  </div>
+
+                </div>
+              </div>
+              <div style="clear: both"></div>
+              <div *ngIf="flagArr">
+                <div *ngFor="let o of rows.operations" class="outerDiv col-md-12">
+                  <label style="font-size: 20px">{{ o.name }}</label>
+                  <ng-container *ngIf="o.status">
+                    <label class="row-tag" *ngIf="o.status.type === 0"
+                      ><span class="badge badge-danger badges failure-badges">{{
+                        o.status.text
+                      }}</span></label
+                    >
+                    <label class="row-tag" *ngIf="o.status.type === 1"
+                      ><span class="badge badge-warning badges progress-badges">{{
+                        o.status.text
+                      }}</span></label
+                    >
+                    <label class="row-tag" *ngIf="o.status.type === 2"
+                      ><span class="badge badge-success badges success-badges">{{
+                        o.status.text
+                      }}</span></label
+                    >
+                  </ng-container>
+                  <a *ngIf="!o.flag" class="cursor pull-right" (click)="onShowDestination(o)"
+                    ><i class="fa fa-plus-square" aria-hidden="true"></i
+                  ></a>
+                  <a *ngIf="o.flag" class="cursor pull-right" (click)="onShowDestination(o)"
+                    ><i class="fa fa-minus-square" aria-hidden="true"></i
+                  ></a>
+                  <div *ngIf="o.flag">
+                    <div>
+                      <div class="col-md-6 outerDiv" style="overflow: hidden">
+                        <label>{{ 'REQUEST' | translate }}</label>
+                        <table class="table tableStyle table-bordered">
+                          <tbody>
+                            <tr *ngFor="let i of o.request.first_column">
+                              <th width="50%" title="{{ i.path }}">
+                                {{ i.text }}
+                              </th>
+                              <td width="50%">
+                                <div class="textwarp">
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | local) : i.value }}</span
+                                  >
+                                  <br />
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | utc) : '' }}</span
+                                  >
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="col-md-6 outerDiv secondColumn">
+                        <table class="table tableStyle table-bordered">
+                          <tbody>
+                            <tr *ngFor="let i of o.request.second_column">
+                              <th width="50%" title="{{ i.path }}">
+                                {{ i.text }}
+                              </th>
+                              <td width="50%">
+                                <div class="textwarp">
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | local) : i.value }}</span
+                                  >
+                                  <br />
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | utc) : '' }}</span
+                                  >
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="col-md-6 outerDiv"
+                        style="overflow: hidden; margin-top: 5px; margin-left: 3px"
+                      >
+                        <label>{{ 'RESPONSE' | translate }}</label>
+                        <table class="table tableStyle table-bordered">
+                          <tbody>
+                            <tr *ngFor="let i of o.response.first_column">
+                              <th width="50%" title="{{ i.path }}">
+                                {{ i.text }}
+                              </th>
+                              <td width="50%">
+                                <div class="textwarp">
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | local) : i.value }}</span
+                                  >
+                                  <br />
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | utc) : '' }}</span
+                                  >
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <div
+                        class="row col-md-6 outerDiv"
+                        style="overflow: hidden; margin-top: 30px; margin-left: 5px"
+                      >
+                        <table class="table tableStyle table-bordered">
+                          <tbody>
+                            <tr *ngFor="let i of o.response.second_column">
+                              <th width="50%" title="{{ i.path }}">
+                                {{ i.text }}
+                              </th>
+                              <td width="50%">
+                                <div class="textwarp">
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | local) : i.value }}</span
+                                  >
+                                  <br />
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | utc) : '' }}</span
+                                  >
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div
+                        class="col-md-6 outerDiv"
+                        style="overflow: hidden; margin-top: 5px; margin-left: 3px"
+                      >
+                        <label>Additional Fields</label>
+                        <table class="table tableStyle table-bordered">
+                          <tbody>
+                            <tr *ngFor="let i of o.additionalField.first_column">
+                              <th width="50%" title="{{ i.path }}">
+                                {{ i.text }}
+                              </th>
+                              <td width="50%">
+                                <div class="textwarp">
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | local) : i.value }}</span
+                                  >
+                                  <br />
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | utc) : '' }}</span
+                                  >
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div
+                        class="row col-md-6 outerDiv" 
+                        style="overflow: hidden; margin-top: 30px; margin-left: 5px"
+                      >
+                        <table class="table tableStyle table-bordered">
+                          <tbody>
+                            <tr *ngFor="let i of o.additionalField.second_column">
+                              <th width="50%" title="{{ i.path }}">
+                                {{ i.text }}
+                              </th>
+                              <td width="50%">
+                                <div class="textwarp">
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | local) : i.value }}</span
+                                  >
+                                  <br />
+                                  <span title="{{ i.path }}">
+                                    {{ i.type === 'date' ? (i.value | utc) : '' }}</span
+                                  >
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #deletebtn>
+          <button (click)="close()"><i nz-icon nzType="close" nzTheme="outline"></i></button>
+        </ng-template>
+      </nz-card>
+    </nz-spin>
+  </ng-container>
+</nz-drawer>

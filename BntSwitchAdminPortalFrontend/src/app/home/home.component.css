@@ -1,0 +1,20 @@
+.dashboard-item-title {
+  text-align: left;
+  margin-left: 1%;
+}
+.chart {
+  max-height: 225px;
+}
+.btn{
+  margin-bottom: 20px;
+}
+.dropdownButton{
+  margin: 17px;
+}
+h5 {
+  font-size: 20px;
+}
+.time-width{
+  width: 12%;
+  margin-top: 18px;
+}

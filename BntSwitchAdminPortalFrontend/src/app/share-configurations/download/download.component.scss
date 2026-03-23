@@ -1,0 +1,31 @@
+/* Make ng-select fill the cell and display properly */
+.version-dropdown {
+  width: 100%;        // Fill the table cell width
+  display: block;
+  min-width: 120px;   // Optional, ensures dropdown is not tiny
+  z-index: 1000;      // Make dropdown overlay the table rows
+}
+
+/* Allow dropdown to overflow the table cell */
+::ng-deep ngx-datatable .datatable-body-cell {
+  overflow: visible !important;
+}
+
+
+:host ::ng-deep .ngx-datatable {
+  min-height: unset !important;
+}
+
+.section-divider {
+  border: 5px solid #000;
+  margin: 0 20px;
+}
+
+.adapter-tag {
+	margin-left: 10px;
+  color: grey;
+  font-weight: 700;
+  font-size: 18px; 
+}
+
+

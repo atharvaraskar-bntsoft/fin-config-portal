@@ -1,0 +1,240 @@
+<a class="btn" routerLink="/routing/processor-adapter"
+  ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+>
+<form [formGroup]="fg" (ngSubmit)="onSubmitprocessorAdapterForm(fg)">
+  <div class="col-sm-12">
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-sm-2">
+              <label
+                tooltip="{{ 'PROCESSOR_ADAPTER_LABEL.CARTIAGE' | translate }}"
+                    placement="right"
+                    delay="500"
+                >{{ 'CARTIAGE' | translate }}</label
+              >
+          </div>
+          <div class="col-sm-6">
+            <ng-select
+            formControlName="adapterId"
+            bindLabel="name"
+            [closeOnSelect]="true"
+                [readonly]="readOnlyFlag"
+            [clearable]="true"
+            [items]="cartiageList"
+            placeholder="{{ 'SELECT_CARTIAGE' | translate }}"
+          >
+          </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-sm-2">
+              <label
+                tooltip="{{ 'PROCESSOR_ADAPTER_LABEL.SERVICE' | translate }}"
+            placement="right"
+            delay="500"
+                >{{ 'SERVICE' | translate }}</label
+              >
+          </div>
+          <div class="col-sm-6">
+            <ng-select
+            formControlName="lookupvalueId"
+            bindLabel="value"
+                [readonly]="readOnlyFlag"
+            [closeOnSelect]="true"
+            [clearable]="true"
+            [items]="serviceModifiedList"
+            placeholder="{{ 'SELECT_SERVICE' | translate }}"
+          >
+          </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+    <div class="form-group">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="row" [ngClass]="displayFieldCss('code')">
+        <div class="col-sm-2">
+              <label
+                class="required"
+          tooltip="{{ 'PROCESSOR_ADAPTER_LABEL.CODE' | translate }}"
+          placement="right"
+          delay="500"
+                >{{ 'CODE' | translate }}</label
+              >
+        </div>
+            <div class="col-sm-6">
+              <input
+          type="text"
+          class="form-control case"
+          formControlName="code"
+                [readonly]="readOnlyFlag"
+          maxlength="20"
+          placeholder="{{ 'CODE' | translate }}"
+          pattern="^(0|[1-9][0-9]*)$"
+        />
+        <app-field-error-display
+        [displayError]="getFormName.controls['code'].touched && getFormName.controls['code'].hasError('required')"
+          errorMsg="{{ 'CODE_ERROR' | translate }}"
+        >
+        </app-field-error-display>
+        <app-field-error-display
+        [displayError]="getFormName.controls['code'].touched && getFormName.controls['code'].hasError('pattern')"
+        errorMsg="Please enter code in numeric only"
+      >
+      </app-field-error-display>
+      </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="row" [ngClass]="displayFieldCss('name')">
+        <div class="col-sm-2">
+        <label
+          class="required"
+          tooltip="{{ 'PROCESSOR_ADAPTER_LABEL.NAME' | translate }}"
+          placement="right"
+          delay="500"
+                >{{ 'NAME' | translate }}</label
+              >
+          </div>
+          <div class="col-sm-6">
+        <input
+          [readonly]="!this.isEditable"
+          type="text"
+          class="form-control case"
+          formControlName="name"
+          maxlength="50"
+                placeholder="{{ 'Name' | translate }}"
+              />
+        <app-field-error-display
+          [displayError]="isFieldValid('name')"
+                errorMsg="{{ 'NAME_ERROR' | translate }}"
+              >
+        </app-field-error-display>
+
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+    </div>
+    <div class="form-group">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="row" [ngClass]="displayFieldCss('description')">
+        <div class="col-sm-2">
+        <label
+          class="required"
+          tooltip="{{ 'PROCESSOR_ADAPTER_LABEL.DESCRIPTION' | translate }}"
+          placement="right"
+          delay="500"
+                >{{ 'DESCRIPTION' | translate }}</label
+              >
+          </div>
+          <div class="col-sm-6">
+        <input
+          type="text"
+                [readonly]="readOnlyFlag"
+          class="form-control case"
+          formControlName="description"
+          maxlength="512"
+          placeholder="{{ 'DESCRIPTION' | translate }}"
+        />
+        <app-field-error-display
+          [displayError]="getFormName.controls['description'].touched && getFormName.controls['description'].hasError('required')"
+                errorMsg="{{ 'DESCRIPTION_ERROR' | translate }}"
+              >
+        </app-field-error-display>
+        <app-field-error-display
+        [displayError]="getFormName.controls['description'].touched && getFormName.controls['description'].hasError('pattern')"
+        errorMsg="Invaild Description"
+              >
+        </app-field-error-display>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="row">
+        <div class="col-sm-2">
+          <label
+          tooltip="{{ 'PROCESSOR_ADAPTER_LABEL.IS_SAF_ENABLED' | translate }}"
+          placement="right"
+          delay="500"
+                >{{ 'IS_SAF_ENABLED' | translate }}</label
+              >
+        </div>
+        <div class="col-sm-6">
+          <label class="check_box_container">
+            {{ currentItem.isSAFEnabled ? ('ENABLED' | translate) : ('DISABLED' | translate) }}
+            <input
+              [ngModel]="currentItem.isSAFEnabled"
+              (change)="checkSaf()"
+                  [disabled]="readOnlyFlag"
+              formControlName="isSAFEnabled"
+              type="checkbox"
+              checked
+            />
+            <span class="checkmark"></span>
+          </label>
+            </div>
+       </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+    </div>
+    <div class="form-group">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="row">
+        <div class="col-sm-2">
+          <label
+          tooltip="{{ 'PROCESSOR_ADAPTER_LABEL.STATUS' | translate }}"
+          placement="right"
+          delay="500"
+                >{{ 'STATUS' | translate }}</label
+              >
+        </div>
+        <div class="col-sm-6">
+          <label class="check_box_container">
+            {{ currentItem.active ? ('ENABLED' | translate) : ('DISABLED' | translate) }}
+            <input
+              [ngModel]="currentItem.active"
+              (change)="checkStatus()"
+              formControlName="active"
+                  [disabled]="readOnlyFlag"
+              type="checkbox"
+              checked
+            />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="text-right">
+      <div class="col-sm-12">
+      <button class="btn" routerLink="/routing/processor-adapter" type="button">
+      {{ 'CANCEL' | translate }}
+    </button>
+        <button
+          *ngIf="!readOnlyFlag"
+          class="btn btn-primary btn-flat pull-right"
+          type="submit"
+          [disabled]="submitted"
+        >
+      {{ 'SAVE' | translate }}
+        </button>
+      </div>
+  </div>
+  </div>
+</form>

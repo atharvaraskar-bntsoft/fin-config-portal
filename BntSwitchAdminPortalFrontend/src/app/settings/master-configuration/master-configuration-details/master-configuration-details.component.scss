@@ -1,0 +1,18 @@
+@import '../../../../variable';
+.input-align {
+  padding: 5px;
+  &.tgl {
+    margin-top: 5px;
+    & > label {
+      margin-right: 5px;
+    }
+  }
+}
+
+.edit__link {
+  color: $main-color;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

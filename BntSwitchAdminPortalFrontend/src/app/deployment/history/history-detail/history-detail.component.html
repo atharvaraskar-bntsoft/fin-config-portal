@@ -1,0 +1,42 @@
+<div class="col-md-6 fade-in template">
+  <a class="btn" (click)="allDetails()"
+    ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+  >
+
+  <div class="detail-sub-header">
+    <i class="fa fa-bars iconColor history-icon-alignment" aria-hidden="true"></i>
+    {{ 'GENERAL_INFO' | translate }}
+  </div>
+  <h4 class="leftHead">{{ 'ID' | translate }} : {{ rows.id }}</h4>
+  <h4 class="leftHead">{{ 'NAME' | translate }} : {{ rows.name }}</h4>
+  <h4 class="leftHead">{{ 'STATUS' | translate }} : {{ rows.status }}</h4>
+  <h4 class="leftHead">
+    {{ 'DEPLOYED_ON' | translate }} :
+    {{ (rows.deployedOn) ? (rows.deployedOn | newDate) : 'N/A' }}
+  </h4>
+  <h4 class="leftHead">
+    {{ 'SCHEDULE_ON' | translate }} :
+    {{ (rows.scheduledOn) ? (rows.scheduledOn | newDate) : 'N/A' }}
+  </h4>
+
+  <div>
+    <table class="table" style="width: 100%">
+      <thead>
+        <tr>
+          <th>Component ID</th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rows of rows.deploymentComponent">
+          <td>{{ rows.componentId }}</td>
+          <td>{{ rows.componentType }}</td>
+          <td>{{ rows.name }}</td>
+          <td>{{ rows.version }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

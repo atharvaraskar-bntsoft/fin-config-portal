@@ -1,0 +1,1 @@
+<% response.sendRedirect(System.getenv("app_name")); %>

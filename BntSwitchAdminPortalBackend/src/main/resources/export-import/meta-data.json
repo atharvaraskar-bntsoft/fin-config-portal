@@ -1,0 +1,114 @@
+{
+   "Rule":{
+      "entityName":"Rule",
+      "childEntityName":"RuleConfiguration",
+      "childEntityAttribute":"ruleConfiguration",
+      
+      "cleanParentAttributes" : ["id","version"],
+     
+      "versionAttributeName":"version",
+      "nameAttribute":"name",
+      "isCustomImport":false,
+      "isCustomExport":false,
+      "isCustomCheker":false,
+      "label":"Rule",
+      "typeAttributeName":"ruleType",
+      "attributePerentInChild" :"rule",
+      "listMainQuery" : "select name , 'Rule' as entity , id as id , updated_on from rule where id in (select distinct rule_id from rule_configuration where version>0)"
+   },
+   
+  
+   
+   
+    "ImfStructure":{
+      "entityName":"ImfStructure",
+      "childEntityName":"",
+      "childEntityAttribute":"",
+      "cleanParentAttributes" : ["id"],
+      "cleaningAttributes" : [
+      ],
+      "versionAttributeName":"version",
+      "nameAttribute":"name",
+      "isCustomImport":false,
+      "isCustomExport":false,
+      "isCustomCheker":false,
+      "label":"Imf",
+      "typeAttributeName":"",
+      "listMainQuery" : "select name , 'ImfStructure' as entity , id as id, updated_on from imf where version>0"
+   },
+   
+   
+   
+    "Tags":{
+      "entityName":"Tags",
+      "childEntityName":"",
+      "childEntityAttribute":"",
+      "cleanParentAttributes" : ["id"],
+      "cleaningAttributes" : [
+      ],
+     
+      "nameAttribute":"name",
+      "isCustomImport":false,
+      "isCustomExport":false,
+      "isCustomCheker":false,
+      "isVersionalble":false,
+      "label":"Tags",
+      "typeAttributeName":"",
+      "listMainQuery" : "select name , 'Tags' as entity , id as id, updated_on from tags"
+   },
+   
+   
+   
+   
+   
+   
+    "Routing":{
+      "entityName":"Routing",
+      "childEntityName":"RoutingVersion",
+      "childEntityAttribute":"routingVersion",
+      "cleanParentAttributes" : ["id","version"],
+    
+      "versionAttributeName":"version",
+      "nameAttribute":"name",
+      "isCustomImport":true,
+      "isCustomExport":false,
+      "isCustomCheker":false,
+      "label":"Rule",
+      "typeAttributeName":"ruleType",
+      "attributePerentInChild" :"routing",
+      "listMainQuery" : "select name , 'Routing' as entity , id as id, updated_on from routing where id in (select distinct routing_id from routing_version where version>0)"
+   },
+   
+ 
+      	
+   "WorkFlow":{
+      "entityName":"WorkFlow",
+      "childEntityName":"",
+      "childEntityAttribute":"",
+      "versionAttributeName":"version",
+      "cleanParentAttributes" : ["id","version"],
+      "nameAttribute":"name",
+      "isCustomImport":"true",
+      "isCustomExport":"true",
+      "isCustomCheker":false,
+      "label":"WorkFlow",
+      "listMainQuery" : "select wf.name as name,'WorkFlow' as entity, wf.id as id, updated_on from workflow wf join (select name, max(version) version from workflow where version>0 group by name) dwf on wf.version=dwf.version and wf.name=dwf.name"
+   },
+   
+    "Adapter":{
+      "entityName":"Adapter",
+      "childEntityName":"AdapterConfiguration",
+      "childEntityAttribute":"adapterConfiguration",
+      "versionAttributeName":"version",
+      "cleanParentAttributes" : ["id","version"],
+      "nameAttribute":"name",
+      "isCustomImport":"true",
+      "isCustomExport":"true",
+      "isCustomCheker":"false",
+      "label":"Adapter",
+      "typeAttributeName":"type",
+      "attributePerentInChild" :"adapter",
+      "listMainQuery" : "select name , 'Adapter' as entity , id as id, updated_on from adapter where id in (select distinct adapter_id from adapter_configuration where version>0)"
+   }
+   
+}

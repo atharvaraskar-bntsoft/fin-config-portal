@@ -1,0 +1,229 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="pull-right row button-margin">
+      <button
+        *ngIf="permissionObject.write"
+        class="btn btn-primary btn-md btn-flat"
+        routerLink="create"
+      >
+        <em class="fa fa-plus-circle"></em> {{ 'CREATE_L3' | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row l3-adapter" [ngClass]="{ loading: loading }">
+    <div >
+      <ngx-datatable
+        appNgxDatatableWatcher
+        #myTable 
+        style="height: 78vh"
+        [loadingIndicator]="loading"
+        class="bootstrap fullscreen striped"
+        [rows]="adaptorMenu"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ adaptorMenu.length }} out of {{ totalRecords }} records</b>
+            </div>
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+
+  <ng-template #version let-row="row" ngx-datatable-cell-template>
+    <div class="filteroverlapTemplate">
+      <ng-select
+        class="filter-shadow"
+        (change)="changeRow($event, row)"
+        [ngModel]="row.version"
+        appendTo="body"
+        bindLabel="version"
+        [closeOnSelect]="true"
+        [items]="row.adapterConfigSummaryUIWapper"
+        [clearable]="false"
+      >
+      </ng-select>
+    </div>
+  </ng-template>
+
+  <ng-template #status let-row="row" ngx-datatable-cell-template>
+    <span class="row-tag">{{ row.status }}</span>
+  </ng-template>
+
+  <ng-template #action let-row="row" ngx-datatable-cell-template>
+    <a class="btn-link button-effect" role="button" [matMenuTriggerFor]="belowMenu">{{
+      'LOCATION_ACTIONS' | translate
+    }}</a>
+    <mat-menu #belowMenu="matMenu">
+      <button mat-menu-item (click)="copyClick(row)" *ngIf="permissionObject.write">
+        <i class="fa fa-copy fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+        <span style="color: #3c8dbc; margin-left: 10px">Copy</span>
+      </button>
+      <mat-divider></mat-divider>
+      <ng-container *ngIf="checkEdit(row)">
+        <button mat-menu-item (click)="getRowData(row)" *ngIf="permissionObject.update">
+          <i class="fa fa-pencil-square-o fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+          <span style="color: #3c8dbc; margin-left: 10px">Edit</span>
+        </button></ng-container
+      >
+      <mat-divider></mat-divider>
+      <ng-container *ngIf="checkEdit(row)">
+        <button mat-menu-item (click)="viewRowData(row)" *ngIf="permissionObject.read">
+          <i class="fa fa-pencil-square-o fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+          <span style="color: #3c8dbc; margin-left: 10px">View</span>
+        </button>
+		
+		<button mat-menu-item (click)="downloadRowL3(row)">
+		      <i class="fa fa-download fa-sm" aria-hidden="true" style="color: #3c8dbc"></i>
+		      <span style="color: #3c8dbc; margin-left: 10px">Download</span>
+		    </button>
+		
+		</ng-container>
+      <mat-divider *ngIf="row.version == 0 && checkDelete(row)"></mat-divider>
+
+      <ng-container *ngIf="row.version == 0 && checkDelete(row)">
+        <button mat-menu-item
+        nzType="primary"
+        nzDanger
+        nz-popconfirm
+        style="color: red"
+        nzPopconfirmTitle="Are you sure to delete this record?"
+        nzPopconfirmPlacement="bottom"
+        [nzIcon]="iconTpl"
+        (nzOnConfirm)="deleteRow(row)"
+        *ngIf="permissionObject.delete">
+          <i class="fa fa-trash fa-sm" aria-hidden="true" style="color: #f46771"></i>
+          <ng-template #iconTpl>
+            <span nz-icon nzType="question-circle-o" style="color: red"></span>
+          </ng-template>
+          <span class="delete-color" style="margin-left: 10px">Delete</span>
+        </button></ng-container
+      >
+      <mat-divider ></mat-divider>
+      <ng-container>
+        <button mat-menu-item (click)="compareJson(row)">
+          <i class="fa-solid fa-book-open-cover" aria-hidden="true" style="color: #3c8dbc"></i>
+          <span style="color: #3c8dbc; margin-left: 10px">{{ 'L3 version comparison' | translate }}</span>
+        </button>
+      </ng-container>
+    </mat-menu>
+  </ng-template>
+  <div
+    class="modal fade"
+    tabindex="-1"
+    [ngClass]="{ in: visibleCopyAnimate }"
+    [ngStyle]="{
+      display: visibleCopy ? 'block' : 'none',
+      opacity: visibleCopyAnimate ? 1 : 1
+    }"
+    *ngIf="visibleCopy"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            Copy L3 Adapter ({{ currentItem.name }})
+            <button
+              class="close pull-right"
+              data-dismiss="modal"
+              type="button"
+              aria-label="Close"
+              (click)="copyCancel()"
+            >
+              ×
+            </button>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row form-group row-template margin-row-label">
+            <div class="col-md-12 input-margin" style="margin-bottom: 5px;">
+              <label class="required">{{ 'NAME' | translate }}: </label>
+              <input
+                class="toto input-align input-search"
+                style="width: 75%; border-radius: 5px; margin-left: 44px"
+                type="text"
+                maxlength="40"
+                placeholder="Name"
+                [(ngModel)]="copyObj.adapterName"
+              />
+            </div>
+            <div class="col-md-12">
+              <label class="required"> {{ 'IMF_VERSION' | translate }}: </label>
+              <ng-select
+                style="margin-left: 7px; width: 25%"
+                [closeOnSelect]="true"
+                [clearable]="false"
+                [items]="getIfmList"
+                bindLabel="version"
+                bindValue="id"
+                [(ngModel)]="copyObj.imfId"
+                [searchable]="false"
+                placeholder="Select IMF Version"
+              ></ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-flat" (click)="copyCancel()">
+            {{ 'CLOSE' | translate }}
+          </button>
+          <button
+            class="btn btn-danger btn-flat pull-right"
+            (click)="saveCopy()"
+            [disabled]="isSaveCopy"
+          >
+            <em class="fa fa-spinner fa-pulse fa-x fa-fw" *ngIf="isSaveCopy"></em>
+            {{ 'Save' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nz-modal
+  style="height: 600px;"
+  [(nzVisible)]="l3jsonVisible"
+  nzTitle="Json Compare"
+  [nzFooter]="ModalFooter"
+  nzClosable="true"
+  (nzOnCancel)="closePopup()"
+  [nzWidth]="1100"
+>
+<ng-container *nzModalContent>
+  <app-json-compare [type]="type" [selectedAdapterName]="selectedAdapterName" style="height: 500px;" *ngIf="l3jsonVisible"></app-json-compare>
+</ng-container>
+</nz-modal>
+<ng-template #ModalFooter>
+</ng-template>
+
+<app-not-found [isVisible]="!adaptorMenu?.length && !loading"></app-not-found>

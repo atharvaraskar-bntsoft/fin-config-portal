@@ -1,0 +1,32 @@
+<nz-spin [nzSpinning]="loading">
+  <div *ngIf="adapterData?.networkData?.properties?.multiPackager">
+    <div style="margin-top:10px">
+      <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'"  [(nzSelectedIndex)]="selectedTabIndex">
+        <nz-tab *ngFor="let tab of tabData; let i = index" [nzTitle]="tab" (nzClick)="tabDataChange(tab, i)"></nz-tab>
+      </nz-tabset>
+    </div>
+    <div *ngIf="selectedTabIndex == 0">
+      <app-structured-data-table [headers]="headers" [rows]="rows" [totals]="totals"
+        [screen]="soapSchema ? 'l1SaopTable' : 'l1SchemaTable'"></app-structured-data-table>
+    </div>
+    <div *ngIf="selectedTabIndex == 1">
+      <app-structured-data-table [headers]="headers" [rows]="rowsResponse" [totals]="resTotals"
+        [screen]="soapSchema ? 'l1SaopTable' : 'l1SchemaTable'"></app-structured-data-table>
+    </div>
+  </div>
+  <div *ngIf="!adapterData?.networkData?.properties?.multiPackager">
+    <app-structured-data-table [headers]="headers" [rows]="soapSchema ? soapData : rows" [totals]="totals"
+      [screen]="soapSchema ? 'l1SaopTable' : 'l1SchemaTable'"></app-structured-data-table>
+  </div>
+</nz-spin>
+<div class="margin pull-right" style="margin-right: 0px">
+  <div>
+    <button class="btn btn-primary" *ngIf="!readOnlyFlag" [disabled]="!(name && template)" type="button"
+      (click)="draftSchema()">
+      {{ 'SAVE_DRAFT' | translate }}
+    </button>
+    <button class="btn btn-primary" [disabled]="!(name && template)" (click)="tabChange()" type="button">
+      {{ 'NEXT' | translate }}
+    </button>
+  </div>
+</div>

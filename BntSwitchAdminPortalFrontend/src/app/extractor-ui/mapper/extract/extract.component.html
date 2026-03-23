@@ -1,0 +1,271 @@
+<div class="row" style="margin-bottom: 5px;">
+  <div class="col-sm-12 text-right">
+    <button class="btn btn-default" (click)="addMore()">
+      <i class="fa fa-plus"></i> Add Block
+    </button>
+  </div>
+</div>
+<div class="card-main-acco" *ngFor="let item of extractObject.listExtractMapping; let a = index">
+  <div class="card-header">
+    <label for="Post Validation">BLOCK {{ a + 1 }}</label>
+    <div class="card-icon">
+      <i class="fa fa-angle-down" (click)="collapseBlockList(item)"></i>
+      <i class="fa fa-trash" (click)="removeBlock(a)"></i>
+    </div>
+  </div>
+  <nz-card [nzBordered]="false" [nzExtra]="extraTemplate">
+    <div class="card-main-acco" *ngFor="let item of extractObject.listExtractMapping; let a = index">
+      <div class="card-header">
+        <label for="Post Validation">BLOCK {{ a + 1 }}</label>
+        <div class="card-icon">
+          <i class="fa fa-angle-down" (click)="collapseBlockList(item)"></i>
+          <i class="fa fa-trash" (click)="removeBlock(a)"></i>
+        </div>
+      </div>
+      <div class="card-body" *ngIf="item.collapse">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-10">
+              <nz-radio-group nzName="radiogroup" (ngModelChange)="conditionNull(item, $event)"
+                [(ngModel)]="item.status">
+                <label nz-radio nzValue="M">Mandatory</label>
+                <label nz-radio nzValue="O">Optional</label>
+                <label nz-radio nzValue="C">Conditional</label>
+              </nz-radio-group>
+              <a *ngIf="item.status === 'C' && item.condition" (click)="createCondition(item, a)" class="required">Edit
+                Condition</a>
+              <a *ngIf="item.status === 'C' && !item.condition" (click)="createCondition(item, a)"
+                class="required">Create Condition</a>
+              <a *ngIf="item.status === 'C' && item.condition" style="color:red;" nz-popconfirm
+                nzPopconfirmTitle="Do you want to delete Condition?" (nzOnConfirm)="deleteCondition(item)"><i
+                  class="fa fa-trash fa-lg"></i></a>
+              <span class="invalid-feedback" *ngIf="item.validateCondition && item.status === 'C'">This field is
+                required</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label>Steps</label>
+            </div>
+            <div class="col-md-2">
+              <span class="btn btn-default" *ngIf="item.listFunction.length === 0" (click)="createStep(item)">
+                <i class="fa fa-plus"></i>
+              </span>
+              <span class="btn btn-default" *ngIf="item.listFunction.length !== 0" (click)="createStep(item)">
+                <i class="fa fa-edit"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label>Evaluate</label>
+            </div>
+            <div class="col-md-2" *ngIf="!item.customMapperList">
+              <span class="btn btn-default" (click)="createEvaluate(item, a)"><i class="fa fa-plus"></i>
+              </span>
+            </div>
+            <div class="col-md-2" *ngIf="item.customMapperList">
+              <span class="btn btn-default" (click)="createEvaluate(item, a)"><i class="fa fa-edit"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label>Post Validation</label>
+            </div>
+            <div class="col-md-2" *ngIf="item.listValidationFunction.length == 0">
+              <button type="button" (click)="createPostValidation(item, a)" class="btn btn-default">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+            <div class="col-md-2" *ngIf="item.listValidationFunction.length != 0">
+              <button type="button" (click)="createPostValidation(item, a)" class="btn btn-default">
+                <i class="fa fa-edit"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-label-right">
+              <label class="required">Assign value to internal field</label>
+            </div>
+            <div class="col-md-4">
+              <app-imf-extract (emitIMFValue)="onChange($event, item)" [imfValue]="item.imfField.alias"
+                [imfList]="imfList" [internalFormatError]="true"></app-imf-extract>
+              <span class="invalid-feedback" *ngIf="item.validateImfField">This field is required</span>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="item.imfField.useCase == 2 || item.imfField.useCase == 3">
+            <div class="row">
+              <div class="col-md-2 text-label-right">
+                <label class="required">Service:</label>
+              </div>
+              <div class="col-md-3">
+                <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Service"
+                  [(ngModel)]="item.imfField.service" (ngModelChange)="selectService(item)">
+                  <nz-option *ngFor="let list of serviceList" [nzValue]="list.value" [nzLabel]="list.value">
+                  </nz-option>
+                </nz-select>
+                <span class="invalid-feedback" *ngIf="item.validateServiceField">This field is required</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="item.imfField.useCase == 3">
+            <div class="row">
+              <div class="col-md-2 text-label-right">
+                <label class="required">Type:</label>
+              </div>
+              <div class="col-md-3">
+                <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Type"
+                  [(ngModel)]="item.imfField.type" (ngModelChange)="selectType(item)">
+                  <nz-option *ngFor="let list of typeList" [nzValue]="list.value" [nzLabel]="list.name">
+                  </nz-option>
+                </nz-select>
+                <span class="invalid-feedback" *ngIf="item.validateTypeField">This field is required</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-2 text-label-right">
+                <label class="required">Set IPC</label>
+              </div>
+              <div class="col-md-4">
+                <nz-select class="form-control" [disabled]="readOnlyFlag" appendTo="body" bindValue="value"
+                  bindLabel="value" [(ngModel)]="item.ipc" placeholder="Select IPC">
+                  <nz-option *ngFor="let list of ipcList" [nzValue]="list.value" [nzLabel]="list.value"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4 text-label-right-only">
+          <label>Steps</label>
+        </div>
+        <div class="col-md-2">
+          <span class="btn btn-default" *ngIf="item.listFunction.length === 0" (click)="createStep(item)">
+            <i class="fa fa-plus"></i>
+          </span>
+          <span class="btn btn-default" *ngIf="item.listFunction.length !== 0" (click)="createStep(item)">
+            <i class="fa fa-edit"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4 text-label-right-only">
+          <label>Evaluate</label>
+        </div>
+        <div class="col-md-2" *ngIf="!item.customMapperList">
+          <span class="btn btn-default" (click)="createEvaluate(item, a)"><i class="fa fa-plus"></i>
+          </span>
+        </div>
+        <div class="col-md-2" *ngIf="item.customMapperList">
+          <span class="btn btn-default" (click)="createEvaluate(item, a)"><i class="fa fa-edit"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4 text-label-right-only">
+          <label>Post Validation</label>
+        </div>
+        <div class="col-md-2" *ngIf="item.listValidationFunction.length == 0">
+          <button type="button" (click)="createPostValidation(item, a)" class="btn btn-default">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+        <div class="col-md-2" *ngIf="item.listValidationFunction.length != 0">
+          <button type="button" (click)="createPostValidation(item, a)" class="btn btn-default">
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4 text-label-right-only">
+          <label class="required">Assign value to internal field</label>
+        </div>
+        <div class="col-md-4">
+          <app-imf-extract (emitIMFValue)="onChange($event, item)" [imfValue]="item.imfField.text" [imfList]="imfList"
+            [internalFormatError]="true"></app-imf-extract>
+          <span class="invalid-feedback" *ngIf="item.validateImfField">This field is required</span>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="item.imfField.useCase == 2 || item.imfField.useCase == 3">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only">
+            <label class="required">Service:</label>
+          </div>
+          <div class="col-md-3">
+            <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Service"
+              [(ngModel)]="item.imfField.service" (ngModelChange)="selectService(item)">
+              <nz-option *ngFor="let list of serviceList" [nzValue]="list.value" [nzLabel]="list.value">
+              </nz-option>
+            </nz-select>
+            <span class="invalid-feedback" *ngIf="item.validateServiceField">This field is required</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="item.imfField.useCase == 3">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only">
+            <label class="required">Type:</label>
+          </div>
+          <div class="col-md-3">
+            <nz-select style="width: 274px;" nzShowSearch nzAllowClear nzPlaceHolder="Select Type"
+              [(ngModel)]="item.imfField.type" (ngModelChange)="selectType(item)">
+              <nz-option *ngFor="let list of typeList" [nzValue]="list.value" [nzLabel]="list.name">
+              </nz-option>
+            </nz-select>
+            <span class="invalid-feedback" *ngIf="item.validateTypeField">This field is required</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-4 text-label-right-only">
+            <label class="required">Set IPC</label>
+          </div>
+          <div class="col-md-4">
+            <nz-select class="form-control" [disabled]="readOnlyFlag" appendTo="body" bindValue="value"
+              bindLabel="value" [(ngModel)]="item.ipc" placeholder="Select IPC">
+              <nz-option *ngFor="let list of ipcList" [nzValue]="list.value" [nzLabel]="list.value"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+    </div>
+    </nz-card>
+    </div>
+<div class="form-group">
+  <div class="col-md-12 text-right">
+    <button class="btn btn-danger" (click)="close()">Close</button>
+    <nz-divider nzType="vertical"></nz-divider>
+    <button type="submit" (click)="save()" class="btn btn-primary">Submit</button>
+  </div>
+</div>
+
+<div *ngIf="isVisible">
+  <nz-drawer [nzMaskClosable]="false" [nzVisible]="isVisible" nzTitle="Condition" [nzWidth]="1040" [nzClosable]="true"
+    (nzOnClose)="closeCondition()">
+    <ng-container *nzDrawerContent>
+      <app-condition-builder *ngIf="jsonData" [jsonData]="jsonData" [ruleCondition]="conditionObj"
+        (addSubRule)="getRule($event)" (closeCreate)="closeCondition($event)">
+      </app-condition-builder>
+    </ng-container>
+  </nz-drawer>
+</div>

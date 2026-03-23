@@ -1,0 +1,41 @@
+@import '../../../variable';
+.error {
+  color: red;
+}
+.ant-modal {
+  width: 840px;
+}
+
+::ng-deep .ant-modal-title {
+  color: $main-color;
+}
+
+.version {
+  color: #488de2;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.filteroverlapTemplate {
+  position: absolute;
+  z-index: 10;
+  width: 7%;
+}
+
+.editor {
+  height: 385px;
+  border: solid 1px #ccc;
+  margin-top: 10px;
+}
+.required {
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}

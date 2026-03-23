@@ -1,0 +1,108 @@
+<div class="col-md-12 fade-in template" *ngIf="row">
+    <a class="btn btn-flat row" (click)="allDetails()"
+      ><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' | translate }}</a
+    >
+  
+    <h4 class="row">
+      <label class="row-tag">
+        <i class="fa fa-university" aria-hidden="true"></i> {{ row.name }}
+      </label>
+    </h4>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="detail-sub-header">
+          <i class="fa fa-info-circle fa-sm iconColor" aria-hidden="true">
+            <span class="icon-text font"> {{ 'GENERAL_INFO' | translate }}</span></i
+          >
+        </div>
+        <div class="col-md-4">
+          <table class="table table-striped">
+            <tbody>
+              <tr *ngIf="row?.name">
+                <th>{{ 'Name' | translate }}</th>
+                <td>{{ row.name }}</td>
+              </tr>
+              <tr *ngIf="row?.code">
+                <th>{{ 'INSTITUTION_ID' | translate }}</th>
+                <td>{{ row.code }}</td>
+              </tr>
+              <tr *ngIf="row?.active">
+                <th>{{ 'Status' | translate }}</th>
+                <td>{{ row.active }}</td>
+              </tr>
+              <tr *ngIf="row?.onusValidate">
+                <th>{{ 'Onus Validate' | translate }}</th>
+                <td>{{ row.onusValidate == 1 ? 'Enabled' : 'Disabled' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <div class="col-md-4">
+          <table class="table table-striped">
+            <tbody>
+              <tr *ngIf="row?.refundOffline">
+                <th>{{ 'Refund Offline' | translate }}</th>
+                <td>{{ row.refundOffline == 1 ? 'Enabled' : 'Disabled' }}</td>
+              </tr>
+              <tr *ngIf="row?.description">
+                <th>{{ 'DESCRIPTION' | translate }}</th>
+                <td>{{ row.description }}</td>
+              </tr>
+              <tr *ngIf="row?.country.countryName">
+                <th>{{ 'Country' | translate }}</th>
+                <td>{{ row.country.countryName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="detail-sub-header" style="margin-left: 15px">
+            <i class="fa fa-info-circle fa-sm iconColor" aria-hidden="true">
+              <span class="icon-text font"> {{ 'Pos Info' | translate }}</span></i
+            >
+          </div>
+        </div>
+        <div class="col-md-4" style="margin-left: 15px">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th>{{ 'Pos Sms' | translate }}</th>
+                <td>{{ row.pos_sms }}</td>
+              </tr>
+              <tr>
+                <th>{{ 'Transaction Type Sms' | translate }}</th>
+                <td>{{ row.txntype_sms }}</td>
+              </tr>
+              <tr>
+                <th>{{ 'Account Type Sms' | translate }}</th>
+                <td>{{ row.accounttype_sms }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <div class="col-md-4">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th>{{ 'Pos Dms' | translate }}</th>
+                <td>{{ row.pos_dms }}</td>
+              </tr>
+              <tr>
+                <th>{{ 'Transaction Type Dms' | translate }}</th>
+                <td>{{ row.txntype_dms }}</td>
+              </tr>
+              <tr>
+                <th>{{ 'Account Type Dms' | translate }}</th>
+                <td>{{ row.accounttype_dms }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

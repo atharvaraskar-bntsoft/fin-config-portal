@@ -1,0 +1,203 @@
+<ng-container>
+  <div class="form-pannel">
+    <div class="form-group mt-4">
+      <div class="row mapper">
+        <div class="col-md-2 text-right">
+          <label class="required">Mapper</label>
+        </div>
+        <div class="col-md-7">
+          <ng-select
+            [clearable]="false"
+            class="filter-shadow"
+            appendTo="body"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            bindLabel="name"
+            [items]="mapperList"
+            [(ngModel)]="selectedMapper"
+            placeholder="Select mapper"
+            (change)="selectMapperFn($event)"
+            [disabled]="dependentSource || readOnlyFlag"
+          >
+            <ng-template ng-option-tmp let-item="item">
+              <div [title]="item.parametersUi.tooltip" *ngIf="item.parametersUi">
+                {{ item.name }}
+              </div>
+              <div *ngIf="!item.parametersUi">{{ item.name }}</div>
+            </ng-template>
+          </ng-select>
+          <span class="invalid-block" *ngIf="!isSubmit">Please provide a valid mapper</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="selectedMapper && selectedMapperParam.length > 0">
+      <ng-container *ngFor="let param of selectedMapperParam; let i = index">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-2 text-right">
+              <label
+                *ngIf="
+                  param.name === 'source' ||
+                  param.name === 'imf' ||
+                  selectedMapper.name === 'GROOVY_EXECUTOR'
+                "
+                class="required"
+                >Parameter {{ i + 1 }}</label
+              >
+              <label
+                *ngIf="
+                  param.name !== 'source' &&
+                  param.name !== 'imf' &&
+                  selectedMapper.name !== 'GROOVY_EXECUTOR'
+                "
+                >Parameter {{ i + 1 }}</label
+              >
+            </div>
+            <div class="col-md-7">
+              <ng-container *ngIf="param.name === 'source'">
+                <ng-select
+                  [clearable]="false"
+                  class="filter-shadow"
+                  style="width: 100%"
+                  [closeOnSelect]="true"
+                  bindValue="id"
+                  bindLabel="name"
+                  [items]="param.list"
+                  [(ngModel)]="param.value"
+                  placeholder="{{ param.label }}"
+                  (change)="selectSourceParam($event, param)"
+                  [disabled]="dependentSource || readOnlyFlag"
+                >
+                  <ng-template ng-option-tmp let-item="item">
+                    <div [title]="item.tooltip">{{ item.name }}</div>
+                  </ng-template>
+                </ng-select>
+                <span class="invalid-block" *ngIf="param.error && !param.value"
+                  >Please provide a valid source</span
+                >
+              </ng-container>
+              <ng-container *ngIf="param.name === 'imf' && mapperType === 'DBMapper'">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <app-imf-tree-structure
+                      [style]="'width: 100%'"
+                      [className]="'custom-form-control'"
+                      [isMapper]="true"
+                      [disabled]="dependentSource"
+                      [isRequest]="isRequest"
+                      [networkService]="networkService"
+                      [index]="i"
+                      [readOnlyFlag] = "readOnlyFlag"
+                      [imfId]="imfId"
+                      [imfValue]="param.value"
+                      (emitIMFValue)="getImfFnDb($event, 'builtinIMFRes')"
+                    >
+                    </app-imf-tree-structure>
+                    <span class="invalid-block" *ngIf="param.error"
+                      >Please provide a valid imf</span
+                    >
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container
+                *ngIf="param.name === 'imf' && mapperType === 'BuiltInMapper' && jsonData"
+              >
+                <div class="row mt-3">
+                  <div class="col-sm-4">
+                    <app-tree-structure
+                      [style]="'width: 100%'"
+                      [className]="'custom-form-control'"
+                      [disabled]="dependentSource"
+                      [jsonData]="jsonData"
+                      [resimf]="param.value"
+                      [readOnlyFlag] = "readOnlyFlag"
+                      [useCase]="param.useCase"
+                      (ImfValue)="getImfFn($event, i)"
+                    >
+                    </app-tree-structure>
+                    <span class="invalid-block" *ngIf="param.error"
+                      >Please provide a valid imf</span
+                    >
+                  </div>
+                  <div class="col-sm-4">
+                    <ng-select
+                      [clearable]="false"
+                      class="filter-shadow"
+                      [closeOnSelect]="true"
+                      [items]="serviceList"
+                      bindLabel="value"
+                      bindValue="value"
+                      placeholder="Select Service"
+                      [disabled]="param.useCase == 1 || readOnlyFlag"
+                      [(ngModel)]="param.selectedService"
+                    >
+                    </ng-select>
+                    <span class="invalid-block" *ngIf="isValidvalue"
+                      >Please provide a valid service</span
+                    >
+                  </div>
+                  <div class="col-sm-4">
+                    <ng-select
+                      [clearable]="false"
+                      [disabled]="(param.useCase == 1 || param.useCase == 2) || readOnlyFlag"
+                      class="filter-shadow"
+                      [closeOnSelect]="true"
+                      [items]="typeList"
+                      bindLabel="name"
+                      bindValue="value"
+                      placeholder="Select type"
+                      [(ngModel)]="param.selectedType"
+                    >
+                    </ng-select>
+                    <span class="invalid-block" *ngIf="param.error && !param.selectedType"
+                      >Please provide a valid type</span
+                    >
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  param.name !== 'source' &&
+                  param.name !== 'imf' &&
+                  selectedMapper.name !== 'GROOVY_EXECUTOR'
+                "
+              >
+                <input
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="param.value"
+                  placeholder="{{ param.label }}"
+                  [disabled]="dependentSource || readOnlyFlag"
+                />
+                <span class="invalid-block" *ngIf="param.error && !param.value"
+                  >Please provide a valid value</span
+                >
+              </ng-container>
+              <ng-container *ngIf="selectedMapper.name === 'GROOVY_EXECUTOR'">
+                <ace-editor [(text)]="param.value" class="editor" [readOnly]="readOnlyFlag" #editor> </ace-editor>
+                <span class="invalid-block" *ngIf="param.error">Please provide a valid value</span>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-12">
+        <div class="text-right">
+          <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+          <button
+          *ngIf="!readOnlyFlag"
+            nz-button
+            nzType="primary"
+            [disabled]="!field || dependentSource"
+            style="margin-left: 10px"
+            (click)="saveMapper()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

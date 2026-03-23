@@ -1,0 +1,180 @@
+<div class="col-sm-12">
+  <div class="page-title"> <a (click)="cancel()">
+      <span *ngIf="ruleTypeRoute === 'route'; else workflow">{{
+        'ALL_ROUTING_RULE' | translate
+        }}</span>
+      <ng-template #workflow><span>{{ 'ALL_WORKFLOW_RULES' | translate }}</span></ng-template>
+    </a>
+  </div>
+</div>
+<form>
+  <div class="main-form__double-field">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="main-form">
+          <div class="form-group" *ngFor="let inputdes of inputfields">
+            <label
+              tooltip="{{ inputdes.label }}"
+              placement="right"
+              delay="500"
+              [ngClass]="{ required: inputdes.validation }">
+              {{ inputdes.label }}
+            </label>
+            <input
+            [class.validate]="showError"
+            id="{{ inputdes.dtoField }}"
+            #model="ngModel"
+              [(ngModel)]="inputdes.value"
+              class="form-control"
+              type="{{ inputdes.inputtype }}"
+              [disabled]="ruleId"
+              rv-noSpaces
+              autocomplete="off"
+              (keyup)="routeName($event, inputdes.dtoField)"
+              pattern="{{
+              inputdes.dtoField === 'ruleName' ? ruleNameRegex :
+              ruleDescriptionRegex
+              }}"
+              name="{{ inputdes.dtoField }}"
+              placeholder="{{ placeholderMapping[inputdes.dtoField] }}"
+              maxlength="50"
+              />
+            <div *ngIf="showError && model.invalid" class="errormsg" >
+              <!-- {{ 'PLEASE_ROUTER_NAME' | translate }} -->
+              Please Enter Vaild {{ inputdes.label }}
+            </div>
+          </div>
+          <fieldset class="main-field">
+            <div class="form-group " *ngIf="ruleId">
+              <label
+                class="required"
+                tooltip="{{ 'RULE_ENGINE.DESTINATIONS' | translate }}"
+                placement="right"
+                delay="500">{{ 'RULE_ENGINE.DESTINATIONS' | translate }}</label>
+              <ng-select
+                *ngIf="isEditable"
+                [items]="ruleDataOutput"
+                [(ngModel)]="selectdestinations"
+                name="destinations"
+                [multiple]="true"
+                bindLabel="text"
+                (change)="destinations($event)"
+                placeholder="{{ 'RULE_ENGINE.DESTINATION' | translate }}">
+              </ng-select>
+              <div *ngIf="selectdestinations.length> 0 && !isEditable">
+                <div>
+                  <span *ngFor="let des of selectdestinations"
+                    class="destination">{{
+                    des.text
+                    }}</span>
+                </div>
+              </div>
+              <div *ngIf="showError && destinationsValues.length === 0"
+              class="errormsg">
+                <!-- {{ 'PLEASE_ROUTER_NAME' | translate }} -->
+                Please Select Destination
+              </div>
+            </div>
+
+            <div class="form-group " *ngIf="!ruleId">
+              <label
+                class="required"
+                tooltip="{{ 'RULE_ENGINE.DESTINATIONS' | translate }}"
+                placement="right"
+                delay="500">{{ 'RULE_ENGINE.DESTINATIONS' | translate }}</label>
+              <ng-select
+                [items]="ruleDataOutput"
+                *ngIf="!ruleId"
+                [multiple]="true"
+                bindLabel="text"
+                bindValue="value"
+                (change)="destinations($event)"
+                placeholder="{{ 'RULE_ENGINE.DESTINATION' | translate }}">
+              </ng-select>
+              <div *ngIf="showError && destinationsValues.length === 0"
+              class="errormsg">
+                <!-- {{ 'PLEASE_ROUTER_NAME' | translate }} -->
+                Please Select Destination
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="main-field">
+            <div class="main-field__title">
+              {{ texts['fields']['status']['label'] }}
+            </div>
+            <div>
+              <label class="check_box_container">{{ enabled ?
+                ('ENABLE' | translate) : ('DISABLE' | translate) }}
+                <input
+                  type="checkbox"
+                  [checked]="enabled"
+                  [(ngModel)]="model.enabled"
+                  name="enabled"
+                  (change)="changeStatus()"
+                  />
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </fieldset>
+          <fieldset class="main-field margbottom">
+            <div class="main-field__title">
+              <a *ngIf="conditionObj" (click)="openCondition()"
+                class="required">Edit Condition</a>
+              <a *ngIf="!conditionObj" (click)="openCondition()"
+                class="required">Create Condition</a>
+              <div *ngIf="validationErrorMessage" class="errormsg">
+                {{ 'PLEASE_ADD_ONE_RULE' | translate }}
+              </div>
+              <nz-modal
+                [(nzVisible)]="isVisiblecon"
+                [nzTitle]="modalTitle"
+                [nzContent]="modalContent"
+                [nzFooter]="modalFooter"
+                [nzWidth]="1150"
+                nzClosable="false">
+                <ng-template #modalTitle>Condition</ng-template>
+
+                <ng-template #modalContent>
+                  <app-condition-builder
+                    *ngIf="jsonData"
+                    [jsonData]="jsonData"
+                    [ruleCondition]="conditionObj"
+                    (addSubRule)="getRule($event)">
+                  </app-condition-builder>
+                </ng-template>
+
+                <ng-template #modalFooter>
+                  <button nz-button nzType="primary" style="width: 80px"
+                    (click)="conCancel()">
+                    Cancel
+                  </button>
+                </ng-template>
+              </nz-modal>
+            </div>
+          </fieldset>
+
+          <div class="row">
+            <div class="col-sm-6">
+            <button type="button" (click)="cancel()" class="btn btn-flat">
+              {{ 'CANCEL' | translate }}
+            </button>
+          </div>
+<div class="col-sm-6 text-right">
+            <button type="button" (click)="saveRule(true)" class="btn btn-primary btn-flat">
+              {{ 'PUBLISH' | translate }}
+            </button>
+            <button
+              type="button"
+              (click)="saveRule(false)"
+              class="btn btn-primary btn-flat">
+              {{ ruleId > 0 ? ('SAVE_DRAFT' | translate) : ('SAVE_DRAFT' |
+              translate) }}
+            </button>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

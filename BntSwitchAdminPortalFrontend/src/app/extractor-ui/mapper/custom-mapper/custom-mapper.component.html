@@ -1,0 +1,54 @@
+<!-- <nz-modal [(nzVisible)]="setCustomMapper" nzClosable="false" [nzTitle]="customMapperMpdalTitle"
+  [nzContent]="customMapperModalContent" [nzFooter]="customMapperModalFooter" [nzWidth]="900"
+  (nzOnCancel)="setCustomMapper = false" [nzStyle]="{ top: '70px' }">
+  <ng-template #customMapperMpdalTitle>
+    Add Custom Mapper {{ selectedTabIndex == 0 ? 'Request' : 'Response' }}:
+    {{ selectedTransactionType }}
+  </ng-template> -->
+
+  <div>
+    <div class="col-md-12">
+      <span *ngIf="isJarUpload">
+        <!-- <ng-container> -->
+          <div class="col-md-2">
+            <label>Upload Jar:</label>
+          </div>
+          <div class="col-md-2">
+            <label for="uploadfile" style="cursor: pointer">
+              <i nz-icon nzType="paper-clip" style="font-size: 20px" theme="outline"></i>
+              <input type="file" [disabled]="readOnlyFlag" (change)="uploadFile($event)" id="uploadfile"
+                style="display: none" />
+            </label>
+          </div>
+        <!-- </ng-container> -->
+       
+        <div class="col-md-7">
+          <table>
+            <tr *ngFor="let file of fileInfos; let i = index">
+              <td class="col-md-6">{{ file.name }}</td>
+              <td class="col-md-3" >
+                <i nz-icon nzType="close" style="font-size: 10px; cursor: pointer; margin-left: 20px; color: red"
+                  nzTheme="outline" (click)="removeFile(i)"></i>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </span>
+      <ng-container>
+        <div class="col-md-12" style="padding-top: 10px" *ngFor="let item of customMappings; let i = index">
+          <input class="input-align input-value"  style="width: 70%" type="text"
+            placeholder="Enter Value" [(ngModel)]="item.className" />
+          <span class="toto input-align" style="margin-left: 50px;" (click)="pullCustomMapperItem(i)"
+            *ngIf="customMappings.length > 0 && i !== 0 "><i class="fa fa-minus"></i></span>
+          <span class="toto input-align" style="margin-left: 80px;" (click)="pushCustomMapperItem(item)"
+            *ngIf="i + 1 === customMappings.length "><i class="fa fa-plus"></i></span>
+        </div>
+      </ng-container>
+    </div>
+    <span class="error ml35" *ngIf="jarFileExistWarning?.length">{{ jarFileExistWarning }}</span>
+</div>
+  <div style="padding-top: 100px;">
+    <button nz-button nzType="primary" (click)="setCustomMapper = false">Cancel</button>
+    <button nz-button nzType="primary" (click)="closeSetCustomMapper()">Save</button>
+  </div>
+<!-- </nz-modal> -->

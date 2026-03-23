@@ -1,0 +1,21 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="visibleJson" nzPlacement="right" [nzWidth]="1200">
+  <ng-container *nzDrawerContent>
+    <nz-spin style="height: 600px" nzTip="Loading..." [nzSpinning]="loading">
+      <nz-card [nzTitle]="title" [nzExtra]="deletebtn">
+        <div>
+          {{ keyData.txnType }}
+          <a role="button" class="pull-right" (click)="copyToClipboard(keyData.jsonData, $event)">
+            <i class="fa fa-copy fa-lg"></i
+          ></a>
+          <span class="pull-right col-sm-2" *ngIf="copied">Copied!</span>
+        </div>
+        <div>
+          <rv-pretty-json [obj]="maskJSON"></rv-pretty-json>
+        </div>
+        <ng-template #deletebtn>
+          <button (click)="closeD()"><i nz-icon nzType="close" nzTheme="outline"></i></button>
+        </ng-template>
+      </nz-card>
+    </nz-spin>
+  </ng-container>
+</nz-drawer>

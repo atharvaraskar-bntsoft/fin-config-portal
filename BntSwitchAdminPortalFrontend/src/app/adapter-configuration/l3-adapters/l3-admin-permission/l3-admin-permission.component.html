@@ -1,0 +1,43 @@
+<form [formGroup]="form" (ngSubmit)="save()">
+  <div class="row row-margin row-align row-template pull-right">
+    <div class="col-md-2 text-right">
+      <span class="toto input-align rulsCss icon-border-radius btn btn-default" style="margin-right: 5px"
+        (click)="addAdminList()">
+        <i class="fa fa-plus"></i></span>
+    </div>
+  </div>
+  <div class="row">
+    <ng-container class="card-details-body" formArrayName="userIDPermission">
+      <div  class="col-md-12 row-margin" *ngFor="let skill of adminFormGroup.controls; let i=index">
+        <div [formGroupName]="i">
+          <div class="col-md-4">
+            <nz-select nzPlaceHolder="Select a user" style="width: 200px" (ngModelChange)="setValue($event)"
+              (nzOpenChange)="openChange($event)" formControlName="userID">
+              <nz-option *ngFor="let list of listOfUsers" [nzValue]="list" [nzLabel]="list.firstName"></nz-option>
+            </nz-select>
+          </div>
+          <div class="col-md-2">
+            <input type="checkbox" (change)="setCheckedView($event)" formControlName="view"> View
+          </div>
+          <div class="col-md-2">
+            <input type="checkbox" (change)="setCheckedEdit($event)" formControlName="edit"> Edit
+          </div>
+          <div class="col-md-2">
+            <input type="checkbox" (change)="setCheckedAdmin($event)" formControlName="admin"> Admin
+          </div>
+          <div class="col-md-2">
+            <span class="toto input-align rulsCss icon-border-radius btn btn-default" style="margin-right: 5px"
+              (click)="removeconnectionList(i)">
+              <i class="fa fa-minus"></i></span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row row-margin row-align row-template pull-right">
+    <div class="col-sm-12">
+      <button nz-button nzType="default" (click)="close()" style="margin-top: 50px">Cancel</button>
+      <button nz-button nzType="primary" style="margin-left: 10px; margin-top: 50px">Save</button>
+    </div>
+  </div>
+</form>

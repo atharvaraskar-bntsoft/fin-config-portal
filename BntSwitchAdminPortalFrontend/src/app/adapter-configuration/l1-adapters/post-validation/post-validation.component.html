@@ -1,0 +1,30 @@
+<div class="select-box">
+  <ng-select [items]="getrequest(adapterData)" [disabled]="readOnlyFlag" bindLabel="messageIntentifier"
+    placeholder="Select Message Type" [clearable]="false" [multiple]="true" [(ngModel)]="transjections">
+  </ng-select>
+</div>
+<div style="clear: both"></div>
+
+<!-- <div ace-editor [(text)]="editorContent.script" [readOnly]="readOnlyFlag" [theme]="'eclipse'" class="editor"></div> -->
+<div>
+  <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="editorContent.script"></ngx-monaco-editor>
+</div>
+<div class="footerDiv" style="padding-left: 0px; padding-right: 0px">
+  <div class="row col-md-4 margin previous-button">
+    <button class="btn btn-primary" type="button" (click)="prevTabValue()">
+      {{ 'PREVIOUS' | translate }}
+    </button>
+  </div>
+  <div class="row col-md-8">
+    <div class="margin pull-right" style="margin-right: -23px">
+      <button class="btn btn-primary" type="button" *ngIf="!readOnlyFlag"
+        [disabled]="transjections && transjections.length > 0 && !editorContent.script" (click)="draftTransform()">
+        {{ 'SAVE_DRAFT' | translate }}
+      </button>
+      <button class="btn btn-primary" type="button" *ngIf="!readOnlyFlag"
+        [disabled]="transjections && transjections.length > 0 && !editorContent.script" (click)="versionData()">
+        {{ 'PUBLISH' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

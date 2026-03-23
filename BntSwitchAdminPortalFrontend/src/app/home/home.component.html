@@ -1,0 +1,80 @@
+<div class="fade-in template">
+  <div>
+    <!-- <div class="dropdown">
+      <button
+        class="btn btn-primary pull-right dropdown-toggle dropdownButton"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        {{ "CREATE" | translate }}
+        <span class="caret"></span>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li>
+          <a
+            class="dropdown-item"
+            routerLink="institutions/institution-group/create"
+            >{{ "INSTITUTIONS_GROUP" | translate }}</a
+          >
+        </li>
+        <li>
+          <a
+            class="dropdown-item"
+            routerLink="institutions/institutions/create"
+            >{{ "INSTITUTIONS" | translate }}</a
+          >
+        </li>
+        <li>
+          <a class="dropdown-item" routerLink="institutions/locations/create">{{
+            "LOCATIONS" | translate
+          }}</a>
+        </li>
+        <li>
+          <a class="dropdown-item" routerLink="institutions/devices/create">{{
+            "DEVICES" | translate
+          }}</a>
+        </li>
+      </div>
+    </div> -->
+
+    <!-- <div class="form-group">
+  <select class="form-control time-width pull-right" [(ngModel)]="interval" (change)="timeInterval()">
+    <option value="30">{{ 'TIME_30_MIN' | translate }}</option>
+    <option value="60">{{ 'TIME_1_Hour' | translate }}</option>
+    <option value="120">{{ 'TIME_2_Hour' | translate }}</option>
+    <option value="1440">{{ 'TIME_24_Hour' | translate }}</option>
+  </select>
+  </div> -->
+    <!--  <div class="dropdown">
+    <button class="btn btn-primary pull-right dropdown-toggle dropdownButton" type="button" id="dropdownMenuTime" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {{ Labels.HOME_INTERVAL }}
+      <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <li><a role="button" class="dropdown-item">{{ Labels.TIME_30_MIN }}</a></li>
+      <li><a role="button" class="dropdown-item">{{ Labels.TIME_1_Hour }}</a></li>
+      <li><a role="button" class="dropdown-item">{{ Labels.TIME_2_Hour }}</a></li>
+      <li><a role="button" class="dropdown-item">{{ Labels.TIME_24_Hour }}</a></li>
+    </div>
+  </div>-->
+  </div>
+  <div
+    [ngClass]="{
+      'col-md-12': item.blockType === 'full',
+      'col-md-6': item.blockType === 'half'
+    }"
+    *ngFor="let item of rows"
+  >
+    <div class="panel panel-default">
+      <h5 class="dashboard-item-title">{{ item.title | translate }}</h5>
+      <div class="panel-body">
+        <div class="chart">
+          <rv-chart-js [data]="item" [height]="225"></rv-chart-js>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

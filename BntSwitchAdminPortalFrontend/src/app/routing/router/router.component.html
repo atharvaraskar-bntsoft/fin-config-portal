@@ -1,0 +1,66 @@
+<div class="col-md-12">
+  <div class="col-md-4" style="margin-right: 5px" *ngIf="ruleTypeRouter === 'service'">
+    <ng-select class="filter-shadow" bindValue="name" bindLabel="name" [closeOnSelect]="true"
+      [(ngModel)]="filterService" [items]="service" (change)="getFilterServiceData($event)"
+      placeholder="{{ 'Select service type' }}" [clearable]="true">
+    </ng-select>
+  </div>
+  <button *ngIf="isCreateBtnVsbl() && permissionObject.write" class="btn btn-primary btn-md btn-flat pull-right"
+    [hidden]="loading" routerLink="{{
+        edittype === 'workflow' ? 'payment/create-router' : 'destination/create-router'
+      }}">
+    <em class="fa fa-plus-circle"></em> {{ 'CREATE' | translate }}
+    {{
+    edittype === 'workflow'
+    ? ('WORKFLOWS_ROUTER' | translate)
+    : ('DESTINATION_ROUTER' | translate)
+    }}
+  </button>
+  <label class="badge badge-danger pull-right" *ngIf="isAllServiceLabelVsbl()" [hidden]="loading">All {{ edittype
+    ===
+    'workflow' ? 'workflow' : 'Services type' }} have router</label>
+</div>
+<div class="col-md-12">
+  <app-destination-table [loading]="loading" [routerList]="routerList" [editType]="edittype"
+    (showVersion)="openVersion($event)" (toggleLive)="editLive($event)" (editCurrentRouter)="edit($event)"
+    (deleteCurrentRouter)="deleteRoute($event)">
+  </app-destination-table>
+  <strong *ngIf="routerList?.length"><b> Showing {{ routerList?.length }} out of {{ routerList?.length }}
+      records</b></strong>
+  <div class="modal fade popup-close" tabindex="-1" [ngClass]="{ in: visibleAnimateRole, 'popup-open': visibleRole }"
+    *ngIf="visibleRole">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{ 'ROUTER_RULE_DETAILS' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            <caption></caption>
+            <thead>
+              <tr>
+                <th>{{ 'NAME' | translate }}</th>
+                <th>{{ 'DESCRIPTION' | translate }}</th>
+                <th>{{ 'VERSION' | translate }}</th>
+                <th>{{ 'PRIORTY' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of versiondata">
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.version }}</td>
+                <td>{{ item.priority }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn col-md-3 btn-flat pull-right" (click)="closePopup()">
+            {{ 'CLOSE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

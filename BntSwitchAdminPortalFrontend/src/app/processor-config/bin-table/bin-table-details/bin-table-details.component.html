@@ -1,0 +1,98 @@
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <a class="btn" routerLink="/processor-config/bin-table">
+      <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+      {{ 'BACK' | translate }}</a>
+  </div>
+
+  <div class="row row-margin">
+    <div class="col-md-4 dropDownmargin margin-filter">
+      <ng-select class="filter-shadow" bindValue="id" bindLabel="fileName" [(ngModel)]="filterkey.binmasterid"
+        (change)="binFileChange($event)" [closeOnSelect]="true" [items]="fileNames" [clearable] ="false"
+        placeholder="{{ 'ALL_FILES' | translate }}"></ng-select>
+    </div>
+
+    <div class="col-md-4 dropDownmargin margin-filter" *ngIf="fileNames && fileNames.length && filterkey.binmasterid">
+      <nz-select nzAllowClear nzShowSearch nzServerSearch (nzOnSearch)="onSearch($event)" [(ngModel)]="filterkey.bin" (ngModelChange)="binChange($event)"
+        (nzScrollToBottom)="loadMore()" nzPlaceHolder="Bin data">
+        <nz-option *ngFor="let o of filterBinData" [nzValue]="o.value" [nzLabel]="o.value">
+        </nz-option>
+        <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+          <i nz-icon nzType="loading" class="loading-icon"></i>
+          Loading Data...
+        </nz-option>
+      </nz-select>
+    </div>
+    <div class="col-md-2">
+      <a *ngIf="resetButtonFlag" role="button" class="btn-link button-effect" (click)="resetFilter()">{{ 'RESET_FILTERS'
+        |
+        translate }}</a>
+    </div>
+  </div>
+
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div style="height: 80vh">
+      <ngx-datatable appNgxDatatableWatcher style="height: 78vh" [loadingIndicator]="loading" #myTable
+        class="bootstrap fullscreen striped" [rows]="binTableDetailsData" [columns]="columns" [columnMode]="'force'"
+        [headerHeight]="headerHeight" [footerHeight]="40" [rowHeight]="rowHeight" [scrollbarV]="true"
+        (scroll)="onScroll($event)">
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+            let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
+            <div>
+              <b>Showing {{ binTableDetailsData.length }} out of {{ totalRecords }} records</b>
+            </div>
+            <datatable-pager appNgxDatatableWatcher [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)" (change)="table.onFooterPage($event)">
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+
+  <ng-template #binAttributes let-row="row" ngx-datatable-cell-template>
+    <div>
+      <a class="btn-link button-effect" role="button" (click)="openModal(row)">{{
+        'VIEW_ATTRIBUTES' | translate
+        }}</a>
+    </div>
+  </ng-template>
+
+  <ng-template #action let-row="row" ngx-datatable-cell-template>
+    <div>
+      <a class="cursor linkMargin" (click)="openAccountType(row)">{{
+        'ACCOUNT_TYPE' | translate
+        }}</a>
+    </div>
+  </ng-template>
+
+  <nz-modal [(nzVisible)]="isAttributesVisible" [nzTitle]="attributesModalTitle" [nzContent]="attributesModalContent"
+    [nzFooter]="attributesModalFooter" nzClosable="true" (nzOnCancel)="isAttributesVisible = false" [nzWidth]="650"
+    [nzStyle]="{ top: '90px' }">
+    <ng-template #attributesModalTitle let-row="row">
+      {{ 'BIN_ATTRIBUTES' | translate }}
+    </ng-template>
+    <ng-template #attributesModalContent>
+      <!-- <div *ngFor="let item of attributeData | keyvalue">
+    {{item.key}}:{{item.value}}
+  </div> -->
+
+      <nz-table #schemaTable nzBordered>
+        <tbody>
+          <tr *ngFor="let item of attributeData | keyvalue">
+            <td>{{ item.key }}:</td>
+            <td>{{ item.value | json }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+    <ng-template #attributesModalFooter>
+      <button nz-button nzType="default" (click)="closeModal()">
+        {{ 'CLOSE' | translate }}
+      </button>
+    </ng-template>
+  </nz-modal>
+</div>

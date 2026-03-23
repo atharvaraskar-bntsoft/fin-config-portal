@@ -1,0 +1,185 @@
+<div class="portal-search">
+  <div class="form-inline">
+    <input
+      class="toto form-control input-search"
+      type="text"
+      placeholder="{{ 'STATE_SEARCH' | translate }}"
+      (keyup.enter)="getFilterNameData($event)"
+      [(ngModel)]="place"
+    />
+    <button
+      type="submit"
+      [disabled]="searchResetButton"
+      class="btn btn-primary btn-md btn-flat top-icon"
+      (click)="resetSearch()"
+    >
+      {{ 'RESET' | translate }}
+    </button>
+  </div>
+</div>
+<div class="col-md-12 fade-in template">
+  <div class="row row-margin">
+    <div class="row col-md-2" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [(ngModel)]="filter.status"
+        [items]="statusList"
+        placeholder="{{ 'ALL_STATUS' | translate }}"
+        (change)="getFilterStatus($event)"
+      >
+      </ng-select>
+    </div>
+    <div class="row col-md-4" style="margin-right: 5px">
+      <ng-select
+        class="filter-shadow"
+        bindValue="id"
+        bindLabel="name"
+        [closeOnSelect]="true"
+        [(ngModel)]="filter.country"
+        [items]="countryList"
+        (change)="getFilterCountries($event)"
+        placeholder="{{ 'ALL_COUNTRIES' | translate }}"
+      ></ng-select>
+    </div>
+    <a
+      role="button"
+      *ngIf="resetButtonFlag"
+      class="btn-link button-effect"
+      (click)="resetFilterSearch()"
+      >{{ 'RESET_FILTERS' | translate }}</a
+    >
+    <!-- <div class="row pull-right button-margin">
+      <button
+        *ngIf="permissionObject.write"
+        class="btn btn-primary btn-md btn-flat"
+        routerLink="create"
+      >
+        <i class="fa fa-plus-circle"></i>
+        {{ 'CountryStatesCreate' | translate }}
+      </button>
+    </div> -->
+  </div>
+  <div class="row" [ngClass]="{ loading: loading }">
+    <div>
+      <ngx-datatable
+        appNgxDatatableWatcher
+        [loadingIndicator]="loading"
+        #myTable
+        class="bootstrap fullscreen striped default-dataTable"
+        [rows]="rows"
+        [columns]="columns"
+        [columnMode]="'force'"
+        [headerHeight]="headerHeight"
+        [footerHeight]="40"
+        [rowHeight]="rowHeight"
+        [scrollbarV]="true"
+        (scroll)="onScroll($event)"
+      >
+        <ngx-datatable-footer appNgxDatatableWatcher>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible"
+          >
+            <div>
+              <b>Showing {{ rows.length }} out of {{ totalRecords }} records</b>
+            </div>
+
+            <datatable-pager
+              appNgxDatatableWatcher
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+              [page]="curPage"
+              [size]="pageSize"
+              [count]="rowCount"
+              [hidden]="!(rowCount / pageSize > 1)"
+              (change)="table.onFooterPage($event)"
+            >
+            </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    tabindex="-1"
+    [ngClass]="{ in: visibleAnimate }"
+    [ngStyle]="{
+      display: visible ? 'block' : 'none',
+      opacity: visibleAnimate ? 1 : 1
+    }"
+    *ngIf="visible"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{ 'CONFIRMDELETE' | translate }}
+            <button
+              class="close pull-right"
+              data-dismiss="modal"
+              type="button"
+              aria-label="Close"
+              (click)="cancel()"
+            >
+              ×
+            </button>
+          </h4>
+        </div>
+        <div class="modal-body">
+          {{ 'DELETE_CONFIRM_COUNTRY_STATE' | translate }} {{ objectData }} ?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-flat" (click)="cancel()">
+            {{ 'CLOSE' | translate }}
+          </button>
+          <button class="btn btn-danger btn-flat pull-right" (click)="delete()">
+            {{ 'DELETE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #status let-row="row" ngx-datatable-cell-template>
+  <ng-container>
+    <div *ngIf="permissionObject.update">
+      <nz-switch
+        [ngModel]="row.active"
+        (ngModelChange)="changeStatus(row)"
+        [nzLoading]="statusLoading"
+        [nzDisabled]="true"
+      >
+      </nz-switch>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #country let-row="row" ngx-datatable-cell-template>
+  <div>{{ row.country.countryName }}</div>
+</ng-template>
+
+<!-- <ng-template #actions let-row="row" ngx-datatable-cell-template>
+  <div>
+    <div>
+      <a
+        *ngIf="permissionObject.delete && permissionObject.check"
+        (click)="deleteRow(row)"
+        class="btn-link button-effect delete-color"
+        role="button"
+        >{{ 'DELETE' | translate }}</a
+      >
+    </div>
+  </div>
+</ng-template> -->

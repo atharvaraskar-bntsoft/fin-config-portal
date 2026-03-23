@@ -1,0 +1,32 @@
+export const DestinationRulesConfig = {
+  texts: {
+    en_EN: {
+      DESTINATION_RULES_ADD: 'Add',
+      DESTINATION_RULES_BACK: 'Back',
+      DESTINATION_RULES_DESTINATIONS: 'Destinations',
+      DESTINATION_RULES_EDIT: 'Edit',
+      DESTINATION_RULES_HIDE_RULE: 'Hide Rule',
+      DESTINATION_RULES_REJECT: 'Reject',
+      DESTINATION_RULES_RULE: 'Rule',
+      DESTINATION_RULES_RULES: 'Rules',
+      DESTINATION_RULES_SHOW_RULE: 'Show Rule',
+      DESTINATION_RULES_VERIFY: 'Verify',
+      DESTINATION_RULES_VERSION: 'Version',
+      DESTINATION_RULES_VIEW: 'View',
+      DESTINATION_VERSION_ZERO: 'Not Versioned',
+    },
+    fr_FR: {
+      DESTINATION_RULES_BACK: 'Retour',
+      DESTINATION_RULES_DESTINATIONS: 'Les destinations',
+      DESTINATION_RULES_DESTINATIONS_RULE: 'Ajouter des règles de destination',
+      DESTINATION_RULES_EDIT: 'modifier',
+      DESTINATION_RULES_HIDE_RULE: 'Masquer la règle',
+      DESTINATION_RULES_REJECT: 'Rejeter',
+      DESTINATION_RULES_RULE: 'Règle',
+      DESTINATION_RULES_SHOW_RULE: 'Afficher la règle',
+      DESTINATION_RULES_VERIFY: 'Vérifier',
+      DESTINATION_RULES_VERSION: 'Version',
+      DESTINATION_RULES_VIEW: 'vue',
+    },
+  },
+};

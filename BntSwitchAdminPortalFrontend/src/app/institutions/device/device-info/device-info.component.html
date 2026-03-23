@@ -1,0 +1,148 @@
+
+
+    <nz-spin style="height: 600px" nzTip="Loading..." [nzSpinning]="loading">
+      <nz-card >
+        <div class="col-md-12 fade-in template" *ngIf="row">
+          <h4 class="row device-header-padding">
+            <label> <i class="fa fa-server" aria-hidden="true"></i> {{ row?.type?.code }} </label>
+          </h4>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="detail-sub-header">
+                <i class="fa fa-info-circle fa-sm iconColor" aria-hidden="true"
+                  ><span class="icon-text font">{{ 'GENERAL_INFO' | translate }}</span></i
+                >
+              </div>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-bordered table-striped">
+                <tbody>
+                  <tr>
+                    <th>{{ 'ACTIVE_SINCE' | translate }}</th>
+                    <td>{{ row?.activateOn | newDate }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ 'TERMINAL_ID' | translate }}</th>
+                    <td>{{ row?.code }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ 'LOCATION' | translate }}</th>
+                    <td>
+                      <a class="cursor" (click)="locationDetails(row)">
+                        {{ row?.location?.name }}</a
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{ 'INSTITUTION_CHAIN' | translate }}</th>
+                    <td>
+                      <a class="cursor" (click)="institutionDetails(row)"
+                        >{{ row?.merchant?.name }}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="row.additionalAttribute">
+                    <th>{{ 'ADDITIONAL_ATTRIBUTES' | translate }}</th>
+
+                    <td>
+                      <a class="cursor" (click)="openModal(row)">{{
+                        'VIEW_ATTRIBUTES' | translate
+                      }}</a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="row.pedId">
+                    <th>{{ 'PED_ID' | translate }}</th>
+                    <td>{{ row?.pedId }}</td>
+                  </tr>
+                  <tr *ngIf="row.pedSerialNo">
+                    <th>{{ 'PED_SERIAL_NO' | translate }}</th>
+                    <td>{{ row?.pedSerialNo }}</td>
+                  </tr>
+                  <tr *ngIf="row.reversalTimeout">
+                    <th>{{ 'REVERSAL_TIMEOUT' | translate }}</th>
+                    <td>{{ row.reversalTimeout }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <nz-modal
+            [(nzVisible)]="isAttributesVisible"
+            [nzTitle]="attributesModalTitle"
+            [nzContent]="attributesModalContent"
+            [nzFooter]="attributesModalFooter"
+            nzClosable="true"
+            (nzOnCancel)="isAttributesVisible = false"
+            [nzWidth]="650"
+            [nzStyle]="{ top: '90px' }"
+          >
+            <ng-template #attributesModalTitle let-row="row">
+              {{ 'ADDITIONAL_ATTRIBUTES' | translate }}
+            </ng-template>
+            <ng-template #attributesModalContent>
+              <nz-table #schemaTable [nzData]="['']" nzBordered [nzFrontPagination]="false">
+                <tbody>
+                  <tr *ngFor="let item of attributeData | keyvalue">
+                    <td>{{ item.key }}</td>
+                    <td>{{ item.value }}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </ng-template>
+            <ng-template #attributesModalFooter>
+              <button nz-button nzType="default" (click)="closeModal()">
+                {{ 'CLOSE' | translate }}
+              </button>
+            </ng-template>
+          </nz-modal>
+          <div
+            class="modal fade"
+            tabindex="-1"
+            [ngClass]="{ in: visibleAnimate }"
+            [ngStyle]="{
+              display: visible ? 'block' : 'none',
+              opacity: visibleAnimate ? 1 : 1
+            }"
+            *ngIf="visible"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">
+                    {{ 'CONFIRMDELETE' | translate }}
+                    <button
+                      class="close pull-right"
+                      data-dismiss="modal"
+                      type="button"
+                      aria-label="Close"
+                      (click)="cancel()"
+                    >
+                      ×
+                    </button>
+                  </h4>
+                </div>
+                <div class="modal-body">
+                  <table class="table table-striped">
+                    <tr>
+                      <td>{{ 'AREYOUSURE' | translate }}</td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-flat" (click)="cancel()">
+                    {{ 'CLOSE' | translate }}
+                  </button>
+                  <button class="btn btn-danger btn-flat" (click)="delete(row)">
+                    {{ 'DELETE' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #deletebtn>
+          <button (click)="close()"><i nz-icon nzType="close" nzTheme="outline"></i></button>
+      </ng-template>
+      </nz-card>
+    </nz-spin>

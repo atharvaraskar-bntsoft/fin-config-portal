@@ -1,0 +1,132 @@
+.workflow-group {
+  background-color: #f4f6f9;
+  border: 2px solid #f4f6f9;
+  margin-top: 20px;
+  padding: 10px;
+  height: 73vh;
+  overflow-y: auto;
+}
+.workflow-group h4 {
+  margin: 0px;
+  padding: 0px;
+}
+
+.workflow-list {
+  background: #ffffff;
+  margin: 12px 8px;
+  padding: 10px;
+  width: 98%;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px 0 rgba(24, 40, 65, 0.15);
+}
+.list-workflow {
+  list-style: none;
+  position: relative;
+  width: 60%;
+  margin-left: 60px;
+}
+.list-workflow:after {
+  content: '';
+  width: 4px;
+  background-color: #cbcfda;
+  // height: 64%;
+  top: 16px;
+  left: 45px;
+  position: absolute;
+  z-index: 0;
+  bottom: 15px;
+}
+
+div.panel:first-child {
+  margin-top:20px;
+}
+
+div.rvtreeview {
+  min-width: 100px;
+  min-height: 100px;
+  
+  max-height: 256px;
+  overflow:auto;
+
+padding: 4px;
+
+margin-bottom: 20px;
+
+color: #369;
+
+border: solid 1px;
+border-radius: 4px;
+}
+div.rvtreeview ul:first-child:before {
+  display: none;
+}
+.rvtreeview, .rvtreeview ul {
+  margin:0;
+  padding:0;
+  list-style:none;
+  
+color: #369;
+}
+.rvtreeview ul {
+  margin-left:1em;
+  position:relative
+}
+.rvtreeview ul ul {
+  margin-left:.5em
+}
+.rvtreeview ul:before {
+  content:"";
+  display:block;
+  width:0;
+  position:absolute;
+  top:0;
+  left:0;
+  border-left:1px solid;
+  
+  /* creates a more theme-ready standard for the bootstrap themes */
+  bottom:15px;
+}
+.rvtreeview li {
+  margin:0;
+  padding:0 1em;
+  line-height:2em;
+  font-weight:700;
+  position:relative
+}
+.rvtreeview ul li:before {
+  content:"";
+  display:block;
+  width:10px;
+  height:0;
+  border-top:1px solid;
+  margin-top:-1px;
+  position:absolute;
+  top:1em;
+  left:0
+}
+.tree-indicator {
+  margin-right:5px;
+  
+  cursor:pointer;
+}
+.rvtreeview li a {
+  text-decoration: none;
+  color:inherit;
+  
+  cursor:pointer;
+}
+.rvtreeview li button, .rvtreeview li button:active, .rvtreeview li button:focus {
+  text-decoration: none;
+  color:inherit;
+  border:none;
+  background:transparent;
+  margin:0px 0px 0px 0px;
+  padding:0px 0px 0px 0px;
+  outline: 0;
+}
+
+strong {
+  position: relative;
+  top: 5px;
+  left: -15px;
+}

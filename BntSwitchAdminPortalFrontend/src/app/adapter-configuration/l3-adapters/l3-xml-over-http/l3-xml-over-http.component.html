@@ -1,0 +1,366 @@
+<form [formGroup]="form" (ngSubmit)="onValidateAndSubmit()">
+    <div>
+      <div class="row col-md-12 top-margin top-padding">
+        <div class="col-md-4">
+          <div>
+            <label>Default Host</label>
+            <input
+              class="toto input-align input-response"
+              type="text"
+              style="width: 70%"
+              [disabled]="readOnlyFlag"
+              [(ngModel)]="tempJson.defaultHost"
+              formControlName="defaultHost"
+              placeholder="Default Host"
+              (keyup)="checkdefaultHost()"
+              pattern="^(([$][{][a-zA-Z0-9_]+:(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+[}]+(,[$][{][a-zA-Z0-9_]+:(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+[}])*)|((?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+))$"
+            />
+
+          </div>
+          <app-field-error-display
+          [displayError]="getFormName.controls['defaultHost'].touched &&
+          getFormName.controls['defaultHost'].hasError('pattern')
+          " errorMsg="Please enter valid url.">
+            </app-field-error-display>
+          </div>
+        <div class="col-md-4">
+          <div>
+            <label>Base Path</label>
+            <input
+              class="toto input-align input-response"
+              type="text"
+              style="width: 70%"
+              [disabled]="readOnlyFlag"
+              formControlName="basePath"
+              placeholder="API Base path URL e.g. /api"
+              (keyup)="checkBasePathSlash()"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-1">
+          <button class="btn btn-primary" *ngIf="!readOnlyFlag" (click)="addApiList()">Add API</button>
+        </div>
+
+        <div class="col-md-3" *ngIf="form.controls['basePath'].valid">
+          <a (click)="openHeaderPopup()" *ngIf="!readOnlyFlag" >{{
+            headerFormGroup.controls.length ? 'Edit Headers' : 'Add Headers'
+          }}</a>
+          <a (click)="openHeaderPopup()" *ngIf="readOnlyFlag && tempJson.headers.length">
+            View Headers</a>
+        </div>
+        <div class="col-md-1">
+          <a (click)="addRole()" *ngIf="!readOnlyFlag">{{
+            tempJson.defaultRole == null ? 'Add Role' : 'Edit Role'
+          }}</a>
+        </div>
+      </div>
+      <div class="row col-md-12 top-margin table-height">
+        <table class="table table-borderless">
+          <caption></caption>
+          <thead>
+            <tr>
+              <th class="required col-md-2" scope="col">API Name</th>
+              <th class="col-md-2" scope="col">Host</th>
+              <th class="col-md-2" scope="col">HealthApi</th>
+              <th class="required col-md-2" scope="col">Path</th>
+              <th class="required col-md-1" scope="col">Method</th>
+              <th scope="col">Request Payload</th>
+              <th scope="col">Response Payload</th>
+              <th class="col-md-1" scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody
+            formArrayName="apiDefinitions"
+            *ngFor="let data of apisFormGroup.controls; let i = index"
+          >
+            <tr [formGroupName]="i">
+              <td>
+                <input
+                  class="toto input-align input-response"
+                  type="text"
+                  style="width: 80%"
+                  formControlName="name"
+                  [disabled]="readOnlyFlag"
+                  placeholder="Enter Api Name"
+                  pattern="^(?! )[a-zA-Z0-9 ]+(?<! )$"
+                />
+                <app-field-error-display
+                  [displayError]="getapiFormGroup(i).controls['name'].touched &&
+                    getapiFormGroup(i).controls['name'].hasError('required')
+                  " errorMsg="Name
+                  is required!">
+                  </app-field-error-display>
+                  <app-field-error-display [displayError]="
+                  getapiFormGroup(i).controls['name'].touched &&
+                  getapiFormGroup(i).controls['name'].hasError('pattern')
+                " errorMsg="Please enter correct name">
+              </app-field-error-display>
+                </td>
+              <td>
+                <input
+                  class="toto input-align input-response"
+                  type="text"
+                  style="width: 80%"
+                  [disabled]="readOnlyFlag"
+                  formControlName="host"
+                  placeholder="Enter Host"
+                  pattern="^(([$][{][a-zA-Z0-9_]+:(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+[}]+(,[$][{][a-zA-Z0-9_]+:(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+[}])*)|((?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+))$"
+                />
+              </td>
+              <td>
+             <input class="toto input-align input-response" [disabled]="readOnlyFlag" formControlName="healthApi"  type="text"
+                    style="width: 80%" placeholder="Enter Health Api" />
+              </td>
+              <td>
+                <input
+                  class="toto input-align input-response"
+                  type="text"
+                  style="width: 80%"
+                  formControlName="api"
+                  [disabled]="readOnlyFlag"
+                  placeholder="Enter api"
+                  minlength="1"
+                  pattern="^\/([^\\]+[^//])"
+                />
+                <app-field-error-display
+                  [displayError]="
+                    getapiFormGroup(i).controls['api'].touched &&
+                    getapiFormGroup(i).controls['api'].hasError('required')
+                  "
+                  errorMsg="api
+                  is required!"
+                >
+                </app-field-error-display>
+                <app-field-error-display [displayError]="
+                    getapiFormGroup(i).controls['api'].touched &&
+                    getapiFormGroup(i).controls['api'].hasError('pattern')
+                  " errorMsg="invalid path!">
+                </app-field-error-display>
+              </td>
+
+              <td>
+                <ng-select
+                  class="filter-shadow"
+                  appendTo="body"
+                  formControlName="method"
+                  [disabled]="readOnlyFlag"
+                  [closeOnSelect]="true"
+                  [clearable]="false"
+                  [items]="methodList"
+                  placeholder="Select Method"
+                >
+                </ng-select>x
+                  <app-field-error-display [displayError]="
+                    getapiFormGroup(i).controls['method'].touched &&
+                    getapiFormGroup(i).controls['method'].hasError('required')"
+                  errorMsg="Method is required!"
+                >
+                </app-field-error-display>
+              </td>
+              <td>
+                <a (click)="openResponsePayload(i)"  *ngIf="!readOnlyFlag" >{{
+                  getapiFormGroup(i).controls['outgoingPackager'].value
+                    ? 'Edit Data' : 'Add Data'
+                }}</a>
+                <a (click)="openResponsePayload(i, data)" *ngIf="readOnlyFlag">View Data</a>
+                <input type="hidden" name="outgoingPackager" formControlName="outgoingPackager" />
+              </td>
+              <td>
+                <a (click)="openRequestPayload(i)"  *ngIf="!readOnlyFlag" >{{
+                  getapiFormGroup(i).controls['incomingPackager'].value
+                    ? 'Edit Data' : 'Add Data'
+                }}</a>
+                <a (click)="openRequestPayload(i, data)" *ngIf="readOnlyFlag">View Data</a>
+                <input type="hidden" name="incomingPackager" formControlName="incomingPackager" />
+              </td>
+              <td>
+                <em class="fa fa-trash fa-lg" style="color: red"  *ngIf="!readOnlyFlag" 
+                  nzDanger
+                  nz-popconfirm
+                  style="color: red"
+                  nzPopconfirmTitle="Are you sure to delete this record?"
+                  nzPopconfirmPlacement="bottom"
+                  [nzIcon]="iconTpl"                
+                  (nzOnConfirm)="removeApiList(i)"></em>
+                  <ng-template #iconTpl>
+                    <span nz-icon nzType="question-circle-o" style="color: red"></span>
+                  </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row col-md-12">
+        <button class="btn btn-primary pull-right" (click)="onNextClick()"
+          [disabled]="form.invalid || this.apisList.length === 0" type="submit">
+          Next
+        </button>
+        <button
+          class="btn btn-primary pull-right"
+          [disabled]="form.invalid || this.apisList.length === 0"
+          type="submit"
+          *ngIf="!readOnlyFlag"
+        >Save Draft
+        </button>
+      </div>
+    </div>
+    <nz-modal [(nzVisible)]="isHeaderVisible" [nzTitle]="headerTitle" [nzContent]="headerContent"
+      [nzFooter]="headerFooter" nzClosable="false">
+      <ng-template #headerTitle>Headers</ng-template>
+      <ng-template #headerContent>
+        <div class="top-margin header-height" formArrayName="headers">
+          <div class="col-md-12" style="padding-left: 0px"
+            *ngFor="let contact of headerFormGroup.controls; let i = index">
+            <div class="example-input form-group col-md-10" [formGroupName]="i">
+              <input class="toto input-align input-response" type="text" style="width: 100%" formControlName="headers"
+                placeholder="Enter Headers" pattern="^(?! )[a-zA-Z0-9 ]+(?<! )$"/>
+              <span class="error" *ngIf="
+                  getHeadersFormGroup(i).controls['headers'].touched &&
+                  getHeadersFormGroup(i).controls['headers'].hasError('required')
+                ">
+                header is required!
+              </span>
+            </div>
+
+            <div class="form-group col-2 delete-cursor" style="position: unset">
+              <em class="fa fa-trash fa-lg" style="color: red"  *ngIf="!readOnlyFlag" (click)="removeHeader(i)"></em>
+            </div>
+          </div>
+          <div class="row">
+            <button  *ngIf="!readOnlyFlag"
+              class="btn btn-primary m-1 add-button-margin"
+              type="button"
+              (click)="addHeadersFrom()"
+            > Add Header
+            </button>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #headerFooter>
+        <button nz-button nzType="primary" (click)="closeHeaderPopup()">Cancel</button>
+        <button
+          nz-button
+          nzType="primary"
+          *ngIf="!readOnlyFlag"
+          [disabled]="!form.controls['headers'].valid"
+          (click)="saveHeaderPopup()"
+        >Save
+        </button>
+      </ng-template>
+    </nz-modal>
+  </form>
+  <nz-modal [(nzVisible)]="isRequestPayloadVisible" [nzTitle]="requestTitle" [nzContent]="requestContent"
+    [nzFooter]="requestFooter" nzClosable="false" [nzStyle]="{ width: '1220px', height: '500px' }">
+    <ng-template #requestTitle>Response Payload</ng-template>
+    <ng-template #requestContent>
+      <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSelectedIndex]="requestActiveTab">
+        <nz-tab [nzTitle]="'View'" (nzClick)="requestFirstTab()" *ngIf="!readOnlyFlag">
+          <ng-container *ngIf="!isEditMode">
+            <rv-pretty-json [obj]="reqData[currentIndex]"></rv-pretty-json>
+          </ng-container>
+          <ng-container *ngIf="isEditMode">
+            <textarea rows="8" [(ngModel)]="reqData[currentIndex]" cols="100"
+              placeholder="Enter/paste request here"></textarea>
+            <button class="btn btn-primary pull-right" [disabled]="!reqData[currentIndex]" type="button"
+              (click)="requestTransform()">
+              Transform
+            </button>
+          </ng-container>
+        </nz-tab>
+
+        <nz-tab [nzTitle]="'Modify'" (nzClick)="requestSecondTab()">
+          <div class="row row-margin"></div>
+          <div class="row col-md-12">
+            <div class="col-md-8">
+              <div [style.padding-top.px]="10" class="box-scroll" *ngIf="jsonData[currentIndex]">
+                <app-imf-hierarchy-tree
+                  [saveMethods]="saveMethods"
+                  [versionMethods]="versionMethods"
+                  [dataSource]="jsonData[currentIndex]"
+                  [source]="'request'"
+                  [revertChanges]="revertReqChanges"
+                  [readOnlyFlag]="readOnlyFlag"
+                  [xmlOverHttp]="xmlOverHttp"
+                ></app-imf-hierarchy-tree >
+              </div>
+            </div>
+            <div class="col-md-4">
+              <app-imf-creation-table [types]="typeList" [readOnlyFlag]="readOnlyFlag"></app-imf-creation-table>
+            </div></div
+        ></nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template #requestFooter>
+      <button nz-button nzType="primary" (click)="saveRequestPayload()">
+          Save
+        </button>
+        <button nz-button nzType="primary" (click)="closeRequestPayload()">
+          Close
+        </button>
+    </ng-template>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="isResponsePayloadVisible" [nzTitle]="responseTitle" [nzContent]="responseContent"
+    [nzFooter]="responseFooter" nzClosable="false" [nzStyle]="{ width: '1220px', height: '500px' }">
+    <ng-template #responseTitle>Request Payload</ng-template>
+    <ng-template #responseContent>
+      <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSelectedIndex]="responseActiveTab">
+        <nz-tab [nzTitle]="'View'"  (nzClick)="responsetFirstTab()" *ngIf="!readOnlyFlag">
+          <ng-container *ngIf="!isEditMode">
+            <rv-pretty-json [obj]="resData[currentIndex]"></rv-pretty-json>
+          </ng-container>
+          <ng-container *ngIf="isEditMode">
+            <textarea rows="8" cols="100" [(ngModel)]="resData[currentIndex]"
+              placeholder="Enter/paste request here">{{ responseObj | json }}</textarea>
+            <button class="btn btn-primary pull-right" type="button" [disabled]="!resData[currentIndex]"
+              (click)="responseTransform()">
+              Transform
+            </button>
+          </ng-container>
+        </nz-tab>
+
+        <nz-tab [nzTitle]="'Modify'" (nzClick)="responseSecondTab()">
+          <div class="row row-margin"></div>
+          <div class="row col-md-12">
+            <div class="col-md-8">
+              <div [style.padding-top.px]="10" class="box-scroll" *ngIf="resJsonData[currentIndex]">
+                <app-imf-hierarchy-tree
+                  [saveMethods]="saveMethods"
+                  [versionMethods]="versionMethods"
+                  [dataSource]="resJsonData[currentIndex]"
+                  [source]="'response'"
+                  [revertChanges]="revertResChanges"
+                  [readOnlyFlag]="readOnlyFlag"
+                  [xmlOverHttp]="xmlOverHttp"
+                ></app-imf-hierarchy-tree>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <app-imf-creation-table [types]="typeList" [readOnlyFlag]="readOnlyFlag"></app-imf-creation-table>
+            </div>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template #responseFooter>
+      <button nz-button nzType="primary" (click)="saveResponsePayload()">
+          Save
+        </button>
+      <button nz-button nzType="primary" (click)="closeResponsePayload()">Close</button>
+    </ng-template>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="isVisibleInvalidField" nzTitle="Invalid Fields" nzCancelDisabled="false" (nzOnOk)="handleOk()">
+      <ng-container *nzModalContent>
+          <p style="color:red">{{ inValidFields }}</p>
+      </ng-container>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="visibleRolePopup"  nzClosable="true" nzTitle="Role" [nzFooter]="null">
+    <ng-container *nzModalContent>
+      <app-add-role (closePopup)="closePopup($event)" [defaultRole]="tempJson.defaultRole"
+        (saveRoles)="saveRoles($event)">
+      </app-add-role>
+    </ng-container>
+  </nz-modal>

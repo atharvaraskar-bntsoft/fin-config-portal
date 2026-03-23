@@ -1,0 +1,187 @@
+.rulelist {
+  list-style: none;
+  margin: 0px;
+  padding: 5px;
+  background: #f4f6f9;
+}
+.rulelist li {
+  border: solid 1px #f7f4f4;
+  padding: 8px;
+  margin: 8px;
+  background: #fefefe;
+}
+.rulelist li:hover .edit-link {
+  display: block;
+}
+.edit-link {
+  display: none;
+}
+.rulename {
+  font-weight: 600;
+  font-size: 15px;
+  padding-bottom: 10px;
+}
+.badgesColor {
+  color: white;
+  background-color: darkkhaki;
+}
+
+.badgesColors {
+  color: white;
+  background-color: burlywood;
+}
+
+.badgeMargin {
+  margin-left: 10px;
+  font-size: 15px;
+}
+
+.marginFormat {
+  padding-right: 4%;
+}
+
+.innerDiv {
+  margin-top: 10px;
+  //   border: 2px solid whitesmoke;
+  //   background-color: white;
+}
+
+.badgesWidthFirst {
+  width: 15%;
+}
+
+.badgesWidthSecond {
+  width: 16%;
+}
+
+.badgesWidthThird {
+  width: 15%;
+}
+
+.outerDiv {
+  border: 2px solid whitesmoke;
+  background-color: #f4f6f9;
+  padding: 10px;
+}
+
+.midDiv {
+  //   outline: 1px solid #ccc;
+  padding: 5px;
+  margin: 5px;
+}
+
+.buttonRule {
+  margin-right: 1%;
+  //   margin-bottom: 1%;
+  //   margin-top: 1%;
+}
+
+.backButton {
+  padding-right: 10%;
+}
+
+.badgesDestination {
+  margin-left: 0px;
+  background: #9ba1b9;
+}
+
+.rowJson {
+  flex-direction: row;
+}
+
+.columnJson {
+  flex: 0 0 50%;
+  font-size: 16px;
+  line-height: 1.25;
+  width: 100%;
+  // dl {
+  //     display: flex;
+  //     flex-wrap: wrap;
+  // }
+  // dt {
+  //     flex: 0 0 131px;
+  //     margin-bottom: 10px;
+  //     text-align: left;
+  //     color: #9ba1b9;
+  // }
+  // dd {
+  //     flex: 0 0 131px;
+  //     margin-left: 19px;
+  //     text-align: left;
+  //     color: #212c3d;
+  //     margin-bottom: 10px;
+  // }
+  // &:first-child {
+  //     flex: 0 0 42%;
+  //     width: 100%;
+  //     dt {
+  //         padding-left: 20px;
+  //         flex: 0 0 131px;
+  //     }
+  // }
+  // &:last-child {
+  //     dt {
+  //         padding-left: 20px;
+  //         flex: 0 0 142px;
+  //     }
+  // }
+}
+
+.json-container {
+  width: 50%;
+  text-align: justify;
+}
+datatable-header.datatable-header {
+  display: none !important;
+}
+
+datatable-row-wrapper.datatable-row-wrapper {
+  background-color: #9ba1b9 !important;
+}
+
+.ngx-datatable .datatable-body .datatable-body-row > div {
+  background-color: aqua !important;
+}
+.route-add-icon {
+  font-weight: 700;
+  font-size: 15px;
+  color: #4e9ff8;
+  padding: 4px;
+}
+.row-second {
+  border-radius: 4px;
+  // background-color: #f4f6f9;
+  padding: 20px;
+}
+.column-padding {
+  padding-left: 10px;
+}
+.button-margin {
+  margin-bottom: 10px;
+}
+.marright {
+  margin-right: 10px;
+  display: none;
+}
+.rulevesionview {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+.rulevesionview li {
+  margin: 5px;
+  padding: 15px 5px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  background: #efefef;
+  overflow: hidden;
+}
+.rulevesionview li:hover .marright {
+  display: block;
+}
+::ng-deep pre {
+  outline: none !important;
+  padding: 10px !important;
+  margin: 0px !important;
+  background: #ffffff !important;
+}

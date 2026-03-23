@@ -1,0 +1,67 @@
+<ng-container>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-12 text-right">
+        <span class="btn btn-default" (click)="addEvaluate()"><i class="fa fa-plus"></i></span>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="listParametersObj?.value">
+  <div class="form-group" *ngFor="let block of listParametersObj?.value; let i = index">
+    <div class="row">
+      <div class="col-sm-2 text-right">{{i + 1}} -</div>
+      <div class="col-md-3">
+        <input class="form-control" type="text" [disabled]="readOnlyFlag" [(ngModel)]="block.key" />
+        <span class="error" *ngIf="(block.key===null || block.key==='') && submit">This field is
+          required.</span>
+      </div>
+      <div class="col-md-1 auto-width nopadding-lg">
+        <label>=</label>
+      </div>
+      <div class="col-sm-3">
+        <nz-tree-select class="evaluate-lookup form-control" [nzDropdownMatchSelectWidth]="true"
+          [nzDropdownStyle]="{ 'max-height': '200px' }" [nzShowExpand]="true" [nzNodes]="lookupList"
+          [nzShowSearch]="true" [nzHideUnMatched]="true" nzPlaceHolder="Please select" [(ngModel)]="block.value"
+          [disabled]="readOnlyFlag">
+        </nz-tree-select>
+        <span class="error" *ngIf="(block.value===null || block.value==='') && submit">This field is
+          required.</span>
+      </div>
+      <div class="col-sm-2">
+        <input class="toto input-align input-search form-control" [disabled]="readOnlyFlag" type="text"
+          [(ngModel)]="block.value" />
+      </div>
+      <div class="col-sm-1 auto-width nopadding-lg">
+        <span class="btn btn-default" (click)="remove(i)">
+          <i class="fa fa-minus"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group" *ngIf="listParametersObj?.value && listParametersObj?.value.length">
+    <div class="row">
+      <div class="col-md-2 text-right">
+        <label>Default Value </label>
+      </div>
+      <div class="col-sm-3">
+        <input class="toto input-align input-search form-control" type="text" [disabled]="readOnlyFlag"
+          [(ngModel)]="evaluateObj.defaultValue" placeholder="Default Value" />
+      </div>
+      <div class="col-md-4">
+        <label style="margin-right: 31px">Use same on match fail</label>
+        <input type="checkbox" [disabled]="readOnlyFlag" [(ngModel)]="evaluateObj.useSameOnMatchFail" />
+      </div>
+    </div>
+  </div>
+</ng-container>
+<div class="row row-margin row-align row-template pull-right">
+  <div class="col-sm-12">
+    <button nz-button nzType="default" (click)="cancel()" style="margin-top: 50px">
+      Cancel
+    </button>
+    <button nz-button nzType="primary" *ngIf="!readOnlyFlag" style="margin-left: 10px; margin-top: 50px"
+      (click)="save()">
+      Save
+    </button>
+  </div>
+</div>

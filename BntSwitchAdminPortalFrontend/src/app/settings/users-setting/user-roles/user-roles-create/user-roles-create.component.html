@@ -1,0 +1,63 @@
+<div class="fade-in template">
+  <div>
+    <a class="btn" routerLink="/settings/user-roles"><i class="fa fa-arrow-circle-o-left fa-sm"></i> {{ 'BACK' |
+      translate }}</a>
+  </div>
+  <form [formGroup]="userRolesForm" (ngSubmit)="onSubmitUserRolesForm(userRolesForm)">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="required">{{ 'USER_ROLE' | translate }}</label>
+        <ng-select [items]="roleList" bindLabel="name" bindValue="name" formControlName="name" [closeOnSelect]="true"
+          placeholder="{{ 'ROLE_NAME' | translate }}"
+          notFoundText="No role to be assigned in the system to assign permissions">
+        </ng-select>
+        <app-field-error-display [displayError]="isFieldValid('name')" errorMsg="{{ 'ROLE_NAME_ERROR' | translate }}">
+        </app-field-error-display>
+      </div>
+      <div class="form-group">
+        <label class="required">{{ 'ADD_FUNCTION' | translate }}</label>
+        <ng-select [items]="functionList" bindLabel="name" dropdownPosition="bottom" [multiple]="true"
+          formControlName="roleFunctions" [closeOnSelect]="true" (change)="valuePush($event)"
+          (remove)="itemRemove($event)" placeholder="{{ 'ADD_FUNCTION' | translate }}" appendTo="body">
+        </ng-select>
+        <app-field-error-display [displayError]="isFieldValid('roleFunctions')"
+          errorMsg="{{ 'ROLE_FUNCTION_ERROR' | translate }}">
+        </app-field-error-display>
+      </div>
+      <table class="table table-bordered table-striped">
+        <tr *ngFor="let data of checkboxDataObject" class="line-gap">
+          <th>
+            <label class="user-roles_lables-align">{{ data.name }}</label>
+          </th>
+          <td *ngFor="let val of data.operation"  [ngClass]="{'disabled': data.originalPermission[val.key] ? false : true }">
+            <label class="check_box_container user-roles_check-align">
+              <input                
+                type="checkbox"
+                (change)="roleCustom(data, val, $event)"
+                [checked]="data.permission[val.key] && data.originalPermission[val.key]" />
+              {{ val.key | titlecase }}
+              <span class="checkmark"></span
+            ></label>
+          </td>
+        </tr>
+      </table>
+
+      <div class="form-group">
+        <label>{{ 'STATUS' | translate }}</label>
+        <label class="check_box_container"><input (change)="checkStatus()" formControlName="locked" type="checkbox" />
+          {{ currentItem.locked ? ('ENABLED' | translate) : ('DISABLED' | translate) }}
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
+      <div>
+        <button class="btn pull-right" routerLink="/settings/user-roles" type="button">
+          {{ 'CANCEL' | translate }}
+        </button>
+        <button class="btn btn-primary btn-flat pull-right" type="submit" [disabled]="submitted">
+          {{ 'SUBMIT' | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

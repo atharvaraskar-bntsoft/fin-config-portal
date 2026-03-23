@@ -1,0 +1,5 @@
+{
+	"LIST_SKIP_REST_URL_POST": ["/adapter/draft", "/adapter/copy","/workflow/create-workflow"],
+	"LIST_SKIP_REST_URL_PUT": [],
+	"LIST_CUSTOM_CHECKER_ENTITY":["Adapter","WorkFlow"]
+}

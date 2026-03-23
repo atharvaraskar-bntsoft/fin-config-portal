@@ -1,0 +1,21 @@
+<div class="col-md-12 margintop fade-in template">
+  <div>
+    <a class="btn" routerLink="/logs/audit-log">
+      <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+      {{ 'BACK' | translate }}</a
+    >
+  </div>
+  <div class="defaultDataTable">
+    <ngx-datatable
+      appNgxDatatableWatcher
+      class="bootstrap fullscreen striped dataTableHeight"
+      [rows]="auditdetailsData"
+      [columns]="columns"
+      [columnMode]="'force'"
+      [headerHeight]="dimensions.headerHeight"
+      [footerHeight]="dimensions.footerHeight"
+      [rowHeight]="dimensions.rowHeight"
+    >
+    </ngx-datatable>
+  </div>
+</div>

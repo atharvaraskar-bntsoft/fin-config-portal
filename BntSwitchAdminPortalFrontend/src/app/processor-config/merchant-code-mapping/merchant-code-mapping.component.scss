@@ -1,0 +1,40 @@
+.martop{
+    margin-top: 10px;
+}
+.maright{
+    margin-right: 5px;
+}
+input{
+  background-image: url('../../../assets/img/search.png');
+  background-position:  6px 7px;
+  padding: 12px 20px 12px 36px;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+.input-search{
+  width: 320px;
+}
+input.ng-touched.ng-invalid {
+  border: 1px solid #ff0000;
+}
+::ng-deep .ng-select.ng-invalid.ng-touched > .ng-select-container {
+  border: 1px solid #ff0000;
+}
+
+.required {
+
+  &:after {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #f46771;
+    content: '*';
+  }
+}
+.portal-search {
+  position: absolute;
+  top: 10px;
+  z-index: 1841;
+  left: calc(50% - 140px);
+}

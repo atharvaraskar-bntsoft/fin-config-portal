@@ -1,0 +1,47 @@
+<ng-container>
+  <div class="form-group text-center">
+    <nz-radio-group nzName="radiogroup" (ngModelChange)="conditionNull(this.scriptObject.listScriptMapping, $event)"
+      [(ngModel)]="this.scriptObject.listScriptMapping.status">
+      <label nz-radio nzValue="M">Mandatory</label>
+      <label nz-radio nzValue="O">Optional</label>
+      <label nz-radio nzValue="C">Conditional</label>
+    </nz-radio-group>
+    <a *ngIf="this.scriptObject.listScriptMapping.status==='C' && this.scriptObject.listScriptMapping.condition"
+      (click)="createCondition(scriptObject, -1)" class="required">Edit Condition</a>
+    <a *ngIf="this.scriptObject.listScriptMapping.status==='C' && !this.scriptObject.listScriptMapping.condition"
+      (click)="createCondition(scriptObject, -1)" class="required">Create Condition</a>
+    <a *ngIf="this.scriptObject.listScriptMapping.status === 'C' && this.scriptObject.listScriptMapping.condition"
+      style="color:red;" nz-popconfirm nzPopconfirmTitle="Do you want to delete Condition?"
+      (nzOnConfirm)="deleteCondition(this.scriptObject.listScriptMapping)"><i
+        class="fa fa-trash fa-lg"></i></a>
+    <span class="invalid-feedback"
+      *ngIf="!conditionError && this.scriptObject.listScriptMapping.status === 'C' && !this.scriptObject.listScriptMapping.condition">
+      Please Enter Condition
+    </span>
+  </div>
+  <div class="row row-margin row-align row-template">
+    <ace-editor [(text)]="scriptText" [(ngModel)]="this.scriptObject.listScriptMapping.script"
+      (textChanged)="onChange($event)" class="editor" #editor></ace-editor>
+  </div>
+  <span class="invalid-block" *ngIf="scriptError && !this.scriptObject.listScriptMapping.script">Please fill all
+    mandatory fields</span>
+</ng-container>
+<div class="row row-margin row-align row-template pull-right">
+  <div>
+    <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+    <button nz-button nzType="primary" style="margin-left: 10px"
+      (click)="saveScript(this.scriptObject.listScriptMapping)">
+      Save
+    </button>
+  </div>
+</div>
+
+<div *ngIf="isVisible">
+  <nz-drawer [nzMaskClosable]="false" [nzVisible]="isVisible" nzTitle="Condition" [nzWidth]="1040" [nzClosable]="true" (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+      <app-condition-builder *ngIf="jsonData" [jsonData]="jsonData" [ruleCondition]="conditionObj"
+        (addSubRule)="getRule($event)" (closeCreate)="close($event)">
+      </app-condition-builder>
+    </ng-container>
+  </nz-drawer>
+</div>

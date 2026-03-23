@@ -1,0 +1,40 @@
+.ant-select{
+  width: 100%;
+}
+.card-main{
+  border: solid 1px #ececec;
+  box-shadow:0 3px 3px 0 #afafaf3a;
+  padding: 15px;
+  margin-bottom: 15px;
+
+.card-heading{
+  border-bottom:#d4d4d4 solid 1px;
+  padding:6px 15px;
+  font-size:16px;
+  font-weight:600;
+  color:#000;
+  position: relative;
+  .card-icon{
+      position: absolute;
+      top: 7px;
+      right: 15px;
+      i{
+          width: 24px;
+          border: #666 solid 1px;
+          border-radius: 40px;
+          line-height: 22px;
+          margin-left:5px ;
+          text-align: center;
+          color: #333;
+      }
+  }
+  }
+  .card-body{
+      background: #fff;
+      padding: 15px;
+      border: #eaeaea solid 1px;
+  }
+}
+  .no_padding{
+      padding: 0;
+  }

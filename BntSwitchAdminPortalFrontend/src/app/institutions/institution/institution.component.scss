@@ -1,0 +1,90 @@
+.defaultDataTable {
+  height: 80vh;
+}
+
+.dataTableHeight {
+  height: 78vh;
+}
+
+.dropDownmargin {
+  margin-right: 5px;
+}
+
+.linkMargin {
+  padding-right: 2%;
+}
+
+.input-search {
+  width: 320px;
+}
+
+input {
+  background-image: url('../../../assets/img/search.png');
+  background-position: 6px 7px;
+  padding: 12px 20px 12px 36px;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+
+.default-dataTable {
+  height: 78vh;
+}
+i.fa.fa-plus-circle {
+  padding-right: 3px;
+}
+
+.badgeWidth {
+  /*color: #9ba1b9;
+  background-color: #f4f6f9;*/
+  display: block;
+  position: relative;
+  height: 30px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  padding: 7px 36px 7px 16px;
+  border-radius: 100px;
+  background-color: #f4f6f9;
+  font-size: 11px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #9ba1b9;
+}
+
+.badgeMargin {
+  width: auto;
+  margin-right: 5px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.filterButton {
+  opacity: 1;
+  position: inherit;
+  top: 51%;
+  right: 11px;
+  width: 12px;
+  height: 11px;
+  padding: 0;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  border: none;
+  background-color: transparent;
+  background-size: 12px 12px;
+  background-position: center;
+  transition: opacity 0.15s linear 0s;
+}
+
+.tooltip:hover:after {
+  border: 1px solid #fc0;
+  padding: 3px 6px;
+  background: #fffea1;
+  content: attr(data-title);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100px;
+  height: 100px;
+}

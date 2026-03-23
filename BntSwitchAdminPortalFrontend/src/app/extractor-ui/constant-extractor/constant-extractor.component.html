@@ -1,0 +1,79 @@
+<div>
+    <div class="div-right">
+        <button class="pull-right btn btn-md btn-default" (click)="addConstant()">
+            <i class="fa fa-plus-circle"></i>
+        </button>
+    </div>
+    <form [formGroup]="constantForm" (ngSubmit)="saveConstant(constantForm.value)">
+        <div class="table-responsive">
+            <table class="table">
+                <tbody *ngIf="constantForm.get('constantConfig').value.length > 0">
+                    <ng-container formArrayName="constantConfig"
+                        *ngFor="let item of constantForm.get('constantConfig').controls; let i = index;">
+                        <tr [formGroupName]="i">
+                            <td>
+                                <a *ngIf="!(constantConfig.controls[i].get('condition')?.value)"
+                                    class="btn-link button-effect" (click)="openCondition(i)" role="button">Add
+                                    Condition</a>
+                                <a *ngIf="constantConfig.controls[i].get('condition')?.value"
+                                    class="btn-link button-effect" (click)="openCondition(i)">Edit Condition</a>
+                                <a *ngIf="constantConfig.controls[i].get('condition')?.value" class="text-danger"
+                                nz-popconfirm nzPopconfirmTitle="Do you want to delete Condition?" 
+                                (nzOnConfirm)="deleteCondition(i)"><i class="fa fa-trash fa-lg"></i></a>
+                                <input type="hidden" formControlName="condition">
+                            </td>
+                            <td>
+                                <nz-form-item>
+                                    <nz-form-control nzErrorTip="Please Select Packager Field">
+                                        <nz-select style="width:100%;" nzPlaceHolder="Select Packager Field"
+                                            formControlName="packagerField">
+                                            <nz-option *ngFor="let list of packageList" [nzValue]="list.name"
+                                                [nzLabel]="list.name"> </nz-option>
+                                        </nz-select>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </td>
+                            <td class="text-center">
+                                <span style="vertical-align: sub;">=</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" formControlName="source" placeholder="Source">
+                            </td>
+                            <td>
+                                <span class="delete_align" (click)="removeConstant(i)">
+                                    <i class="fa fa-trash fa-lg"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+                <tbody *ngIf="constantForm.get('constantConfig').value.length == 0">
+                    <tr>
+                        <td colspan="5">
+                            Please add constant...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <button class="btn btn-default btn-md" (click)="closeDrawer()">Close</button>
+            <nz-divider nzType="vertical"></nz-divider>
+            <span *ngIf="constantForm.get('constantConfig').value.length > 0">
+                <button nz-button nzType="primary" [disabled]="constantForm.invalid">
+                    {{ 'Save' }}
+                </button>
+            </span>
+        </div>
+    </form>
+</div>
+
+<div *ngIf="isVisible">
+    <nz-drawer [nzMaskClosable]="false" [nzVisible]="isVisible" nzTitle="Condition" [nzWidth]="1040" [nzClosable]="true" (nzOnClose)="close()">
+        <ng-container *nzDrawerContent>
+            <app-condition-builder *ngIf="jsonData" [jsonData]="jsonData" [ruleCondition]="conditionObj"
+                (addSubRule)="getRule($event)" (closeCreate)="close($event)">
+            </app-condition-builder>
+        </ng-container>
+    </nz-drawer>
+</div>
