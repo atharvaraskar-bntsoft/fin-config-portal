@@ -92,6 +92,7 @@
     "rxjs": "^6.6.2",
     "sass": "^1.58.3",
     "serialize-error": "^4.1.0",
+    "sweetalert2": "^11.26.24",
     "time-ago-pipe": "^1.3.2",
     "tslib": "^2.0.0",
     "underscore": "^1.13.1",

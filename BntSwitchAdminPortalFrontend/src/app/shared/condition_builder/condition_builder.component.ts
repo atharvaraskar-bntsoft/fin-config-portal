@@ -17,7 +17,7 @@ import { SubscribeService } from '@app/services/subscribe.services';
 })
 export class ConditionBuilderComponent implements OnInit, OnChanges {
   public reg = new RegExp('^[0-9]+$');
-  public aphaNumeric = /^[A-Za-z0-9\.\@\[\$\]\^\{\}\._]+$/;
+  public aphaNumeric = /^[A-Za-z0-9\s\.\@\[\$\]\^\{\}\._]+$/;
   public aphaNumericWithComa = new RegExp('^[0-9a-zA-Z,]+$');
   public aphaNumericLike = new RegExp('^[0-9a-zA-Z%]+$');
   public ruleData = [];

@@ -18,7 +18,7 @@ export const adminLteConf = {
     },
     {
       iconClasses: 'fa fa-pie-chart fa-lg desktop',
-      id: 'link_monitoring',
+      id: 'link_monitoring_1',
       label: 'MONITORING',
       route: '/monitoring',
     },
@@ -64,7 +64,7 @@ export const adminLteConf = {
             //   route: 'institutions/acquirers',
             // },
             {
-              id: 'link_velocity',
+              id: 'link_velocity_1',
               label: 'VELOCITY_LIMIT',
               route: 'limits/velocity-limits',
             },
@@ -91,7 +91,7 @@ export const adminLteConf = {
             //   // route: '/'
             // },
             {
-              id: 'link_mid',
+              id: 'link_mid_1',
               label: 'MID_MAPPING',
               route: 'processor-config/merchant-code-mapping',
 
@@ -171,7 +171,7 @@ export const adminLteConf = {
           route: 'adapter-configuration/l3-adapters',
         },
         {
-          id: 'link_tag_rule',
+          id: 'link_tag_rule_1',
           label: 'Tags',
           route: 'routing/ruletags',
         },
@@ -201,7 +201,7 @@ export const adminLteConf = {
           route: '/extractor-ui',
         },
  */       {
-          id: 'link_dek',
+          id: 'link_dek_1',
           label: 'DEK',
           route: 'processor-config/dek',
         },
@@ -271,7 +271,7 @@ export const adminLteConf = {
         //   route: 'logs/access-log',
         // },
         {
-          id: 'link_audit_log',
+          id: 'link_audit_log_1',
           label: 'AUDIT_LOG',
           route: 'logs/audit-log',
         },
@@ -330,12 +330,12 @@ export const adminLteConf = {
     {
       children: [
         {
-          id: 'link_pending_approvals',
+          id: 'link_pending_approvals_1',
           label: 'Approval',
           route: 'approvals/approvals',
         },
         {
-          id: 'link_notification',
+          id: 'link_notification_1',
           label: 'NOTIFICATION',
           route: 'approvals/notifications',
         },

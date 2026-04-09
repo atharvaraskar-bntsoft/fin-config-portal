@@ -175,9 +175,16 @@ dependencies {
 	implementation ('io.hypersistence:hypersistence-utils-hibernate-62:3.3.2')
 	implementation group: 'com.google.guava', name: 'guava', version: '32.1.1-jre'
 	
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 	
+	// Bridge Micrometer Tracing → OpenTelemetry
+	implementation 'io.micrometer:micrometer-tracing-bridge-otel'
 	
+	// Export traces to OTel Collector via OTLP
+	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
 	
+	// AOP - needed for automatic method span creation
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	
 	implementation (project (':')) { 
 		transitive = false 

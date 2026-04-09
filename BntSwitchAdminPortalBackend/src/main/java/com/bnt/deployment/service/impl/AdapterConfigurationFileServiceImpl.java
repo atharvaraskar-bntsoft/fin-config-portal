@@ -79,7 +79,7 @@ public class AdapterConfigurationFileServiceImpl implements AdapterConfiguration
         
         if (config.getResponseCode() != null) {
             AdapterConfigFileDTO dto = new AdapterConfigFileDTO();
-            dto.setFileName("response_code.properties");
+            dto.setFileName("response-code.properties");
             dto.setContentType("text/plain");
             dto.setContent(convertResponseCodeJsonToL1Properties(config.getResponseCode()));
             files.add(dto);
@@ -112,7 +112,7 @@ public class AdapterConfigurationFileServiceImpl implements AdapterConfiguration
 
         if (config.getResponseMapping() != null) {
             AdapterConfigFileDTO dto = new AdapterConfigFileDTO();
-            dto.setFileName("response_mapping.json");
+            dto.setFileName("response-mapping.json");
             dto.setContentType("application/json");
             dto.setContent(config.getResponseMapping());
             files.add(dto);
@@ -134,20 +134,20 @@ public class AdapterConfigurationFileServiceImpl implements AdapterConfiguration
 
             if ("CHANNELS".equalsIgnoreCase(bean.getFileType())) {
                 AdapterConfigFileDTO dto = new AdapterConfigFileDTO();
-                dto.setFileName("channel.xml");
+                dto.setFileName("channels.xml");
                 dto.setContentType("application/xml");
                 dto.setContent(bean.getFileContentSingle());
                 files.add(dto);
-                System.out.println("Added channel.xml to download list.");
+                System.out.println("Added channels.xml to download list.");
             }
 
             if ("WORKFLOW CHAIN".equalsIgnoreCase(bean.getFileType())) {
                 AdapterConfigFileDTO dto = new AdapterConfigFileDTO();
-                dto.setFileName("workflow_chain.xml");
+                dto.setFileName("workflow-chain.xml");
                 dto.setContentType("application/xml");
                 dto.setContent(bean.getFileContentSingle());
                 files.add(dto);
-                System.out.println("Added workflow_chain.xml to download list.");
+                System.out.println("Added workflow-chain.xml to download list.");
             }
         }
 
@@ -187,7 +187,7 @@ public class AdapterConfigurationFileServiceImpl implements AdapterConfiguration
 		  
 		  if (config.getResponseCode() != null) {
 	            AdapterConfigFileDTO dto = new AdapterConfigFileDTO();
-	            dto.setFileName("response_code.properties");
+	            dto.setFileName("response-code.properties");
 	            dto.setContentType("text/plain");
 	            dto.setContent(convertResponseCodeJsonToL3CartProperties(config.getResponseCode()));
 	            files.add(dto);
@@ -231,7 +231,7 @@ public class AdapterConfigurationFileServiceImpl implements AdapterConfiguration
 		      
 		        if ("CHANNELS".equalsIgnoreCase(bean.getFileType())) {
 		            AdapterConfigFileDTO dto = new AdapterConfigFileDTO();
-		            dto.setFileName("channel.xml");
+		            dto.setFileName("channels.xml");
 		            dto.setContentType("application/xml");
 		            dto.setContent(bean.getFileContentSingle());
 		            files.add(dto);
@@ -240,11 +240,11 @@ public class AdapterConfigurationFileServiceImpl implements AdapterConfiguration
 
 		        if ("WORKFLOW CHAIN".equalsIgnoreCase(bean.getFileType())) {
 		            AdapterConfigFileDTO dto = new AdapterConfigFileDTO();
-		            dto.setFileName("workflow_chain.xml");
+		            dto.setFileName("workflow-chain.xml");
 		            dto.setContentType("application/xml");
 		            dto.setContent(bean.getFileContentSingle());
 		            files.add(dto);
-		            System.out.println("Added L3 workflow_chain.xml to download list.");
+		            System.out.println("Added L3 workflow-chain.xml to download list.");
 		        }
 		    }
 		    List<DataFiles> networkFiles =
@@ -502,7 +502,7 @@ public class AdapterConfigurationFileServiceImpl implements AdapterConfiguration
 
             if ("CHANNELS".equalsIgnoreCase(bean.getFileType())) {
                 AdapterConfigFileDTO channelDto = new AdapterConfigFileDTO();
-                channelDto.setFileName("channel.xml");
+                channelDto.setFileName("channels.xml");
                 channelDto.setContentType("application/xml");
                 channelDto.setContent(bean.getFileContentSingle());
                 files.add(channelDto);

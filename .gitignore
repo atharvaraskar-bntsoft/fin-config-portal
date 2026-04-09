@@ -36,3 +36,6 @@ generated
 /BntSwitchAdminPortalFrontend/node_modules
 node_modules
 /BntSwitchAdminPortalFrontend/.vscode
+
+BntSwitchAdminPortalBackend/out/
+out/

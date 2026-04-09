@@ -1,7 +1,8 @@
-<app-loader *ngIf="isLoading"></app-loader>
+<app-loader *ngIf="isLoading"  [loaderText]="loaderText" ></app-loader>
 <!-- ===================== L1 SECTION ===================== -->
 <p class="mb-4 adapter-tag">
-   <strong>L1 Adapter</strong> Configuration Files
+	<i class="fa fa-folder-open mr-2"></i>
+   <strong> L1 Adapter</strong> Configuration Files:-
 </p>
 
 <div class="adapter-download-section mb-5">
@@ -26,7 +27,8 @@
 
 <!-- ===================== L3 SECTION ===================== -->
 <p class="mt-5 mb-4 adapter-tag">
-   <strong>L3 Adapter</strong> Configuration Files
+	<i class="fa fa-folder-open mr-2"></i>
+   <strong> L3 Adapter</strong> Configuration Files:-
 </p>
 
 <div class="adapter-download-section mb-5">
@@ -56,14 +58,15 @@
 </p>
 -->
 <p class="mt-5 mb-4 adapter-tag">
-  <strong>L2 Adapter</strong> Configuration Files
+	<i class="fa fa-folder-open mr-2"></i>	
+  <strong> L2 Adapter</strong> Configuration Files:-
 </p>
 
 <!-- L2 i. Workflow -->
 
 <div class="adapter-download-section mb-5">
   <div class="col-md-12">
-	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700;">1]<strong> Workflow</strong> File</p>
+	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700;  font-size: 16px;">1]<strong> Workflow</strong> File</p>
     <ngx-datatable
       class="bootstrap striped"
       [rows]="l2Rows"
@@ -84,7 +87,7 @@
 
 <div class="adapter-download-section mb-5">
   <div class="col-md-12">
-	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700;">2]<strong> IMF</strong> File</p>
+	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700; font-size: 16px;">2]<strong> IMF</strong> File</p>
     <ngx-datatable
       class="bootstrap striped"
       [rows]="l2ImfRows"
@@ -104,7 +107,7 @@
 
 <div class="adapter-download-section mb-5">
   <div class="col-md-12">
-	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700;">3]<strong> Core Properties</strong> File</p>
+	<p class="mb-2 adapter-subtag"  style="color: grey; font-weight: 700; font-size: 16px;">3]<strong> Core Properties</strong> File</p>
     <ngx-datatable
       class="bootstrap striped"
       [rows]="coreProperties"

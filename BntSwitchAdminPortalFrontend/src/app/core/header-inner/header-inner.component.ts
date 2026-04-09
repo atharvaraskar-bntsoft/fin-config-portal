@@ -128,7 +128,7 @@ export class HeaderInnerComponent implements OnInit, AfterViewInit {
               {
                 link: 'settings/master-configuration',
                 label: translation.MASTER_CONFIGURATION,
-                id: 'link_currencies',
+                id: 'link_currencies_1',
               },
             ];
             this.permissions = this.permissions.filter(item => {

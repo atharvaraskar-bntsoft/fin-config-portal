@@ -15,6 +15,7 @@ import { Utils } from 'src/utils';
 import { GetL3AdapterList } from '@app/store/actions/l3-adapter.action';
 import { selectL3AdapterList } from '@app/store/selectors/l3-adapter.selectors';
 import { DeploymentWorkflowService } from '@app/services/deployment-workflow-mapper.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -24,6 +25,13 @@ import { DeploymentWorkflowService } from '@app/services/deployment-workflow-map
   styleUrls: ['./upload.component.scss']
 })
 export class UploadComponent implements OnInit {
+	
+	public isLoading = false;
+	public loaderText: string = 'Uploading files...';
+	
+	imfList: any[] = [];
+	selectedL1ImfId: number | null = null;
+	selectedL3ImfId: number | null = null;
 	
 	// ===== IMF =====
 	  imfVersion: number | null = null;
@@ -88,6 +96,25 @@ export class UploadComponent implements OnInit {
 		this.loadAdapters();
 		this.loadL3Adapters();
 		this.loadWorkflowCoreProperties();
+		this.loadImfList(); 
+	  }
+	  
+	  loadImfList() {
+	    this._imfJsonService.getImfList().subscribe((res: any) => {
+	      if (res?.data?.imfStructureList) {
+
+	        const list = res.data.imfStructureList;
+
+	        this.imfList = list
+	          .sort((a, b) => b.version - a.version)
+	          .map((item: any) => ({
+	            id: item.id || item.imfId,   // ✅ FIX HERE
+	            version: item.version
+	          }));
+
+	        console.log('IMF LIST:', this.imfList);
+	      }
+	    });
 	  }
 	  
 	  loadCoreProperties() {
@@ -188,6 +215,7 @@ export class UploadComponent implements OnInit {
 	      alert('Please select file');
 	      return;
 	    }
+		this.isLoading = true;
 	    const reader = new FileReader();
 
 	    reader.onload = () => {
@@ -223,29 +251,41 @@ export class UploadComponent implements OnInit {
 
 	              this._imfJsonService.uploadImf(overwritePayload).subscribe({
 	                next: res => {
-	                  alert(res.data?.message || 'IMF updated successfully');
+						this.isLoading = false;	
+	                 // alert(res.data?.message || 'IMF updated successfully');
+					 this.showSuccess(response.data?.message || 'IMF updated successfully');
                       
 	                  // Reset UI
+					  this.loadImfList();
 					  this.imfVersion = null;
 	                  this.selectedFile = null;
 	                  this.fileInput.nativeElement.value = '';
 	                },
 	                error: e => {
+						this.isLoading = false;	
 	                  alert(e.error?.message || 'Failed to overwrite IMF');
 	                }
 	              });
 	            }
+				else {
+				    // ✅ ADD THIS LINE RIGHT HERE
+				    this.isLoading = false;
+				  }
 	          } else {
 	            // Normal success
-	            alert(response.data?.message || 'IMF uploaded successfully');
+				this.isLoading = false;
+	           // alert(response.data?.message || 'IMF uploaded successfully');
+			   this.showSuccess(response.data?.message || 'IMF uploaded successfully');
 
 	            // Reset UI
+				this.loadImfList();
 				this.imfVersion = null;
 	            this.selectedFile = null;
 	            this.fileInput.nativeElement.value = '';
 	          }
 	        },
 	        error: (error) => {
+			this.isLoading = false;	
 	          console.error('Upload Failed:', error);
 
 	          // Handle bad request (400)
@@ -275,6 +315,7 @@ export class UploadComponent implements OnInit {
 		  alert('Please select Core Instance and file');
 		  return;
 		}
+		this.isLoading = true;
 	     const reader = new FileReader();
 
 	     reader.onload = () => {
@@ -318,23 +359,31 @@ export class UploadComponent implements OnInit {
 	                   .uploadCorePropertiesFile(overwritePayload)
 	                   .subscribe({
 	                     next: (res: any) => {
-	                       alert(res.data?.message || 'Core Properties updated successfully');
+							this.isLoading = false;	
+	                      // alert(res.data?.message || 'Core Properties updated successfully');
+						  this.showSuccess(res.data?.message || 'Core Properties updated successfully');
 	                       this.resetCore();
 	                     },
 	                     error: (err) => {
+							this.isLoading = false;	
 	                       alert(err.error?.message || 'Failed to overwrite Core Properties');
 	                     }
 	                   });
 	               }
+				   else {
+				                 this.isLoading = false; 
+				               }
 
 	             } else {
-	               // ✅ NORMAL SUCCESS
-	               alert(response.data?.message || 'Core Properties uploaded successfully');
+					this.isLoading = false;
+	              // alert(response.data?.message || 'Core Properties uploaded successfully');
+				   this.showSuccess(response.data?.message || 'Core Properties uploaded successfully');
 	               this.resetCore();
 	             }
 
 	           },
 	           error: (error) => {
+				this.isLoading = false;
 	             console.error('Core Upload Failed:', error);
 
 	             if (error.status === 400) {
@@ -364,7 +413,7 @@ export class UploadComponent implements OnInit {
 
 	     const allowedFileNames: any = {
 	       properties: "adapter_conf.properties",
-	       responseCode: "response_code.properties",
+	       responseCode: "response-code.properties",
 	       packager: "packager.json",
 	       requestMapping: "adapter_transactions_mapping.json",
 	       imf: "imf.json",
@@ -406,11 +455,13 @@ export class UploadComponent implements OnInit {
 	         !this.adapterFiles.responseCode ||
 	         !this.adapterFiles.packager ||
 	         !this.adapterFiles.requestMapping ||
-	         !this.adapterFiles.imf) {
+	         this.selectedL1ImfId === null) {
 
 	       alert('Please upload all 5 files');
 	       return;
 	     }
+
+	     this.isLoading = true;
 
 	     const payload: any = {
 	       adapterId: this.selectedAdapterId
@@ -421,9 +472,10 @@ export class UploadComponent implements OnInit {
 	     }
 
 	     const readFile = (file: File) =>
-	       new Promise<string>((resolve) => {
+	       new Promise<string>((resolve, reject) => {
 	         const reader = new FileReader();
 	         reader.onload = () => resolve(reader.result as string);
+	         reader.onerror = () => reject('File read failed'); // ✅ important
 	         reader.readAsText(file);
 	       });
 
@@ -432,22 +484,20 @@ export class UploadComponent implements OnInit {
 	       readFile(this.adapterFiles.responseCode),
 	       readFile(this.adapterFiles.packager),
 	       readFile(this.adapterFiles.requestMapping),
-	       readFile(this.adapterFiles.imf),
-		
-	     ]).then((results: string[]) => {
+	     ])
+	     .then((results: string[]) => {
 
 	       payload.properties = results[0];
 	       payload.responseCode = results[1];
 	       payload.packager = results[2];
 	       payload.requestMapping = results[3];
-	       payload.imf = results[4];
-	
+	       payload.imfId = this.selectedL1ImfId;
+
+	       console.log("🚀 FINAL L1 PAYLOAD:", payload);
 
 	       this._l1AdapterService.uploadL1AdapterFiles(payload).subscribe({
 
 	         next: (response: any) => {
-
-	           console.log('L1 Upload Response:', response);
 
 	           if (response.data?.statusCode === 309) {
 
@@ -465,43 +515,40 @@ export class UploadComponent implements OnInit {
 	                 responseCode: payload.responseCode,
 	                 packager: payload.packager,
 	                 requestMapping: payload.requestMapping,
-	                 imf: payload.imf,
+	                 imfId: this.selectedL1ImfId,
 	                 version: versionToUse,
 	                 overwrite: true
 	               };
-				   console.log("Upload Payload:", payload);
-
 
 	               this._l1AdapterService.uploadL1AdapterFiles(overwritePayload)
 	                 .subscribe({
-
 	                   next: (res: any) => {
-
-	                     alert(res.data?.message || 'Adapter files updated successfully');
-
+	                     this.isLoading = false;
+	                    // alert(res.data?.message || 'Adapter files updated successfully');
+						this.showSuccess(res.data?.message || 'L1 Adapter files updated successfully');
 	                     this.resetAdapterFiles();
-
 	                   },
-
 	                   error: (err) => {
+	                     this.isLoading = false;
 	                     alert(err.error?.message || 'Failed to overwrite Adapter files');
 	                   }
-
 	                 });
 
+	             } else {
+	               this.isLoading = false;
 	             }
 
 	           } else {
-
-	             alert(response.data?.message || 'Adapter files uploaded successfully');
-				 this.resetAdapterFiles();
-
+	             this.isLoading = false;
+	             //alert(response.data?.message || 'Adapter files uploaded successfully');
+				 this.showSuccess(response.data?.message || 'L1 Adapter files uploaded successfully');
+	             this.resetAdapterFiles();
 	           }
 
 	         },
 
 	         error: (error) => {
-
+	           this.isLoading = false;
 	           console.error('Upload Failed:', error);
 
 	           if (error.status === 400) {
@@ -509,14 +556,18 @@ export class UploadComponent implements OnInit {
 	           } else {
 	             alert('Upload Failed. Please try again.');
 	           }
-
 	         }
 
 	       });
 
+	     })
+	     .catch((err) => {   // ✅ CORRECT PLACE
+	       this.isLoading = false;
+	       console.error('File Read Error:', err);
+	       alert('Error reading files. Please try again.');
 	     });
-
 	   }
+	
 
 	   // Reset after upload
 	   resetAdapterFiles() {
@@ -525,9 +576,10 @@ export class UploadComponent implements OnInit {
 	       responseCode: null,
 	       packager: null,
 	       requestMapping: null,
-	       imf: null
+	       imf: null,
+		  
 	     };
-
+		 this.selectedL1ImfId = null;
 	     this.selectedAdapterId = null;
 	     this.adapterVersion = null;
 
@@ -541,98 +593,114 @@ export class UploadComponent implements OnInit {
 	  
 
 	   uploadL3AdapterFiles() {
+
 	     if (!this.selectedL3Id) {
 	       alert('Please select L3 Instance');
 	       return;
 	     }
 
-	     // Check if all 5 files are uploaded
 	     if (
 	       !this.l3Files.properties ||
 	       !this.l3Files.responseCode ||
 	       !this.l3Files.packager ||
 	       !this.l3Files.requestMapping ||
-	       !this.l3Files.imf   ||
-		   !this.l3Files.networkHandler
+	       this.selectedL3ImfId === null ||
+	       !this.l3Files.networkHandler
 	     ) {
 	       alert('Please upload all 6 files');
 	       return;
 	     }
 
+	     this.isLoading = true;
+
 	     const payload: any = {
-			adapterId: this.selectedL3Id
+	       adapterId: this.selectedL3Id
 	     };
 
 	     if (this.l3Version !== null && this.l3Version !== undefined) {
 	       payload.version = this.l3Version;
 	     }
 
-	     // Helper to read file content as text
 	     const readFile = (file: File) =>
-	       new Promise<string>((resolve) => {
+	       new Promise<string>((resolve, reject) => {
 	         const reader = new FileReader();
+
 	         reader.onload = () => resolve(reader.result as string);
+	         reader.onerror = (err) => reject(err);   // ✅ IMPORTANT
+
 	         reader.readAsText(file);
 	       });
 
-	     // Read all files
 	     Promise.all([
 	       readFile(this.l3Files.properties),
 	       readFile(this.l3Files.responseCode),
 	       readFile(this.l3Files.packager),
 	       readFile(this.l3Files.requestMapping),
-	       readFile(this.l3Files.imf),
-		   readFile(this.l3Files.networkHandler)
-	     ]).then((results: string[]) => {
+	       readFile(this.l3Files.networkHandler)
+	     ])
+	     .then((results: string[]) => {
+
 	       payload.properties = results[0];
 	       payload.responseCode = results[1];
 	       payload.packager = results[2];
 	       payload.requestMapping = results[3];
-	       payload.imf = results[4];
-		   payload.networkHandler = results[5];
+	       payload.imfId = this.selectedL3ImfId;
+	       payload.networkHandler = results[4];
 
-	       // Upload L3 adapter
 	       this._l3AdapterService.uploadL3Adapter(payload).subscribe({
 	         next: (response: any) => {
-	           // Check for version conflict
+
 	           if (response.data?.statusCode === 309) {
+
 	             const confirmUpdate = confirm(
 	               '⚠ L3 Adapter version already exists. Do you want to overwrite it?'
 	             );
 
 	             if (confirmUpdate) {
+
 	               const versionToUse = this.l3Version ?? response.data.version;
 
 	               const overwritePayload: any = {
-					 adapterId: this.selectedL3Id,
+	                 adapterId: this.selectedL3Id,
 	                 properties: payload.properties,
 	                 responseCode: payload.responseCode,
 	                 packager: payload.packager,
 	                 requestMapping: payload.requestMapping,
-	                 imf: payload.imf,
-					 networkHandler: payload.networkHandler,
+	                 imfId: this.selectedL3ImfId,
+	                 networkHandler: payload.networkHandler,
 	                 version: versionToUse,
 	                 overwrite: true
 	               };
 
 	               this._l3AdapterService.uploadL3Adapter(overwritePayload).subscribe({
 	                 next: (res: any) => {
-	                   alert(res.data?.message || 'L3 Adapter updated successfully');
+	                   this.isLoading = false;
+	                   //alert(res.data?.message || 'L3 Adapter updated successfully');
+					   this.showSuccess(res.data?.message || 'L3 Adapter updated successfully');
 	                   this.resetL3Files();
 	                 },
 	                 error: (err) => {
+	                   this.isLoading = false;
 	                   alert(err.error?.message || 'Failed to overwrite L3 Adapter files');
 	                 }
 	               });
+
+	             } else {
+	               this.isLoading = false;
 	             }
+
 	           } else {
-	             // Normal success
-	             alert(response.data?.message || 'L3 Adapter uploaded successfully');
+	             this.isLoading = false;
+	             //alert(response.data?.message || 'L3 Adapter uploaded successfully');
+				 this.showSuccess(response.data?.message || 'L3 Adapter uploaded successfully');
 	             this.resetL3Files();
 	           }
 	         },
+
 	         error: (error) => {
+	           this.isLoading = false;
 	           console.error('Upload Failed:', error);
+
 	           if (error.status === 400) {
 	             alert(error.error?.message || 'Invalid request');
 	           } else {
@@ -640,9 +708,15 @@ export class UploadComponent implements OnInit {
 	           }
 	         }
 	       });
+	     })
+
+	     .catch((err) => {   // ✅ THIS WAS MISSING
+	       this.isLoading = false;
+	       console.error('File Read Error:', err);
+	       alert('Error reading files. Please try again.');
 	     });
 	   }
-
+	   
 	   // Reset L3 files and UI
 	   resetL3Files() {
 	     this.l3Files = {
@@ -650,10 +724,13 @@ export class UploadComponent implements OnInit {
 	       responseCode: null,
 	       packager: null,
 	       requestMapping: null,
-	       imf: null
+	       imf: null,
+		   networkHandler: null ,
+		   
 	     };
 	     this.selectedL3Id = null;
 	     this.l3Version = null;
+		 this.selectedL3ImfId = null;
 
 	     // Reset file input values
 	     const fileInputs = document.querySelectorAll<HTMLInputElement>('input[type="file"]');
@@ -667,7 +744,7 @@ export class UploadComponent implements OnInit {
 
 	   const allowedFileNames: any = {
 	   properties: "cart_conf.properties",
-	   responseCode: "response_code.properties",
+	   responseCode: "response-code.properties",
 	   packager: "packager.xml",
 	   requestMapping: "cart_transactions_mapping.json",
 	   imf: "imf.json",
@@ -701,6 +778,7 @@ export class UploadComponent implements OnInit {
 	       alert('Please select file and Core Property Detail ID');
 	       return;
 	     }
+		 this.isLoading = true;
 
 	     const reader = new FileReader();
 
@@ -714,12 +792,15 @@ export class UploadComponent implements OnInit {
 	       this._deploymentWorkflowService.uploadWorkflow(payload)
 	         .subscribe({
 	           next: (response: any) => {
-	             alert(response.data?.message || 'Workflow uploaded successfully');
+				this.isLoading = false; 
+	            // alert(response.data?.message || 'Workflow uploaded successfully');
+				this.showSuccess(response.data?.message || 'Workflow uploaded successfully');
 
 	             this.workflowFile = null;
 	             this.selectedWorkflowCorePropertyDetailId = null;
 	           },
 	           error: (error: any) => {
+				this.isLoading = false; 
 	             console.error(error);
 	             alert(error.error?.message || 'Workflow upload failed');
 	           }
@@ -728,6 +809,18 @@ export class UploadComponent implements OnInit {
 	     };
 
 	     reader.readAsText(this.workflowFile);
+	   }
+	   
+	   showSuccess(message: string) {
+	     Swal.fire({
+	       title: 'Success',
+	       text: message,
+	       icon: 'success',
+	       width: '700px',
+	       customClass: {
+	         popup: 'big-swal'
+	       }
+	     });
 	   }
 	   
 	   

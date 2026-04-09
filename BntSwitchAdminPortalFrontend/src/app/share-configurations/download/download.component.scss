@@ -28,4 +28,11 @@
   font-size: 18px; 
 }
 
+/* make SweetAlert2 modal bigger */
+.swal2-popup.swal2-my-custom {
+  width: 32rem !important;       /* bigger width */
+  padding: 2rem !important;      /* bigger padding */
+  font-size: 1rem !important;    /* optional, adjust text size */
+}
+
 

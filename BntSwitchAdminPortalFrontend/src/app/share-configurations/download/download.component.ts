@@ -18,6 +18,7 @@ import { ImfJsonService } from '@app/services/imf-json.service';
 import { GetCoreProperties } from '@app/store/actions/core-properties.action';
 import { selectCorePropertiesListGet } from '@app/store/selectors/core-properties.selector';
 import { CorePropertiesService } from '@app/services/core-properties.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -46,6 +47,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
   public coreProperties: any[] = [];
   public coreColumns: any[] = [];
   public isLoading = false;
+  public loaderText: string = 'Downloading files...';
 
 
 
@@ -99,10 +101,10 @@ export class DownloadComponent implements OnInit, OnDestroy {
 	      { prop: 'action', name: trans.ACTION, cellTemplate: this.l3Actions },
 	    ];
 		this.l2Columns = [
-		  { prop: 'deploymentId', name: trans.NAME },
-		  { prop: 'name', name: trans.TEMPLATE, cellTemplate: this.l2Name },
-		  { prop: 'version', name: trans.VERSION, cellTemplate: this.naVersionTemplate},
-		  { prop: 'action', name: trans.ACTION, cellTemplate: this.l2Action },
+		  { name: trans.NAME, cellTemplate: this.l2Name },   
+		  { name: trans.TEMPLATE, cellTemplate: this.naVersionTemplate }, 
+		  { name: trans.VERSION, cellTemplate: this.naVersionTemplate },  
+		  { name: trans.ACTION, cellTemplate: this.l2Action },
 		];
 		
 		this.l2ImfColumns = [
@@ -273,12 +275,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
   /**
    * Downloads adapter files for the selected row and version.
    */
+  
   async downloadRow(row: any) {
     this.isLoading = true;
-
-    console.log('Adapter ID:', row.id);
-    console.log('Version ID:', row.adapterConfigSummaryUIWapper[0].id);
-    console.log('Version:', row.adapterConfigSummaryUIWapper[0].version);
 
     const adapterId = row.id;
 
@@ -300,56 +299,64 @@ export class DownloadComponent implements OnInit, OnDestroy {
       const beansDirHandle = await dirHandle.getDirectoryHandle('beans', { create: true });
 
       this._l1AdapterService.downloadL1Adapter(payload).subscribe({
-
-        // ✅ SUCCESS
         next: async (res) => {
-          if (res?.status === 'success' && res?.data?.files?.length) {
+          try {
+            if (res?.status === 'success' && res?.data?.files?.length) {
+              for (const file of res.data.files) {
+                let content = file.content;
 
-            for (const file of res.data.files) {
-              let content = file.content;
-
-              if (file.contentType === 'application/json') {
-                try {
-                  const parsed = JSON.parse(file.content);
-                  content = JSON.stringify(parsed, null, 2);
-                } catch (e) {
-                  console.error('Error parsing JSON', e);
+                if (file.contentType === 'application/json') {
+                  try {
+                    content = JSON.stringify(JSON.parse(file.content), null, 2);
+                  } catch (e) {
+                    console.error('JSON parse error', e);
+                  }
                 }
+
+                const targetDir =
+                  file.fileName.startsWith('channel') || file.fileName.startsWith('workflow')
+                    ? beansDirHandle
+                    : dirHandle;
+
+                const fileHandle = await targetDir.getFileHandle(file.fileName, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(content);
+                await writable.close();
               }
 
-              const targetDir =
-                file.fileName.startsWith('channel') || file.fileName.startsWith('workflow')
-                  ? beansDirHandle
-                  : dirHandle;
-
-              const fileHandle = await targetDir.getFileHandle(file.fileName, { create: true });
-              const writable = await fileHandle.createWritable();
-              await writable.write(content);
-              await writable.close();
+              //alert('All adapter configuration files have been downloaded successfully!');
+			  Swal.fire({
+			  		 			   title: 'Success',
+			  		 			   text: 'All L1 adapter configuration files have been downloaded successfully!',
+			  		 			   icon: 'success',
+			  		 			   width: '700px',   // bigger modal
+			  		 			   customClass: {
+			  		 			     popup: 'big-swal'
+			  		 			   }
+			  		 			 });
+            } else {
+              alert('No files available to download');
             }
-
-            console.log('All files saved successfully!');
-            alert('All adapter configuration files have been downloaded successfully!');
+          } catch (err) {
+            console.error('Error saving files', err);
+            alert('Error saving files!');
+          } finally {
+            // ✅ Stop loader only after all files written
+            this.isLoading = false;
           }
         },
 
-        // ❌ ERROR
         error: (err) => {
           console.error('Download failed:', err);
           alert('Download failed!');
           this.isLoading = false;
-        },
-
-        // ✅ ALWAYS STOP LOADER
-        complete: () => {
-          this.isLoading = false;
         }
 
+        // ❌ Remove complete block
       });
-
     } catch (err) {
-      this.isLoading = false;
       console.error('Error downloading adapter config:', err);
+      this.isLoading = false;
     }
   }
 
@@ -380,75 +387,10 @@ export class DownloadComponent implements OnInit, OnDestroy {
       const beansDirHandle = await dirHandle.getDirectoryHandle('beans', { create: true });
 
       this._l3AdapterService.downloadL3Adapter(payload).subscribe({
-
-        // ✅ SUCCESS
         next: async (res) => {
-          if (res?.status === 'success' && res?.data?.files?.length) {
-
-            for (const file of res.data.files) {
-
-              let content = file.content;
-
-              if (file.contentType === 'application/json') {
-                try {
-                  const parsed = JSON.parse(file.content);
-                  content = JSON.stringify(parsed, null, 2);
-                } catch (e) {}
-              }
-
-              const targetDir =
-                file.fileName.startsWith('channel') || file.fileName.startsWith('workflow')
-                  ? beansDirHandle
-                  : dirHandle;
-
-              const fileHandle = await targetDir.getFileHandle(file.fileName, { create: true });
-              const writable = await fileHandle.createWritable();
-              await writable.write(content);
-              await writable.close();
-            }
-
-            alert('L3 adapter configuration files downloaded successfully!');
-          }
-        },
-
-        // ❌ ERROR
-        error: (err) => {
-          console.error('Download failed:', err);
-          alert('Download failed!');
-          this.isLoading = false;
-        },
-
-        // ✅ ALWAYS STOP LOADER
-        complete: () => {
-          this.isLoading = false;
-        }
-
-      });
-
-    } catch (err) {
-      this.isLoading = false;
-      console.error('Error downloading L3 adapter config:', err);
-    }
-  }
-  
-  public async downloadL2Workflow(row: any) {
-    this.isLoading = true;
-
-    try {
-      const dirHandle = await (window as any).showDirectoryPicker();
-      const beansDirHandle = await dirHandle.getDirectoryHandle('beans', { create: true });
-
-      this._deploymentWorkflowService
-        .downloadL2Workflow(row.deploymentId)
-        .subscribe({
-
-          // ✅ SUCCESS
-          next: async (res: any) => {
-
-            if (res?.data?.files?.length) {
-
+          try {
+            if (res?.status === 'success' && res?.data?.files?.length) {
               for (const file of res.data.files) {
-
                 let content = file.content;
 
                 if (file.contentType === 'application/json') {
@@ -460,8 +402,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 }
 
                 const targetDir =
-                  file.fileName.startsWith('channel') ||
-                  file.fileName.startsWith('orchestration')
+                  file.fileName.startsWith('channel') || file.fileName.startsWith('workflow')
                     ? beansDirHandle
                     : dirHandle;
 
@@ -471,30 +412,108 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 await writable.close();
               }
 
-              alert('L2 workflow files downloaded successfully!');
-
+             // alert('L3 adapter configuration files downloaded successfully!');
+			 Swal.fire({
+			 		 			   title: 'Success',
+			 		 			   text: 'L3 adapter configuration files downloaded successfully!',
+			 		 			   icon: 'success',
+			 		 			   width: '700px',   // bigger modal
+			 		 			   customClass: {
+			 		 			     popup: 'big-swal'
+			 		 			   }
+			 		 			 });
             } else {
-              // ⚠️ No files case
               alert('No files available to download');
             }
-          },
-
-          // ❌ ERROR
-          error: (err) => {
-            console.error('Download failed:', err);
-            alert('Download failed!');
-          },
-
-          // ✅ ALWAYS STOP LOADER
-          complete: () => {
+          } catch (err) {
+            console.error('Error saving files', err);
+            alert('Error saving files!');
+          } finally {
+            // ✅ Stop loader only after all files written
             this.isLoading = false;
           }
+        },
 
-        });
+        error: (err) => {
+          console.error('Download failed:', err);
+          alert('Download failed!');
+          this.isLoading = false;
+        }
 
+        // ❌ Remove complete block
+      });
     } catch (err) {
+      console.error('Error downloading L3 adapter config:', err);
       this.isLoading = false;
+    }
+  }
+  
+  public async downloadL2Workflow(row: any) {
+    this.isLoading = true;
+
+    try {
+      const dirHandle = await (window as any).showDirectoryPicker();
+      const beansDirHandle = await dirHandle.getDirectoryHandle('beans', { create: true });
+
+      this._deploymentWorkflowService.downloadL2Workflow(row.deploymentId).subscribe({
+        next: async (res: any) => {
+          try {
+            if (res?.data?.files?.length) {
+              for (const file of res.data.files) {
+                let content = file.content;
+
+                if (file.contentType === 'application/json') {
+                  try {
+                    content = JSON.stringify(JSON.parse(file.content), null, 2);
+                  } catch (e) {
+                    console.error('JSON parse error', e);
+                  }
+                }
+
+                const targetDir =
+                  file.fileName.startsWith('channel') || file.fileName.startsWith('orchestration')
+                    ? beansDirHandle
+                    : dirHandle;
+
+                const fileHandle = await targetDir.getFileHandle(file.fileName, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(content);
+                await writable.close();
+              }
+
+             // alert('L2 workflow files downloaded successfully!');
+			 Swal.fire({
+			   title: 'Success',
+			   text: 'L2 workflow files downloaded successfully!',
+			   icon: 'success',
+			   width: '700px',   // bigger modal
+			   customClass: {
+			     popup: 'big-swal'
+			   }
+			 });
+            } else {
+              alert('No files available to download');
+            }
+          } catch (err) {
+            console.error('Error saving files', err);
+            alert('Error saving files!');
+          } finally {
+            // ✅ Stop loader after processing
+            this.isLoading = false;
+          }
+        },
+
+        error: (err) => {
+          console.error('Download failed:', err);
+          alert('Download failed!');
+          this.isLoading = false;
+        }
+
+        // ❌ Removed complete block
+      });
+    } catch (err) {
       console.error('Error downloading L2 workflow:', err);
+      this.isLoading = false;
     }
   }
   
@@ -511,18 +530,12 @@ export class DownloadComponent implements OnInit, OnDestroy {
       }
 
       const version = versionObj.version;
-
       const dirHandle = await (window as any).showDirectoryPicker();
 
-      this._imfJsonService
-        .downloadImfByVersion(version)
-        .subscribe({
-
-          // ✅ SUCCESS
-          next: async (res: any) => {
-
+      this._imfJsonService.downloadImfByVersion(version).subscribe({
+        next: async (res: any) => {
+          try {
             if (res?.data?.files?.length) {
-
               const file = res.data.files[0];
               let content = file.content;
 
@@ -537,31 +550,36 @@ export class DownloadComponent implements OnInit, OnDestroy {
               await writable.write(content);
               await writable.close();
 
-              alert('L2 IMF downloaded successfully!');
-
+             // alert('L2 IMF downloaded successfully!');
+			 Swal.fire({
+			 			   title: 'Success',
+			 			   text: 'L2 IMF downloaded successfully!',
+			 			   icon: 'success',
+			 			   width: '700px',   // bigger modal
+			 			   customClass: {
+			 			     popup: 'big-swal'
+			 			   }
+			 			 });
             } else {
-              // ⚠️ no file case
               alert('No IMF file available');
             }
-
-            // ✅ STOP loader
-            this.isLoading = false;
-          },
-
-          // ❌ ERROR
-          error: (err) => {
-            console.error('Download failed:', err);
-            alert('Download failed!');
-            
-            // ✅ STOP loader
+          } catch (err) {
+            console.error('Error saving IMF file', err);
+            alert('Error saving IMF file!');
+          } finally {
             this.isLoading = false;
           }
+        },
 
-        });
-
+        error: (err) => {
+          console.error('Download failed:', err);
+          alert('Download failed!');
+          this.isLoading = false;
+        }
+      });
     } catch (err) {
-      this.isLoading = false;
       console.error('Error downloading L2 IMF:', err);
+      this.isLoading = false;
     }
   }
   
@@ -578,22 +596,15 @@ export class DownloadComponent implements OnInit, OnDestroy {
       }
 
       const versionId = versionObj.id;
-
       const dirHandle = await (window as any).showDirectoryPicker();
 
-      this._corePropertiesService
-        .downloadCoreProperties(versionId)
-        .subscribe({
-
-          // ✅ SUCCESS
-          next: async (res: any) => {
-
+      this._corePropertiesService.downloadCoreProperties(versionId).subscribe({
+        next: async (res: any) => {
+          try {
             if (res?.status === 'success' && res?.data?.files?.length) {
-
               const file = res.data.files[0];
               let content = file.content;
 
-              // pretty print json
               try {
                 content = JSON.stringify(JSON.parse(content), null, 2);
               } catch (e) {
@@ -609,34 +620,39 @@ export class DownloadComponent implements OnInit, OnDestroy {
               await writable.write(content);
               await writable.close();
 
-              alert('Core Properties downloaded successfully!');
-
+              //alert('Core Properties downloaded successfully!');
+			  Swal.fire({
+			  		 			   title: 'Success',
+			  		 			   text: 'Core Properties downloaded successfully!',
+			  		 			   icon: 'success',
+			  		 			   width: '700px',   // bigger modal
+			  		 			   customClass: {
+			  		 			     popup: 'big-swal'
+			  		 			   }
+			  		 			 });
             } else {
-              // ⚠️ no file case
               alert('No file available to download');
             }
-
-            // ✅ STOP loader
-            this.isLoading = false;
-          },
-
-          // ❌ ERROR
-          error: (err) => {
-            console.error('Download failed:', err);
-            alert('Download failed!');
-            
-            // ✅ STOP loader
+          } catch (err) {
+            console.error('Error saving Core Properties file', err);
+            alert('Error saving Core Properties file!');
+          } finally {
             this.isLoading = false;
           }
+        },
 
-        });
+        error: (err) => {
+          console.error('Download failed:', err);
+          alert('Download failed!');
+          this.isLoading = false;
+        }
+      });
 
     } catch (err) {
-      this.isLoading = false;
       console.error('Error downloading Core Properties:', err);
+      this.isLoading = false;
     }
   }
-
   public onCoreVersionChange(selected: any, row: any) {
     row.selectedVersion = selected;
   }

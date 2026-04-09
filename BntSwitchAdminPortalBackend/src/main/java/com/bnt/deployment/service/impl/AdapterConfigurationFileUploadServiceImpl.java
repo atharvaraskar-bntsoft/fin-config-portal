@@ -396,19 +396,15 @@ public class AdapterConfigurationFileUploadServiceImpl implements AdapterConfigu
 	    }
 
 	    // IMF FILE
-	    if (request.getImf() != null) {
+	    if (request.getImfId() != null) {
 
-	        Integer maxVersion = imfRepository.findMaxVersion();
-	        Integer newVersion = (maxVersion == null) ? 1 : maxVersion + 1;
+	        ImfStructure imf = imfRepository.findById(request.getImfId())
+	            .orElseThrow(() -> new RippsAdminRestException(
+	                "IMF not found",
+	                HttpStatus.NOT_FOUND
+	            ));
 
-	        ImfStructure imfnew = new ImfStructure();
-	        imfnew.setVersion(newVersion);
-	        imfnew.setName("IMF Structure " + newVersion);
-	        imfnew.setImf(request.getImf());
-
-	        ImfStructure savedImf = imfRepository.save(imfnew);
-
-	        config.setImfId(savedImf);
+	        config.setImfId(imf);
 	    }
 
 	    // PROPERTIES
@@ -678,19 +674,15 @@ public class AdapterConfigurationFileUploadServiceImpl implements AdapterConfigu
 	  
 
 	    // IMF
-	    if (request.getImf() != null) {
+	    if (request.getImfId() != null) {
 
-	        Integer maxVersion = imfRepository.findMaxVersion();
-	        Integer newVersion = (maxVersion == null) ? 1 : maxVersion + 1;
+	        ImfStructure imf = imfRepository.findById(request.getImfId())
+	            .orElseThrow(() -> new RippsAdminRestException(
+	                "IMF not found",
+	                HttpStatus.NOT_FOUND
+	            ));
 
-	        ImfStructure imfnew = new ImfStructure();
-	        imfnew.setVersion(newVersion);
-	        imfnew.setName("IMF Structure " + newVersion);
-	        imfnew.setImf(request.getImf());
-
-	        ImfStructure savedImf = imfRepository.save(imfnew);
-
-	        config.setImfId(savedImf);
+	        config.setImfId(imf);
 	    }
 	    //netwrok handler
 	    if (request.getNetworkHandler() != null) {

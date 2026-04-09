@@ -5,6 +5,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,6 +72,9 @@ public class PortalStatusController {
 
 	@Value("${ui.code.date}")
 	private String uiCodeDate;
+
+    @Value("${app.table.names}")
+    private String tableNames;
 
 	@Autowired
 	Environment environment;
@@ -158,7 +162,7 @@ public class PortalStatusController {
 	}
 
 	public List<String> getMetadata() {
-		return new ArrayList<>();
+		return new ArrayList<>(Arrays.asList(tableNames.split(",")));
 	}
 
 	private List<PropertyValueWrapper> getJvmDetail() {

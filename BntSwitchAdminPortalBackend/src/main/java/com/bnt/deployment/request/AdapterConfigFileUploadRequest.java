@@ -9,7 +9,7 @@ public class AdapterConfigFileUploadRequest {
     private String responseCode;
     private String packager;
     private String requestMapping;
-    private String imf;
+    private Integer imfId;
     private String networkHandler;
 
     private Boolean overwrite;
@@ -62,12 +62,12 @@ public class AdapterConfigFileUploadRequest {
         this.requestMapping = requestMapping;
     }
 
-    public String getImf() {
-        return imf;
+    public Integer getImfId() {
+        return imfId;
     }
 
-    public void setImf(String imf) {
-        this.imf = imf;
+    public void setImfId(Integer imfId) {
+        this.imfId = imfId;
     }
 
     public Boolean getOverwrite() {
