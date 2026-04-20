@@ -6,6 +6,34 @@ This project provides both **backend (Spring Boot / Java)** and **frontend (Angu
 
 ---
 
+select
+    t1_0.id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')),
+    t1_0.created_on,
+    t1_0.ipc,
+    t1_0.merchant_id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')),
+    t1_0.terminal_id,
+    t1_0.txn_data,
+    t1_0.txn_id,
+    t1_0.txn_originator_reference,
+    t1_0.txn_psp_reference,
+    t1_0.txn_recv_date_time,
+    t1_0.txn_type,
+    t1_0.updated_on
+from txn_log t1_0
+where
+    t1_0.txn_recv_date_time between '2026-04-13 09:58:00'
+    and '2026-04-20 09:58:00'
+
+    and json_unquote(json_extract(
+        t1_0.txn_data,
+        '$.message_collection[0].message_exchange.response_message.response_code'
+    )) like '%20%' escape '!'
+
+order by t1_0.created_on desc
+limit 0, 20;
+
 ## 📂 Repository
 
 * **Admin Portal Codebase**
