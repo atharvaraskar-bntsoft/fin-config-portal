@@ -5,7 +5,239 @@ The **BNT Switch Admin Portal** is part of the **B-Switch payment engine**, used
 This project provides both **backend (Spring Boot / Java)** and **frontend (Angular)** components along with **Docker support** for deployment.
 
 ---
+basic filter
 
+SELECT
+    t1_0.id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')),
+    t1_0.created_on,
+    t1_0.ipc,
+    t1_0.merchant_id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')),
+    t1_0.terminal_id,
+    t1_0.txn_data,
+    t1_0.txn_id,
+    t1_0.txn_originator_reference,
+    t1_0.txn_psp_reference,
+    t1_0.txn_recv_date_time,
+    t1_0.txn_type,
+    t1_0.updated_on
+FROM txn_log t1_0
+WHERE
+    t1_0.txn_recv_date_time BETWEEN '2022-04-18 10:34:48'
+                                AND '2025-04-20 10:34:48'
+ORDER BY
+    t1_0.created_on DESC
+LIMIT 0, 20;
+
+
+
+with tcn type filter
+SELECT
+    txn_log.id,
+    JSON_UNQUOTE(JSON_EXTRACT(txn_log.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')) AS amount_value,
+    txn_log.created_on,
+    txn_log.ipc,
+    txn_log.merchant_id,
+    JSON_UNQUOTE(JSON_EXTRACT(txn_log.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')) AS rrn,
+    txn_log.terminal_id,
+    txn_log.txn_data,
+    txn_log.txn_id,
+    txn_log.txn_originator_reference,
+    txn_log.txn_psp_reference,
+    txn_log.txn_recv_date_time,
+    txn_log.txn_type,
+    txn_log.updated_on
+FROM
+    txn_log
+WHERE
+    txn_log.txn_type = 'Withdrawal'
+    AND txn_log.txn_recv_date_time BETWEEN '2022-04-18 10:34:48' AND '2025-04-20 10:34:48'
+ORDER BY
+    txn_log.created_on DESC
+LIMIT 0, 20;
+
+
+
+
+with trenial id filter
+SELECT
+    t1_0.id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')),
+    t1_0.created_on,
+    t1_0.ipc,
+    t1_0.merchant_id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')),
+    t1_0.terminal_id,
+    t1_0.txn_data,
+    t1_0.txn_id,
+    t1_0.txn_originator_reference,
+    t1_0.txn_psp_reference,
+    t1_0.txn_recv_date_time,
+    t1_0.txn_type,
+    t1_0.updated_on
+FROM txn_log t1_0
+WHERE
+    t1_0.txn_recv_date_time BETWEEN '2022-04-19 10:34:48'
+                                AND '2026-04-20 10:34:48'
+    AND t1_0.terminal_id = '321452'
+ORDER BY t1_0.created_on DESC
+LIMIT 0, 20;
+
+
+with amount filter
+SELECT
+    txn_log.id,
+    JSON_UNQUOTE(JSON_EXTRACT(txn_log.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')) AS amount_value,
+    txn_log.created_on,
+    txn_log.ipc,
+    txn_log.merchant_id,
+    JSON_UNQUOTE(JSON_EXTRACT(txn_log.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')) AS rrn,
+    txn_log.terminal_id,
+    txn_log.txn_data,
+    txn_log.txn_id,
+    txn_log.txn_originator_reference,
+    txn_log.txn_psp_reference,
+    txn_log.txn_recv_date_time,
+    txn_log.txn_type,
+    txn_log.updated_on
+FROM
+    txn_log
+WHERE
+    txn_log.txn_recv_date_time BETWEEN '2022-04-18 10:34:48'
+                                  AND '2025-04-20 10:34:48'
+    AND JSON_UNQUOTE(JSON_EXTRACT(
+        txn_log.txn_data,
+        '$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value'
+    )) = 50
+ORDER BY
+    txn_log.created_on DESC
+LIMIT 0, 20;
+
+
+
+
+
+
+
+
+
+
+with source acquire filter
+SELECT
+    txn_log.id,
+    JSON_UNQUOTE(JSON_EXTRACT(txn_log.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')) AS amount_value,
+    txn_log.created_on,
+    txn_log.ipc,
+    txn_log.merchant_id,
+    JSON_UNQUOTE(JSON_EXTRACT(txn_log.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')) AS rrn,
+    txn_log.terminal_id,
+    txn_log.txn_data,
+    txn_log.txn_id,
+    txn_log.txn_originator_reference,
+    txn_log.txn_psp_reference,
+    txn_log.txn_recv_date_time,
+    txn_log.txn_type,
+    txn_log.updated_on
+FROM
+    txn_log
+WHERE
+    txn_log.txn_recv_date_time BETWEEN '2022-04-18 10:34:48' AND '2025-04-20 10:34:48'
+    AND JSON_UNQUOTE(JSON_EXTRACT(txn_log.txn_data,'$.message_collection[0].message_exchange.request_message.acquirer_institution_code')) = 'ACQ001'
+ORDER BY
+    txn_log.created_on DESC
+LIMIT 0, 20;
+
+
+
+//two json filtter source acquirer and amount
+
+select
+    t1_0.id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')),
+    t1_0.created_on,
+    t1_0.ipc,
+    t1_0.merchant_id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')),
+    t1_0.terminal_id,
+    t1_0.txn_data,
+    t1_0.txn_id,
+    t1_0.txn_originator_reference,
+    t1_0.txn_psp_reference,
+    t1_0.txn_recv_date_time,
+    t1_0.txn_type,
+    t1_0.updated_on
+from txn_log t1_0
+where
+    t1_0.txn_recv_date_time between '2024-04-19 08:20:33'
+    and '2026-04-20 08:20:33'
+
+    and json_unquote(json_extract(
+        t1_0.txn_data,
+        '$.message_collection[0].message_exchange.request_message.acquirer_institution_code'
+    )) = 'ACQ001'
+
+    and json_unquote(json_extract(
+        t1_0.txn_data,
+        '$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value'
+    )) = 50
+
+order by t1_0.created_on desc
+limit 0, 20;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+filetrs destination endpoint
+select
+    t1_0.id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')),
+    t1_0.created_on,
+    t1_0.ipc,
+    t1_0.merchant_id,
+    json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.rrn')),
+    t1_0.terminal_id,
+    t1_0.txn_data,
+    t1_0.txn_id,
+    t1_0.txn_originator_reference,
+    t1_0.txn_psp_reference,
+    t1_0.txn_recv_date_time,
+    t1_0.txn_type,
+    t1_0.updated_on
+from txn_log t1_0
+where
+    t1_0.txn_recv_date_time between '2024-04-19 08:20:33'
+    and '2026-04-20 08:20:33'
+
+    and json_unquote(json_extract(
+        t1_0.txn_data,
+        '$.message_collection[1].message_exchange.request_message.acquirer_institution_code'
+    )) = '100'
+
+    and json_unquote(json_extract(
+        t1_0.txn_data,
+        '$.message_collection[1].message_exchange.service_type'
+    )) = 'AUTH_SERVICE'
+
+order by t1_0.created_on desc
+limit 0, 20;
+
+
+filter 
+Responce code
 select
     t1_0.id,
     json_unquote(json_extract(t1_0.txn_data,'$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value')),
