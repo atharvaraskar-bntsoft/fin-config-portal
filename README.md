@@ -266,6 +266,41 @@ where
 order by t1_0.created_on desc
 limit 0, 20;
 
+
+
+with respoence code filter
+SELECT
+    t1_0.id,
+    JSON_UNQUOTE(JSON_EXTRACT(
+        t1_0.txn_data,
+        '$.message_collection[0].message_exchange.request_message.amounts.amount_transaction.value'
+    )) AS amount_value,
+    t1_0.created_on,
+    t1_0.ipc,
+    t1_0.merchant_id,
+    JSON_UNQUOTE(JSON_EXTRACT(
+        t1_0.txn_data,
+        '$.message_collection[0].message_exchange.request_message.rrn'
+    )) AS rrn,
+    t1_0.terminal_id,
+    t1_0.txn_data,
+    t1_0.txn_id,
+    t1_0.txn_originator_reference,
+    t1_0.txn_psp_reference,
+    t1_0.txn_recv_date_time,
+    t1_0.txn_type,
+    t1_0.updated_on
+FROM txn_log t1_0
+WHERE
+    t1_0.txn_recv_date_time BETWEEN '2022-03-21 09:24:41'
+                                AND '2026-04-21 10:24:41'
+    AND JSON_UNQUOTE(JSON_EXTRACT(
+        t1_0.txn_data,
+        '$.message_collection[0].message_exchange.response_message.response_code'
+    )) LIKE '%68%' ESCAPE '!'
+ORDER BY t1_0.created_on DESC
+LIMIT 0, 20;
+
 ## 📂 Repository
 
 * **Admin Portal Codebase**
