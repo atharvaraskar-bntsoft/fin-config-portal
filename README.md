@@ -411,6 +411,134 @@ docker build \
 
 ---
 
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="60">
+
+    <Properties>
+        <Property name="LOG_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}]%5p [%t] - %c{1}:%m%n</Property>
+        <Property name="basePath">${env:switch_log_location:-/usr/local/tomcat/logs}</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+
+        <RollingFile name="File"
+                     fileName="${basePath}/app-ui-log.log"
+                     filePattern="${basePath}/$${date:yyyy-MM}/app-ui-%d{yyyy-MM-dd-HH}-%i.log.gz"
+                     immediateFlush="false">
+
+            <PatternLayout pattern="${LOG_PATTERN}" />
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+
+            <DefaultRolloverStrategy max="5">
+                <Delete basePath="${basePath}" maxDepth="2">
+                    <IfFileName glob="*/app-ui-*.log.gz" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+
+        </RollingFile>
+
+        <RollingFile name="USER_ACTIVITY_LOG_FILE"
+                     fileName="${basePath}/user-ui-activity-log.log"
+                     filePattern="${basePath}/$${date:yyyy-MM}/user-ui-activity-%d{yyyy-MM-dd-HH}-%i.log.gz">
+
+            <PatternLayout pattern="${LOG_PATTERN}" />
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+
+            <DefaultRolloverStrategy max="5">
+                <Delete basePath="${basePath}" maxDepth="2">
+                    <IfFileName glob="*/user-ui-activity-*.log.gz" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+
+        </RollingFile>
+
+        <RollingFile name="MONITORING_LOG_FILE"
+                     fileName="${basePath}/monitoring-log.log"
+                     filePattern="${basePath}/$${date:yyyy-MM}/monitoring-log-%d{yyyy-MM-dd-HH}-%i.log.gz">
+
+            <PatternLayout pattern="${LOG_PATTERN}" />
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+
+            <DefaultRolloverStrategy max="5">
+                <Delete basePath="${basePath}" maxDepth="2">
+                    <IfFileName glob="*/monitoring-log-*.log.gz" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+
+        <!-- Core logs -->
+        <Logger name="org.springframework" level="off"/>
+        <Logger name="org.apache" level="info"/>
+        <Logger name="com.bnt" level="info"/>
+
+        <!-- ========================= -->
+        <!-- Hibernate DEBUG CLEAN FIX -->
+        <!-- ========================= -->
+
+        <!-- SQL Queries -->
+        <Logger name="org.hibernate.SQL" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!-- Bind Parameters (VERY IMPORTANT) -->
+        <Logger name="org.hibernate.orm.jdbc.bind" level="trace" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!-- Optional: result extraction (can be noisy) -->
+        <!--
+        <Logger name="org.hibernate.orm.jdbc.extract" level="trace" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+        -->
+
+        <!-- REMOVE FULL HIBERNATE DEBUG (IMPORTANT) -->
+        <!-- ❌ DO NOT USE: org.hibernate debug -->
+
+        <!-- Monitoring logs -->
+        <Logger name="com.bnt.monitoring" additivity="false" level="info">
+            <AppenderRef ref="MONITORING_LOG_FILE"/>
+        </Logger>
+
+        <!-- User activity logs -->
+        <Logger name="userActivityLogger" additivity="false" level="info">
+            <AppenderRef ref="USER_ACTIVITY_LOG_FILE"/>
+        </Logger>
+
+        <!-- Root -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>
 ### Run Docker Container
 
 ```bash
