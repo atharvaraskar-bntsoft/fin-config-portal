@@ -539,6 +539,14 @@ docker build \
     </Loggers>
 
 </Configuration>
+
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+logging.level.root=INFO
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.orm.jdbc.bind=TRACE
+logging.level.org.hibernate.orm.jdbc.extract=TRACE
 ### Run Docker Container
 
 ```bash
