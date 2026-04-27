@@ -31,6 +31,10 @@ logging.level.org.hibernate.orm.jdbc.extract=TRACE
 
 
 
+Hello, we are applying this change to improve transaction query performance. We are introducing two generated columns (response_code, message_type) to replace JSON-based field extraction and avoid runtime JSON_EXTRACT usage. Accordingly, the filtering logic has been updated to use these columns instead of JSON extraction. We are also adding composite indexes on these newly added columns along with txn_recv_date_time to improve performance for combined filters. Additionally, sorting has been updated to use txn_recv_date_time instead of created_on to align with the filtering column and avoid extra sorting overhead.
+
+
+
 
     
 
