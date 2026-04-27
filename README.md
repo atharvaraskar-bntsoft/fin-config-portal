@@ -6,6 +6,22 @@ This project provides both **backend (Spring Boot / Java)** and **frontend (Angu
 
 ---
 
+SELECT COUNT(*)
+FROM txn_log
+WHERE txn_recv_date_time >= NOW() - INTERVAL 7 DAY;
+
+
+SELECT COUNT(*)
+FROM txn_log t1_0
+WHERE JSON_UNQUOTE(
+        JSON_EXTRACT(
+            t1_0.txn_data,
+            '$.message_collection[0].message_exchange.response_message.response_code'
+        )
+    ) LIKE '%50%' ESCAPE '!';
+
+
+    
 
 SELECT
     t1_0.id,
