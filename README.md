@@ -5,6 +5,16 @@ The **BNT Switch Admin Portal** is part of the **B-Switch payment engine**, used
 This project provides both **backend (Spring Boot / Java)** and **frontend (Angular)** components along with **Docker support** for deployment.
 
 ---
+
+We have applied the below changes to the code for query optimization:
+Introducing generated columns (response_code, message_type)
+Updating filtering logic to replace JSON extraction with these new columns
+Adding composite indexes on the newly added columns
+Aligning sorting with txn_recv_date_time instead of created_on for better index utilization
+These changes have been tested and are working successfully in the local environment. Screenshots of the working implementation have been attached below. The latest code with these changes has been added and pushed to the CRX-210 ticket branch.
+
+
+
 We have applied the below changes to the code for query optimization:-
 
 Introducing generated columns (response_code, message_type)
