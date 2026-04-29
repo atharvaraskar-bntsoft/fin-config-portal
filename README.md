@@ -6,6 +6,89 @@ This project provides both **backend (Spring Boot / Java)** and **frontend (Angu
 
 ---
 
+
+
+
+
+
+
+
+
+
+
+
+
+Transaction Query Optimization – Problem & Solution
+
+Problem Statement
+
+i) JSON Extraction in Query (Performance Issue)
+The existing query was using JSON_EXTRACT and JSON_UNQUOTE to fetch values like response code and message type from the txn_data JSON column.
+
+Example: JSON_UNQUOTE(JSON_EXTRACT(txn_data, '$...response_code'))
+
+Issues:
+
+Adds runtime JSON parsing overhead
+Prevents index usage
+Slows down query execution
+
+ii) No Direct Columns → No Indexing
+Fields like response_code and message_type were not stored as direct columns. They were extracted dynamically from JSON, so indexing was not possible.
+
+iii) Inefficient Sorting (ORDER BY issue)
+Query was filtering on txn_recv_date_time but sorting on created_on.
+
+Issues:
+
+MySQL cannot use both indexes efficiently
+Causes extra sorting (filesort)
+Increases CPU and memory usage
+Solution Implemented
+
+i) Added Generated Columns
+Created stored generated columns for response_code and message_type to extract values from JSON and store them.
+
+Benefits:
+
+Eliminates runtime JSON parsing
+Makes fields directly queryable
+Enables indexing
+
+ii) Updated Application Logic
+Replaced JSON-based filtering with direct column usage (response_code_col, gen_msg_type).
+
+Benefits:
+
+Faster filtering
+Proper index utilization
+
+iii) Added Composite Indexes
+Added composite indexes on:
+
+(txn_recv_date_time, response_code_col)
+(txn_recv_date_time, gen_msg_type)
+
+Benefits:
+
+Efficient multi-column filtering
+Reduced number of scanned rows
+Improved query performance
+
+iv) Optimized Sorting
+Updated ORDER BY to use txn_recv_date_time instead of created_on.
+
+Benefits:
+
+Aligns filtering and sorting column
+Enables efficient index usage
+Avoids extra sorting overhead
+
+
+
+
+
+
 We have applied the below changes to the code for query optimization:
 Introducing generated columns (response_code, message_type)
 Updating filtering logic to replace JSON extraction with these new columns
