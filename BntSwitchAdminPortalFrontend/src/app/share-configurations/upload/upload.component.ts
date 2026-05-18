@@ -16,6 +16,8 @@ import { GetL3AdapterList } from '@app/store/actions/l3-adapter.action';
 import { selectL3AdapterList } from '@app/store/selectors/l3-adapter.selectors';
 import { DeploymentWorkflowService } from '@app/services/deployment-workflow-mapper.service';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { GetImfJson } from '@app/store/actions/imf-json.action';
 
 
 
@@ -89,6 +91,7 @@ export class UploadComponent implements OnInit {
 		private _l1AdapterService: L1AdapterService,
 		private _l3AdapterService: L3AdapterService ,
 		private _deploymentWorkflowService: DeploymentWorkflowService,
+		private router: Router,
 	  ) {}
 	  
 	  ngOnInit(): void {
@@ -253,7 +256,20 @@ export class UploadComponent implements OnInit {
 	                next: res => {
 						this.isLoading = false;	
 	                 // alert(res.data?.message || 'IMF updated successfully');
-					 this.showSuccess(response.data?.message || 'IMF updated successfully');
+					// this.showSuccess(response.data?.message || 'IMF updated successfully');
+					Swal.fire({
+					  title: 'Success',
+					  text:  'IMF updated successfully',
+					  icon: 'success',
+					  width: '700px',
+					  customClass: {
+					    popup: 'big-swal'
+					  }
+					}).then(() => {
+					  this._store.dispatch(new GetImfJson());
+					  this.router.navigate(['/adapter-configuration/imf']);
+
+					});
                       
 	                  // Reset UI
 					  this.loadImfList();
@@ -275,7 +291,21 @@ export class UploadComponent implements OnInit {
 	            // Normal success
 				this.isLoading = false;
 	           // alert(response.data?.message || 'IMF uploaded successfully');
-			   this.showSuccess(response.data?.message || 'IMF uploaded successfully');
+			  // this.showSuccess(response.data?.message || 'IMF uploaded successfully');
+			  this._store.dispatch(new GetImfJson());
+			  Swal.fire({
+  					  title: 'Success',
+  					  text: response.data?.message || 'IMF updated successfully',
+  					  icon: 'success',
+  					  width: '700px',
+  					  customClass: {
+  					    popup: 'big-swal'
+  					  }
+  					}).then(() => {
+
+  					  this.router.navigate(['/adapter-configuration/imf']);
+
+  					});
 
 	            // Reset UI
 				this.loadImfList();

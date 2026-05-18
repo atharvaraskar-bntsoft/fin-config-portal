@@ -1,5 +1,22 @@
+
+
 <div class="col-md-12 fade-in template">
-  <div class="row" [ngClass]="{ loading: loading }">
+	
+	<!-- Header Row -->
+	<div class="row" style="margin-bottom: 10px;">
+	  <div class="col-md-12 text-right">
+	    <button
+	      *ngIf="permissionObject.write"
+	      class="btn btn-primary btn-md btn-flat"
+	      routerLink="create"
+	    >
+	      <i class="fa fa-plus-circle"></i>
+	      GENERATE WORKFLOW
+	    </button>
+	  </div>
+	</div>
+  
+	<div class="row" [ngClass]="{ loading: loading }">
     <div style="height: 80vh">
       <ngx-datatable
         appNgxDatatableWatcher

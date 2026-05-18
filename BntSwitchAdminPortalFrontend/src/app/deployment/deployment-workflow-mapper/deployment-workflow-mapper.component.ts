@@ -16,6 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DeploymentWorkflowService } from '@app/services/deployment-workflow-mapper.service';
 import { selectPermissionsData } from '@app/store/selectors/permission.selectors';
+import { Router } from '@angular/router';
 declare var jQuery: any;
 
 @Component({
@@ -53,7 +54,7 @@ export class DeploymentWorkflowMapperComponent implements OnInit, OnDestroy {
     write: null,
   };
   public deploymentL2jsonId = 'link_deployment_l2json';
-  constructor(private _store: Store<IAppState>, private translate: TranslateService,  @Inject(DeploymentWorkflowService) private _deploymentWorkflowService: DeploymentWorkflowService) {  }
+  constructor(private _store: Store<IAppState>, private translate: TranslateService,  @Inject(DeploymentWorkflowService) private _deploymentWorkflowService: DeploymentWorkflowService  ,  private router: Router) {  }
 
   ngOnInit() {
     

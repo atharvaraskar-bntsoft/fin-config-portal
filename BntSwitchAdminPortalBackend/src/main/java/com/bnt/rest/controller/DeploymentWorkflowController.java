@@ -1,5 +1,6 @@
 package com.bnt.rest.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +24,7 @@ import com.bnt.common.ResponseEntityData;
 import com.bnt.common.ResponseWrapper;
 import com.bnt.common.util.RippsUtility;
 import com.bnt.constant.RippsRestConstant;
+import com.bnt.rest.dto.DeploymentDto;
 import com.bnt.rest.service.DeploymentWorkflowService;
 
 /**************************
@@ -63,6 +67,40 @@ public class DeploymentWorkflowController {
 		responseEntityData.setStatus(RippsRestConstant.SUCCESS);
 		responseEntityData.setData(deploymentWorkflowService.findSwitchClusterById(id));
 		return new ResponseEntity<>(RippsUtility.setResponseEntityData(responseEntityData), HttpStatus.OK);
+	}
+	
+	@PostMapping("/generate")
+	public ResponseEntity<Map<String, Object>> generateWorkflowJson(
+	        @RequestHeader(value = "X-Auth-Token") String xAuthToken,
+	        @RequestBody DeploymentDto dto) {
+
+	    logger.info("Generate workflow JSON with upload deployment");
+
+	    ResponseEntityData responseEntityData = new ResponseEntityData();
+
+	    try {
+	        Integer id = deploymentWorkflowService.generateJsonFromDeployment(dto);
+
+	        responseEntityData.setStatus(RippsRestConstant.SUCCESS);
+	        responseEntityData.setMessage("Workflow Uploaded Successfully");
+
+	        Map<String, Object> data = new HashMap<>();
+	        data.put("id", id);   
+	        responseEntityData.setData(data);
+	        return new ResponseEntity<>(
+	                RippsUtility.setResponseEntityData(responseEntityData),
+	                HttpStatus.CREATED);
+
+	    } catch (Exception e) {
+	        logger.error("Error generating workflow JSON", e);
+
+	        responseEntityData.setStatus(RippsRestConstant.FAILURE);
+	        responseEntityData.setMessage("Error generating workflow JSON");
+
+	        return new ResponseEntity<>(
+	                RippsUtility.setResponseEntityData(responseEntityData),
+	                HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 
 }

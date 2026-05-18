@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '@app/services/guards/auth-guard.service';
 import { DeploymentWorkflowMapperComponent } from './deployment-workflow-mapper.component';
+import { DeploymentWorkflowMapperCreateComponent } from './deployment-workflow-mapper-create/deployment-workflow-mapper-create.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
     },
     path: '',
   },
+  {
+    path: 'create',
+    component: DeploymentWorkflowMapperCreateComponent
+  }
 ];
 
 @NgModule({

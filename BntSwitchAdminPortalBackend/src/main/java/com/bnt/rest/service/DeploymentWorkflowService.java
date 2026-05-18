@@ -24,5 +24,7 @@ public interface DeploymentWorkflowService {
 	Set<IdNameVersionTypeWrapper> getComponentListForDeploymentWorkFlowJSON();
 
 	int saveUpdateJson(DeploymentDto dto, Integer deploymentId);
+	
+	Integer generateJsonFromDeployment(DeploymentDto dto);
 
 }

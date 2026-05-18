@@ -276,7 +276,9 @@ export const deploymentWorkflowUrls = {
   getByIdDeploymentWorkflowUrl: '/deployment-workflow',
   getDeploymentWorkflowUrl: '/deployment-workflow',
   downloadL2Workflow: '/adapterconfig/download-l2-files' ,
+  generateWorkflow: '/deployment-workflow/generate',
   uploadWorkflow: '/adapterconfig/upload-workflow'
+
   
 };
 

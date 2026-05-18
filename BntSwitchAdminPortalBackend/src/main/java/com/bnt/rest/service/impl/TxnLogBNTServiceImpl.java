@@ -92,6 +92,7 @@ public class TxnLogBNTServiceImpl implements TxnLogBNTService {
 	@Autowired
 	private LookupValueService lookUpValueService;
 
+	@Autowired
 	private ResourceLoader resourceLoader;
 
 	private BufferedReader reader;

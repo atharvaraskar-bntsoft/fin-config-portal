@@ -10,9 +10,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AlertModule, PrettyJsonRvModule } from 'bnt';
 import { ModalModule } from 'angular-custom-modal';
 import { AuthGuard } from '@app/services/guards/auth-guard.service';
+import { DeploymentWorkflowMapperCreateComponent } from './deployment-workflow-mapper-create/deployment-workflow-mapper-create.component';
 
 @NgModule({
-  declarations: [DeploymentWorkflowMapperComponent],
+  declarations: [DeploymentWorkflowMapperComponent, DeploymentWorkflowMapperCreateComponent],
   imports: [
     CommonModule,
     DeploymentWorkflowMapperRoutingModule,

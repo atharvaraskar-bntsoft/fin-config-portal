@@ -1,5 +1,8 @@
 package com.bnt.rest.service.impl;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -167,6 +170,42 @@ public class DeploymentServiceImpl implements DeploymentService {
 		 * getScheduledAndDeployedComponentWrapperList());
 		 * deploymentWorkflowService.saveUpdateJson(dto, deploymentId); }
 		 */
+		return deploymentId;
+	}
+	
+	@Transactional
+	@Override
+	public Integer generateWorkflowJson(DeploymentDto dto) {
+		logger.info("Inside generateWorkflowJson ");
+		Deployment deployment = ObjectMapper.mapToEntity(dto, Deployment.class);
+		String date = RippsUtility.getCurrentDate("dd-MM-YYYY");
+		Integer recordCount = deploymentJpaHelper.getDeploymentNewRecordCount();
+		String deploymentName = "Deployment#" + recordCount + "(" + date + ")";
+		deployment.setName(deploymentName);
+		deployment.setStatus(DeploymentMapper.SCHEDULED);
+	   // deployment.setStatus("UPLOADED");
+         deployment.setScheduledOn(new Timestamp(System.currentTimeMillis()));
+         deployment.setDeployedOn(new Timestamp(System.currentTimeMillis()));
+		deployment.getDeploymentComponent().stream()
+				.forEach(deploymentComponent -> deploymentComponent.setDeployment(deployment));
+
+		Deployment savedDeployment = null;
+		try {
+			savedDeployment = deploymentJpaHelper.save(deployment);
+		} catch (Exception e) {
+			logger.error(ExceptionLog.printStackTraceToString(e));
+			throw new RippsAdminException("Error in saving deployment");
+		}
+		Integer deploymentId = null;
+		try {
+			deploymentId = savedDeployment.getId();
+			dto.setScheduledAndDeployedInfo(deploymentComponentService.getScheduledAndDeployedComponentWrapperList());
+			deploymentWorkflowService.saveUpdateJson(dto, deploymentId);
+		} catch (Exception e) {
+			throw new RippsAdminException("Error in saving deployment");
+		}
+
+	
 		return deploymentId;
 	}
 

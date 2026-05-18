@@ -30,5 +30,7 @@ public interface DeploymentService {
 
 	List<DeploymentStatusDto> groupUnscheduledListOnSchedulePage(Map<String, List<DeploymentHistoryWrapper>> historyMap,
 			List<DeploymentStatusDto> unscheduledList);
+	
+	public Integer generateWorkflowJson(DeploymentDto dto);
 
 }

@@ -1,0 +1,256 @@
+<app-loader 
+  *ngIf="isLoading" 
+  [loaderText]="loaderText">
+</app-loader>
+
+<section class="content">
+  <div class="container-fluid px-0">
+	
+	
+	<div style="margin-left: 20px; margin-bottom: 1px;">
+	     <a class="btn btn-primary" routerLink="../">
+	       <i class="fa fa-arrow-circle-o-left fa-sm"></i>
+	       {{ 'BACK' | translate }}
+	     </a>
+	   </div>
+	   
+	   <div class="text-center mb-1">
+	     <h4 class="mb-1">Generate Workflow JSON</h4>
+	     <p class="text-muted lead mb-0" >
+			Select all required components with their versions to generate the  workflow Json
+	     </p>
+	   </div>
+	   <div style="width: 100%; text-align: center; ">
+	   	  <span style="display: inline-block; width: 100%; height: 1px; background-color: rgb(192, 192, 192);"></span>
+	   	</div>
+	   	
+    <!-- ================= DESTINATION ROUTER ================= -->
+    <div class="card mb-0 shadow-sm">
+      <div class="card-header">
+        <strong>Destination Router</strong>
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered mb-0">
+
+          <thead style="background-color:#36BBA6;">
+            <tr>
+              <th style="width:5%" class="text-center">Select</th>
+              <th style="width:30%">Name</th>
+              <th style="width:25%">Type</th>
+              <th style="width:40%">Version</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let row of serviceRows">
+
+              <!-- Checkbox -->
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="row.selected"
+                  (change)="onServiceSelect(row)" />
+              </td>
+
+              <td>{{ row.name }}</td>
+              <td>{{ row.type }}</td>
+
+              <td>
+                <select
+                  class="form-control"
+                  [(ngModel)]="row.selectedVersion"
+                  (change)="onVersionChange(row.selectedVersion, row)">
+                  <option *ngFor="let v of row.versions" [ngValue]="v">
+                    {{ v.version }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+
+            <tr *ngIf="!serviceRows?.length">
+              <td colspan="4" class="text-center text-muted">
+                No Destination Router Data Available
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================= WORKFLOW ROUTER ================= -->
+    <div class="card shadow-sm mb-0">
+      <div class="card-header">
+        <strong>Workflow Router</strong>
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered mb-0">
+
+          <thead style="background-color:#36BBA6;">
+            <tr>
+              <th style="width:5%" class="text-center">Select</th>
+              <th style="width:30%">Name</th>
+              <th style="width:25%">Type</th>
+              <th style="width:40%">Version</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let row of workflowRows">
+
+              <!-- Checkbox -->
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="row.selected"
+                  (change)="onWorkflowSelect(row)" />
+              </td>
+
+              <td>{{ row.name }}</td>
+              <td>{{ row.type }}</td>
+
+              <td>
+                <select
+                  class="form-control"
+                  [(ngModel)]="row.selectedVersion"
+                  (change)="onVersionChange(row.selectedVersion, row)">
+                  <option *ngFor="let v of row.versions" [ngValue]="v">
+                    {{ v.version }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+
+            <tr *ngIf="!workflowRows?.length">
+              <td colspan="4" class="text-center text-muted">
+                No Workflow Router Data Available
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================= CORE PROPERTIES ================= -->
+    <div class="card shadow-sm mb-0">
+      <div class="card-header">
+        <strong>Core Properties</strong>
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered mb-0">
+
+          <thead style="background-color:#36BBA6;">
+            <tr>
+              <th style="width:5%" class="text-center">Select</th>
+              <th style="width:30%">Name</th>
+              <th style="width:25%">Type</th>
+              <th style="width:40%">Version</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let row of coreRows">
+
+              <!-- Checkbox -->
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="row.selected"
+                  (change)="onCoreSelect(row)" />
+              </td>
+
+              <td>{{ row.name }}</td>
+              <td>{{ row.type }}</td>
+
+              <td>
+                <select
+                  class="form-control"
+                  [(ngModel)]="row.selectedVersion"
+                  (change)="onCoreVersionChange(row.selectedVersion, row)">
+                  <option *ngFor="let v of row.versions" [ngValue]="v">
+                    {{ v.version }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+
+            <tr *ngIf="!coreRows?.length">
+              <td colspan="4" class="text-center text-muted">
+                No Core Properties Data Available
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+	
+	<!-- ================= LATEST WORKFLOW (NEW TABLE) ================= -->
+	<div class="card shadow-sm mb-0">
+	  <div class="card-header">
+	    <strong>Workflow</strong>
+	  </div>
+
+	  <div class="card-body p-0">
+	    <table class="table table-bordered mb-0">
+
+	      <thead style="background-color:#36BBA6;">
+	        <tr>
+				<th style="width:5%" class="text-center">Select</th>
+				   <th style="width:30%">Name</th>
+				   <th style="width:25%">Type</th>
+				   <th style="width:40%">Version</th>
+	        </tr>
+	      </thead>
+
+	      <tbody>
+	        <tr *ngFor="let row of latestWorkflowRows">
+
+	          <!-- Checkbox -->
+	          <td class="text-center">
+	            <input
+	              type="checkbox"
+	              [(ngModel)]="row.selected"
+	              (change)="onLatestWorkflowSelect(row)" />
+	          </td>
+
+	         
+	          <td>{{ row.name }}</td>
+			  <td>{{ row.type }}</td>
+			  <td>
+			    <select
+			      class="form-control"
+			      [(ngModel)]="row.selectedVersion">
+
+			      <option *ngFor="let v of row.versions" [ngValue]="v">
+			        {{ v.version }}
+			      </option>
+
+			    </select>
+			  </td>
+	        </tr>
+
+	        <tr *ngIf="!latestWorkflowRows?.length">
+	          <td colspan="4" class="text-center text-muted">
+	            No Workflow Data Available
+	          </td>
+	        </tr>
+	      </tbody>
+
+	    </table>
+	  </div>
+	</div>
+
+    <!-- ================= GENERATE BUTTON ================= -->
+    <div class="text-center mt-2">
+      <button
+        class="btn btn-success px-4"
+        [disabled]="!isValidSelection"
+        (click)="generateDeployment()">
+        Generate Workflow Json
+      </button>
+    </div>
+
+  </div>
+</section>

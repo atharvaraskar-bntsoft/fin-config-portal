@@ -10,6 +10,8 @@ export class DeploymentWorkflowService {
   getByIdDeploymentWorkflow = `${basePath.domain}${deploymentWorkflowUrls.getByIdDeploymentWorkflowUrl}`;
   downloadL2WorkflowUrl = `${basePath.domain}${deploymentWorkflowUrls.downloadL2Workflow}`; 
   uploadWorkflowUrl = `${basePath.domain}${deploymentWorkflowUrls.uploadWorkflow}`;
+  generateWorkflowUrl = `${basePath.domain}${deploymentWorkflowUrls.generateWorkflow}`;
+
 
   public variable: any = {
     params: {
@@ -40,6 +42,10 @@ export class DeploymentWorkflowService {
   
   uploadWorkflow(payload: any): Observable<any> {
     return this._http.post<any>(this.uploadWorkflowUrl, payload);
+  }
+  
+  generateWorkflow(payload: any): Observable<any> {
+    return this._http.post<any>(this.generateWorkflowUrl, payload);
   }
 
 }

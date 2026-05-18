@@ -1,5 +1,6 @@
 package com.bnt.rest.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,23 +34,30 @@ import com.bnt.common.util.exception.ExceptionLog;
 import com.bnt.constant.ParameterConstant;
 import com.bnt.main.ObjectMapper;
 import com.bnt.rest.dto.DeploymentDto;
+import com.bnt.rest.dto.DeploymentStatusDto;
 import com.bnt.rest.dto.DeploymentWorkflowDto;
 import com.bnt.rest.dto.IdNameVersionTypeWrapper;
 import com.bnt.rest.entity.ConfiguredRoutes;
 import com.bnt.rest.entity.Deployment;
+import com.bnt.rest.entity.DeploymentComponent;
 import com.bnt.rest.entity.DeploymentWorkflow;
 import com.bnt.rest.entity.RoutingVersion;
 import com.bnt.rest.entity.RuleConfiguration;
+import com.bnt.rest.jpa.repository.DeploymentPersistenceHelper;
 import com.bnt.rest.jpa.repository.DeploymentWorkflowPersistenceHelper;
 import com.bnt.rest.jpa.repository.HistoryPersistenceHelper;
 import com.bnt.rest.jpa.repository.RoutingVersionHelper;
 import com.bnt.rest.service.DeploymentComponentService;
+import com.bnt.rest.service.DeploymentService;
 import com.bnt.rest.service.DeploymentWorkflowService;
 import com.bnt.rest.service.NewWorkflowService;
 import com.bnt.rest.wrapper.dto.workflow.WorkFlowUiWrapper;
 import com.bnt.ruleengine.ParentDto;
 import com.bnt.ruleengine.sample.FinalJsonUtiity;
 import com.bnt.service.mapper.DeploymentMapper;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import com.bnt.rest.service.impl.DeploymentWorkflowServiceImpl;
 
 /**************************
  * @author vaibhav.shejol *
@@ -73,6 +82,12 @@ public class DeploymentWorkflowServiceImpl implements DeploymentWorkflowService 
 
 	@Autowired
 	private NewWorkflowService newWorkflowService;
+	
+	private final DeploymentService deploymentService;
+
+	public DeploymentWorkflowServiceImpl(@Lazy DeploymentService deploymentService) {
+	    this.deploymentService = deploymentService;
+	}
 
 	@Override
 	public ResponseWrapper getDeploymentWorkflow(Map<String, Object> requestParamMap) {
@@ -245,6 +260,25 @@ public class DeploymentWorkflowServiceImpl implements DeploymentWorkflowService 
 			}
 		}
 
+	}
+
+	@Override
+	public Integer generateJsonFromDeployment(DeploymentDto dto) {
+
+	    log.info("START: Generating Workflow JSON for Deployment");
+	    try {
+	        if (dto == null) {
+	            log.error("DeploymentDto is NULL");
+	            throw new RippsAdminException("Invalid request: Deployment data is missing");
+	        }
+	        Integer result = deploymentService.generateWorkflowJson(dto);
+	        log.info("SUCCESS: Workflow JSON generated successfully");
+	        return result;
+
+	    } catch (Exception e) {
+	        log.error("ERROR while generating Workflow JSON", e);
+	        throw new RippsAdminException("Failed to generate Workflow JSON: " + e.getMessage());
+	    }
 	}
 
 }
